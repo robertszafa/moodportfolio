@@ -1,0 +1,28 @@
+@font-face {
+    font-family: Roboto;
+    src: url('https://fonts.googleapis.com/css?family=Roboto');
+}
+
+body {
+    background: #ffffff;
+    font-family: Roboto;
+}
+
+.formBody {
+    width: 85%;
+    background: rgb(235, 237, 240);
+    box-shadow: 0px 0px 9px -2px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 0px 9px -2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 9px -2px rgba(0,0,0,0.75);
+}
+
+#registerLogo {
+    width: 80%;
+    margin: auto;
+}
+
+.field {
+    margin: 0 auto;
+    width: 80%;
+    padding: 0.5em;
+}
