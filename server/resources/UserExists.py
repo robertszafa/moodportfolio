@@ -8,7 +8,7 @@ class UserExists(Resource):
         try:
             email = request.json.get('email')
         except:
-            return jsonify({'error' : 'noEmailProvided'})
+            return jsonify({'exists' : "False", 'error' : 'noEmailProvided'})
 
         response = _email_exists(email)
 
@@ -18,7 +18,7 @@ class UserExists(Resource):
         try:
             email = request.json.get('email')
         except:
-            return jsonify({'error' : 'noEmailProvided'})
+            return jsonify({'exists' : False, 'error' : 'noEmailProvided'})
 
         response = _email_exists(email)
 

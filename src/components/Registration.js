@@ -7,6 +7,7 @@ import '../stylesheet/register.css'
 const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*)(?=.*[@$!.%*?&])[A-Za-z@$!%*?&]');
 
 
+
 const App = ({
   values,
   errors,
@@ -54,7 +55,6 @@ const Registration = withFormik ({
     },
 
     validationSchema: Yup.object().shape({
-    // TODO: asynchronously check if email exists
     name: Yup.string() 
               .min(3, 'Name must be 3 characters or longer')
               .max(60, 'Name must be shorter than 60 characters')
@@ -62,7 +62,22 @@ const Registration = withFormik ({
     email: Yup.string()
               .email('Email not valid')
               .max(100)
-              .required('Email is required'),
+              .required('Email is required')
+              .test("checkEmail", "Email was already used", 
+                async function(email) {
+                  const res = await fetch('http://localhost:5000/api/UserExists', {
+                    method: "POST",
+                    mode: "cors",
+                    cache: "no-cache",
+                    credentials: "same-origin",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ 'email': email })
+                  });
+                  const res_1 = await res.json();
+                  return !res_1.exists;
+                }),
     password: Yup.string()
                  .min(8, 'Password must be 8 characters or longer')
                  .max(100, 'Password must be shorter than 200 characters')
@@ -83,9 +98,8 @@ const Registration = withFormik ({
                                 'email' : values.email,
                                 'password' : values.password})
         })
-        .then(function(res) {
-          console.log(res.json())
-        })
+        .then((res) => res.json())
+        .then(json => console.log(json))
     }
 }) (App)
 
