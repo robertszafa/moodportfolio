@@ -2,7 +2,7 @@ import React from 'react'
 import {withFormik, Form, Field} from 'formik'
 import * as Yup from 'yup'
 
-const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!.%*?&])[A-Za-z\d@$!%*?&]');
+const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*)(?=.*[@$!.%*?&])[A-Za-z@$!%*?&]');
 
 
 const App = ({
@@ -64,29 +64,21 @@ const Registration = withFormik ({
     }),
     
     handleSubmit(values) {
-        // TODO //
-        // send request to server using fetch()
-        // -> need to figure out CORS (Cross Origin Resource Sharing)
-        
-        // let headers = new Headers();
-        // // headers.append('Content-Type', 'application/json');
-        // // headers.append('Accept', 'application/json');
-        // // headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-        // // headers.append('Access-Control-Allow-Credentials', 'true');
-        // // headers.append('POST', 'OPTIONS');
-
-        // (async () => {
-        //     const rawResponse = await fetch('http://localhost:5000/api/user/register', {
-        //       method: 'POST',
-        //     //   mode: 'cors',
-        //     //   headers: headers,
-        //       contentType: "application/json",
-        //       body: JSON.stringify({"name": values.name, "email": values.email, "password": values.password})
-        //     });
-        //     const content = await rawResponse.json();
-        
-        //     console.log(content);
-        //   })();
+        fetch('http://localhost:5000/api/Register', {
+          method: "POST", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, cors, *same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({'name' : values.name,
+                                'email' : values.email,
+                                'password' : values.password})
+        })
+        .then(function(res) {
+          console.log(res.json())
+        })
     }
 }) (App)
 
