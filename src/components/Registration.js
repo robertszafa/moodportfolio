@@ -1,6 +1,8 @@
 import React from 'react'
 import {withFormik, Form, Field} from 'formik'
 import * as Yup from 'yup'
+import logo from './logo.png'
+import '../stylesheet/register.css'
 
 const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*)(?=.*[@$!.%*?&])[A-Za-z@$!%*?&]');
 
@@ -10,30 +12,30 @@ const App = ({
   errors,
   touched
 }) => (
-  <Form>
-
+  <Form className="formBody">
+      <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
     <div>
-      <Field 
+      <Field className="field"
         name="name"
         placeholder="Your Name"/>
-        <br/>
+        {touched.name && errors.name && <p>{errors.name}</p>}
     </div>
 
     {/* touched.* makes sure that errors are checked only once the fiels is left */}
-    <div> {touched.email && errors.email && <p> {errors.email}</p>}
-      <Field
+    <div>
+      <Field className="field"
         type="email" 
         name="email" 
         placeholder="Your Email"/>
-        <br/>
+        {touched.email && errors.email && <p> {errors.email}</p>}
     </div>
 
-    <div>{touched.password && errors.password && <p> {errors.password}</p>}
-    <Field
+    <div>
+    <Field className="field"
       type="password"
       name="password"
       placeholder="Your Password"/>
-      <br/>
+      {touched.password && errors.password && <p> {errors.password}</p>}
     </div>
 
     <button type="submit">Submit</button>
@@ -42,6 +44,7 @@ const App = ({
 
 
 const Registration = withFormik ({
+  // Same as handleChange
     mapPropsToValues({name, email, password}) {
         return {
             email: email || '',
@@ -52,6 +55,10 @@ const Registration = withFormik ({
 
     validationSchema: Yup.object().shape({
     // TODO: asynchronously check if email exists
+    name: Yup.string() 
+              .min(3, 'Name must be 3 characters or longer')
+              .max(60, 'Name must be shorter than 60 characters')
+              .required('Name is required'),
     email: Yup.string()
               .email('Email not valid')
               .max(100)
