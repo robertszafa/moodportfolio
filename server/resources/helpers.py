@@ -1,7 +1,46 @@
-import datetime  
+from datetime import datetime, timedelta
+import jwt
 from flask import request, jsonify
 from passlib.hash import sha256_crypt
-from config import mysql
+from config import app, mysql
+
+
+def _authenticate_user(request):
+    try:
+        auth_token = request.headers.get('Authorization')
+    except:
+        return False
+    
+    if auth_token:
+        return _decode_auth_token(auth_token)
+    
+    return False
+
+
+def _encode_auth_token(user_id):
+    try:
+        payload = {
+            'exp': datetime.utcnow() + timedelta(days=1, seconds=0),
+            'iat': datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            app.config.get('SECRET_KEY'),
+            algorithm='HS256'
+        )
+    except Exception as e:
+        return e
+
+
+def _decode_auth_token(auth_token):
+    try:
+        payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+        return payload['sub']
+    except jwt.ExpiredSignatureError:
+        return False
+    except jwt.InvalidTokenError:
+        return False
 
 
 def _email_exists(email):
@@ -28,6 +67,16 @@ def _get_password_hash(email):
 
     return password_hash
 
+def _get_user_id(email):
+    cur = mysql.connection.cursor()
+    if cur.execute('SELECT userID FROM User WHERE email=%s', [email]) < 1:
+        cur.close() 
+        return # no user with this email
+
+    user_id = cur.fetchone().get('userID') 
+    cur.close() 
+
+    return user_id
 
 # return tuple (verified, errors)
 def _verify_user(email, password):

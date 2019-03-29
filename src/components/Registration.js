@@ -1,10 +1,12 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import {withFormik, Form, Field} from 'formik'
 import * as Yup from 'yup'
+import Graph from './Graph'
 import logo from './logo.png'
 import '../stylesheet/register.css'
 
-const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*)(?=.*[@$!.%*?&])[A-Za-z@$!%*?&]');
+const passwordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
 
 
 
@@ -14,7 +16,7 @@ const App = ({
   touched
 }) => (
   <Form className="formBody">
-      <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
+    <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
     <div>
       <Field className="field"
         name="name"
@@ -45,7 +47,6 @@ const App = ({
 
 
 const Registration = withFormik ({
-  // Same as handleChange
     mapPropsToValues({name, email, password}) {
         return {
             email: email || '',
@@ -80,17 +81,17 @@ const Registration = withFormik ({
                 }),
     password: Yup.string()
                  .min(8, 'Password must be 8 characters or longer')
-                 .max(100, 'Password must be shorter than 200 characters')
+                 .max(100, 'Password must be shorter than 100 characters')
                  .matches(passwordRegex, 'Password must have a number, capital letter and a special character.')
                  .required('Password is required')
     }),
     
     handleSubmit(values) {
         fetch('http://localhost:5000/api/Register', {
-          method: "POST", // *GET, POST, PUT, DELETE, etc.
-          mode: "cors", // no-cors, cors, *same-origin
-          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: "same-origin", // include, *same-origin, omit
+          method: "POST", 
+          mode: "cors",
+          cache: "no-cache",
+          credentials: "same-origin",
           headers: {
               "Content-Type": "application/json",
           },
@@ -99,7 +100,14 @@ const Registration = withFormik ({
                                 'password' : values.password})
         })
         .then((res) => res.json())
-        .then(json => console.log(json))
+        .then(json => {
+          console.log(json)
+          sessionStorage.setItem("authToken", json.authToken);
+          ReactDOM.render(
+            <Graph />,
+            document.getElementById('root')
+          );
+        })
     }
 }) (App)
 

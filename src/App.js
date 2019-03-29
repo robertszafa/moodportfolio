@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
-import Registration from './components/Registration.js'
+import Dashboard from './components/Dashboard.js'
 
 export default class App extends Component {
   render (){
     return(
       <div>
-        <Registration></Registration>
+        <Dashboard />
       </div>
     )
   }
