@@ -1,10 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-//import './index.css';
-
-import { Bar } from 'react-chartjs-2';
-import { Line } from 'react-chartjs-2';
-import { Pie } from 'react-chartjs-2';
+import { Bar, Line, Pie } from 'react-chartjs-2';
 
 //The Graph component. Draws pie, line and bar charts.
 class Graph extends React.Component {
@@ -12,7 +7,7 @@ class Graph extends React.Component {
 		super(props);
 
 		this.state = {
-			type: props.type
+			type: props.type,
 			data: props.data,
 			indexClicked: -1
 		};

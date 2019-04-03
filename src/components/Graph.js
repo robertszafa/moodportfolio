@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Pie from 'react-chartjs-2';
 
 
 export default class Graph extends React.Component {
@@ -33,6 +34,7 @@ export default class Graph extends React.Component {
     render() {
       return (
         <div>
+          Graph Component
         </div>
       );
     }
