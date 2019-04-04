@@ -10,7 +10,7 @@ CREATE TABLE User
 (
     userID INT(4) AUTO_INCREMENT, 
     name VARCHAR(50),
-    hashedPassword VARCHAR(75), 
+    hashedPassword VARCHAR(80), 
     gender TINYINT(3), 
     signupDate DATETIME, 
     dob DATETIME, 
