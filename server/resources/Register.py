@@ -23,8 +23,8 @@ class Register(Resource):
             cur.close()
             user_id = _get_user_id(email)
             auth_token = _encode_auth_token(user_id)
-        except:
-            return jsonify({'registered' : False, 'error' : 'databaseError'})
+        except Exception as err:
+            return jsonify({'registered' : False, 'error' : 'databaseError' + str(err)})
         
         return jsonify({'registered' : True, 
                         'error' : '', 
