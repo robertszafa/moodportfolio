@@ -1,8 +1,8 @@
 import React from 'react';
-import '../../stylesheet/menu.css'
-import Logo from '../../images/logo.png'
+import '../stylesheet/header.css'
+import Logo from '../images/logo.png'
 
-const menu = props => (
+const Header = props => (
     <header className="menuBar">
         <nav className="menuNavigation">
             <div></div>
@@ -18,4 +18,4 @@ const menu = props => (
     </header>
 )
 
-export default menu;
+export default Header;

@@ -10,6 +10,8 @@
     "react-bootstrap": "^1.0.0-beta.6",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.5",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "yup": "^0.27.0"
   },

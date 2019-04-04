@@ -1,14 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {withFormik, Form, Field} from 'formik'
 import Graph from './Graph'
-import graphs from './graphs'
 import Login from './Login'
-import Registration from './Registration'
-import logo from './logo.png'
 
 
-export default class Dashboard extends React.Component {
+export default class Home extends React.Component {
     constructor(props) {
       super(props);
       this.state = {loggedIn: false};

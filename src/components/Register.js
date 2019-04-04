@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom'
 import {withFormik, Form, Field} from 'formik'
 import * as Yup from 'yup'
 import Graph from './Graph'
-import logo from './logo.png'
 import '../stylesheet/register.css'
+import logo from '../images/logo.png'
 
 const passwordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
 
@@ -46,7 +46,7 @@ const App = ({
 )
 
 
-const Registration = withFormik ({
+const Register = withFormik ({
     mapPropsToValues({name, email, password}) {
         return {
             email: email || '',
@@ -111,4 +111,4 @@ const Registration = withFormik ({
     }
 }) (App)
 
-export default Registration
+export default Register

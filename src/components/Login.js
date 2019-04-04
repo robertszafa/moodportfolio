@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import {withFormik, Form, Field} from 'formik'
 import * as Yup from 'yup'
 import Graph from './Graph'
-import logo from './logo.png'
+import logo from '../images/logo.png'
 import '../stylesheet/register.css'
 
 const passwordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
