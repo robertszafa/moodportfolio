@@ -1,11 +1,14 @@
-import React from 'react';
+import React from 'react'
+import ToggleMenu from './menu/ToggleMenu'
 import '../stylesheet/header.css'
-import Logo from '../images/logo.png'
+import Logo from '../images/logo-2.png'
 
 const Header = props => (
     <header className="menuBar">
         <nav className="menuNavigation">
-            <div></div>
+            <div>
+                <ToggleMenu click={props.sideMenuClickHandler} />
+            </div>
             <div><img className="menuLogo" src={Logo} alt="Moodportfol.io Logo"/></div>
             <div className="space"></div>
             <div className="menuList">
