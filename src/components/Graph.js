@@ -57,6 +57,7 @@ export default class Graph extends React.Component {
 	render() {
 		return (
 			<div>
+				<h1>Graph</h1>
 				{this.renderPie()}
 			</div>
 		);

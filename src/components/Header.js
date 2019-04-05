@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import ToggleMenu from './menu/ToggleMenu'
 import '../stylesheet/header.css'
 import Logo from '../images/logo-2.png'
@@ -9,12 +10,15 @@ const Header = props => (
             <div>
                 <ToggleMenu click={props.sideMenuClickHandler} />
             </div>
-            <div><img className="menuLogo" src={Logo} alt="Moodportfol.io Logo"/></div>
-            <div className="space"></div>
+
+            <div>
+                <a componentClass={Link} href="/" to="/"><img className="menuLogo" src={Logo} alt="Moodportfol.io Logo"/></a>
+            </div>
             <div className="menuList">
                 <ul>
-                    <li><a href="/">Graph</a></li>
-                    <li><a href="/">Capture</a></li>
+                    <li><a componentClass={Link} href="/capture" to="/capture">Capture</a></li>
+                    <li><a componentClass={Link} href="/graph" to="/graph">Graph</a></li>
+                    <li><a href="/">Profile</a></li>
                 </ul>
             </div>
         </nav>

@@ -31,10 +31,11 @@ img {
 }
 
 .menuList {
-    float: right;
+
 }
 
 .menuList a {
+    font-size: 23px;
     text-decoration: none;
     color: white;
 }
