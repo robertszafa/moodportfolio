@@ -40,7 +40,7 @@ def pixelsToImage(strPixelArray):
     #split to individual pixels. convert str to int
     return Image.fromarray(image_data)
 
-def genImages():
+def genImages(base_folder= '../data',fer_path= '../fer2013.csv',ferplus_path= '../fer2013new.csv'):
     """Opens csv with FER and FER+ dataset. 
     Creates images from the pixels in FER
     Names images from FER+"""
@@ -75,5 +75,24 @@ def genImages():
 
     print('Done. Check ', base_folder)
 
-if __name__ == "__main__":
-    genImages()
+if __name__ == "__main__":    
+	parser = argparse.ArgumentParser()
+    parser.add_argument("-d", 
+                        "--base_folder", 
+                        type = str, 
+                        help = "Base folder containing the training, validation and testing folder.", 
+                        required = True)
+    parser.add_argument("-fer", 
+                        "--fer_path", 
+                        type = str,
+                        help = "Path to the original fer2013.csv file.",
+                        required = True)
+                        
+    parser.add_argument("-ferplus", 
+                        "--ferplus_path", 
+                        type = str,
+                        help = "Path to the new fer2013new.csv file.",
+                        required = True)                        
+
+    args = parser.parse_args()
+    genImages(args.base_folder, args.fer_path, args.ferplus_path)

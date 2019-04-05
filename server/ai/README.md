@@ -16,14 +16,16 @@ The pixels must be converted to images and stored in the right sub-folders withi
 
 To store the images run:
 ```
+cd src
 python generate_training_data.py -d <dataset base folder> -fer <fer2013.csv path> -ferplus <fer2013new.csv path>
 ```
 For example:
 ```
+cd src
 python generate_training_data.py -d ../data -fer '../fer2013.csv' -ferplus '../fer2013new.csv'
 ``` 
 
-if  both the csvs are stored in the [parent folder](ai)
+if  both the csvs are stored in the parent folder (/server/ai)
 
 ## Training
 My implementation uses PLD training mode (Probabilistic Label Drawing) described in https://arxiv.org/abs/1608.01041.

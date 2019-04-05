@@ -56,7 +56,7 @@ class ImageData(object):
                 image_path = os.path.join(folder_path,imageNames[i])    
                 image_data = Image.open(image_path)
                 image_data.load()  
-                # face rectangle 
+                # face rectangle #(48,48)
                 img_box = list(map(int, box[i][1:-1].split(',')))
                 face_rc = Rect(img_box)
                 allData.append((image_path,image_data,processesed_emotions,face_rc))
