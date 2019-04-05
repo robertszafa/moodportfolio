@@ -80,19 +80,25 @@ def _get_user_id(email):
 
 # return tuple (verified, errors)
 def _verify_user(email, password):
+    loggedIn = False
+    auth_token = None
+    error = None
     password_hash = _get_password_hash(email)
 
     # email doesn't exists in DB
     if not password_hash:
-        loggedIn = False
-        error = 'emailNotExisting' 
+        error = 'wrongCredentials' 
+    else:
+        loggedIn = sha256_crypt.verify(password, password_hash)
 
-    loggedIn = sha256_crypt.verify(password, password_hash)
+
 
     if not loggedIn:
-        error = 'wrongPassword'
+        error = 'wrongCredentials'
+    else:
+        auth_token = _encode_auth_token(_get_user_id(email)).decode()
     
-    return jsonify({'loggedIn' : loggedIn, 'error': error})
+    return jsonify({'loggedIn' : loggedIn, 'error': error, 'authToken': auth_token})
 
 
 def _hash_password(password):

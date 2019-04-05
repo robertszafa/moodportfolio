@@ -2,47 +2,59 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {withFormik, Form, Field} from 'formik'
 import * as Yup from 'yup'
-import Graph from './Graph'
+import App from '../App'
+import Login from './Login'
 import '../stylesheet/register.css'
 import logo from '../images/logo.png'
 
 const passwordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
 
+function redirectToLogin() {
+  ReactDOM.render(
+    <Login />,
+    document.getElementById('root')
+  ); 
+}
 
-
-const App = ({
+const RegisterApp = ({
   values,
   errors,
   touched
 }) => (
-  <Form className="formBody">
-    <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
-    <div>
+  <div>
+    <Form className="formBody">
+      <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
+      <div>
+        <Field className="field"
+          name="name"
+          placeholder="Your Name"/>
+          {touched.name && errors.name && <p>{errors.name}</p>}
+      </div>
+
+      {/* touched.* makes sure that errors are checked only once the fiels is left */}
+      <div>
+        <Field className="field"
+          type="email" 
+          name="email" 
+          placeholder="Your Email"/>
+          {touched.email && errors.email && <p> {errors.email}</p>}
+      </div>
+
+      <div>
       <Field className="field"
-        name="name"
-        placeholder="Your Name"/>
-        {touched.name && errors.name && <p>{errors.name}</p>}
-    </div>
+        type="password"
+        name="password"
+        placeholder="Your Password"/>
+        {touched.password && errors.password && <p> {errors.password}</p>}
+      </div>
 
-    {/* touched.* makes sure that errors are checked only once the fiels is left */}
-    <div>
-      <Field className="field"
-        type="email" 
-        name="email" 
-        placeholder="Your Email"/>
-        {touched.email && errors.email && <p> {errors.email}</p>}
-    </div>
+      <button type="submit">Submit</button>
+    </Form>
 
-    <div>
-    <Field className="field"
-      type="password"
-      name="password"
-      placeholder="Your Password"/>
-      {touched.password && errors.password && <p> {errors.password}</p>}
-    </div>
-
-    <button type="submit">Submit</button>
-  </Form>
+    <label>Already have an account?</label>
+    <button type="submit" onClick={redirectToLogin}>Log in!</button>
+  </div>
+  
 )
 
 
@@ -104,11 +116,11 @@ const Register = withFormik ({
           console.log(json)
           sessionStorage.setItem("authToken", json.authToken);
           ReactDOM.render(
-            <Graph />,
+            <App />,
             document.getElementById('root')
           );
         })
     }
-}) (App)
+}) (RegisterApp)
 
 export default Register
