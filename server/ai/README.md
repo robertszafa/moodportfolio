@@ -17,12 +17,12 @@ The pixels must be converted to images and stored in the right sub-folders withi
 To store the images run:
 ```
 cd src
-python generate_training_data.py -d <dataset base folder> -fer <fer2013.csv path> -ferplus <fer2013new.csv path>
+python getImages.py -d <dataset base folder> -fer <fer2013.csv path> -ferplus <fer2013new.csv path>
 ```
 For example:
 ```
 cd src
-python generate_training_data.py -d ../data -fer '../fer2013.csv' -ferplus '../fer2013new.csv'
+python getImages.py -d ../data -fer '../fer2013.csv' -ferplus '../fer2013new.csv'
 ``` 
 
 if  both the csvs are stored in the parent folder (/server/ai)
