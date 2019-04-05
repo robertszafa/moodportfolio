@@ -1,5 +1,4 @@
 import os
-import csv
 import numpy as np
 import pandas as pd
 from PIL import Image
@@ -14,8 +13,7 @@ class ImageData(object):
 
         self.data, self.indices = self.load_data(base_folder, 
             sub_folder,labels_csv)
-        self.currentBatchStartPoint = 0
-        self.lenOfData = 0
+        self.currentBatchStartPoint = 0        
         self.height = image_height
         self.width = image_width
         self.A, self.A_pinv = imgUtils.compute_norm_mat(self.width, self.height)
@@ -64,11 +62,11 @@ class ImageData(object):
                 allData.append((image_path,image_data,processesed_emotions,face_rc))
         
         self.lenOfData = len(allData)
+        print("Done storing pictorial data of length", self.lenOfData)
         indices = np.arange(self.lenOfData)
         np.random.shuffle(indices)  #shuffle data
         return allData,indices
         
-
     def processEmotionForPLD(self, emotions_raw):
         """
         Outlier Removal. Proces emotions for doing PLD - Probabilistic Label Drawing
@@ -129,20 +127,29 @@ class ImageData(object):
         return True
 
 
-    def getNextMinibatch(self,batch_size):
+    def getNextMinibatch(self,batch_size):        
+
         #batch end point is either end of data or c=startpoint+batch size
         self.batchEndPoint = min(self.currentBatchStartPoint + batch_size, 
             self.lenOfData)
+        # current batch size might not be 32!
+        currBatchSize = self.batchEndPoint - self.currentBatchStartPoint
+
+        print("Current Batch start point:", self.currentBatchStartPoint)
+
+        #incase lenOfData is a multiple of 32:
+        if currBatchSize < 0:
+            raise Exception('Reach the end of the training data.')
         
         #shape of x,y matrices. 1- channel first in cntk!
-        inputs = np.empty(shape=(batch_size,1,self.height,self.width), 
+        inputs = np.empty(shape=(currBatchSize,1,self.height,self.width), 
             dtype=np.float32)
-        targets=np.empty(shape=(batch_size,1,self.num_classes), 
+        targets=np.empty(shape=(currBatchSize,1,self.num_classes), 
             dtype=np.float32)
 
         for i in range(self.currentBatchStartPoint,self.batchEndPoint):
             index = self.indices[i]
-            # (image_path,image_data,emotions) = self.data[index]
+            # (image_path,image_data,emotions,face_rc) = self.data[index]
             distorted_image = imgUtils.distort_img(self.data[index][1], 
                                             self.data[index][3], 
                                             self.width, 
@@ -155,16 +162,28 @@ class ImageData(object):
             final_image = imgUtils.preproc_img(distorted_image, A=self.A, 
                 A_pinv=self.A_pinv)
 
-        #add final_image and label to inputs and targets
-        
+            #add final_image and label to inputs and targets
+            inputs[i-self.currentBatchStartPoint] = final_image
+            #to match indexes ^^
+            targets[i-self.currentBatchStartPoint,:] =                self.getTargetEmotion(self.data[index][2])
         #SET NEW START BATCH POINT:::;->
         self.currentBatchStartPoint = self.batchEndPoint
+        
+        return inputs,targets,currBatchSize
+
+    def getTargetEmotion(self,emotionArray):
+        # pick one emotion from array based on the probability distribtuion.
+
+        choice = np.random.choice(a=len(emotionArray),p=emotionArray)
+        new_target = np.zeros_like(emotionArray)
+        new_target[choice] = 1.0
+        return new_target
 
     def getLengthOfData(self):
         return self.lenOfData
 
-if __name__ == '__main__' :
-	obj = ImageData('../data','FER2013Train',"label.csv",64,64,8,False)
+    def reset(self):
+        self.currentBatchStartPoint = 0
 
 
 

@@ -17,7 +17,7 @@ def compute_norm_mat(base_width, base_height):
     return A, A_pinv
 
 #standard histogram equalisation - 
-def computeHistogramEqualization(img,A,A_pinv):
+def preproc_img(img,A,A_pinv):
     img_flat = img.flatten()
     hist = np.bincount(img_flat,minlength=256)
     #np.bincount faster than np.histogram

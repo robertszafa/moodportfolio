@@ -37,3 +37,11 @@ criterion_lr.train((X_train_lr, Y_train_lr), parameter_learners=[learner],
 the learner is the object that actually performs the model update. 
 Alternative learners include momentum_sgd() and adam()
 The train() function is feeding our data (X_train_lr, Y_train_lr) minibatch by minibatch to the model and updates it
+
+
+
+
+
+OPENING IMG FROM URL:
+url = "https://cntk.ai/jup/201/00014.png"
+myimg = np.array(PIL.Image.open(urlopen(url)), dtype=np.float32)
