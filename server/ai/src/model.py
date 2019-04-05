@@ -33,13 +33,20 @@ class VGG13(object):
     def __init__(self):
         self.constructArchitecture()	 
 		
-	def constructArchitecture(self):
+    def constructArchitecture(self):
         with ct.default_options(activation=relu, init=glorot_uniform()):
             self._model =  Sequential([
                 For(range(4), lambda i: [
-                    Convolution((3,3),[64,128,256,256][i], pad=True)
-                    Convolution((3,3),64, pad=True)
-                    MaxPooling((2,2),strides=(2,2))
+                    Convolution((3,3),[64,128][i], pad=True),
+                    Convolution((3,3),[64,128][i], pad=True),
+                    MaxPooling((2,2),strides=(2,2)),
+                    Dropout(0.25)
+                ]),
+                For(range(2), lambda i: [
+                    Convolution((3,3),[256,256][i], pad=True),
+                    Convolution((3,3),[256,256][i], pad=True),
+                    Convolution((3,3),[256,256][i], pad=True),
+                    MaxPooling((2,2),strides=(2,2)),
                     Dropout(0.25)
                 ]),
                 For(range(2), lambda i: [

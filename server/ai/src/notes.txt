@@ -1,0 +1,39 @@
+Image augmentation - randomnly generates training images by flipping, rotating, shifting or doing a series of such operation on images.
+
+CONTRAST STRETCHING: Adjust contrast of the image (rescales intensity values)
+
+HISTOGRAM EQUALIZATION: increase global contrast of img using the image intensity historgam. Sometimes results in unnatural looking imgs.
+https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_histograms/py_histogram_equalization/py_histogram_equalization.html
+Good image as pixel values from all range (not just high or low). SO stretch image. MAKES ALL IMAGES TO SAME LIGHTING CONDITIONS.
+
+FROM CNTK TUTORIALS:
+model_factory() : all the CNN layers
+model = model_factory()
+x = cntk.input_variable(input_shape)
+y = cntk.input_variable(num_classes, is_sparse=True)
+
+The criterion function is used by the trainer to optimize the model: 
+It maps (input vectors, labels) to (loss, metric). The loss is used for the SGD updates.
+We choose cross entropy. Specifically, cross_entropy_with_softmax() first applies the softmax() to the network’s output, 
+as cross entropy expects probabilities. 
+We do not include softmax() in the model function itself, because it is not necessary for using the model. 
+As the metric, we count classification errors (this metric is not differentiable).
+
+def criterion_model_factory(data, label_one_hot):
+    z = model(data)
+    loss = cntk.cross_entropy_with_softmax(z, label_one_hot)
+    metric = cntk.classification_error(z, label_one_hot)
+    return loss, metric
+criterion_model = criterion_model_factory(x,y)
+throw momentum
+
+learner = cntk.sgd(model_lr.parameters,
+                   cntk.learning_parameter_schedule(0.1))
+progress_writer = cntk.logging.ProgressPrinter(0)
+
+criterion_lr.train((X_train_lr, Y_train_lr), parameter_learners=[learner],
+                   callbacks=[progress_writer])
+
+the learner is the object that actually performs the model update. 
+Alternative learners include momentum_sgd() and adam()
+The train() function is feeding our data (X_train_lr, Y_train_lr) minibatch by minibatch to the model and updates it
