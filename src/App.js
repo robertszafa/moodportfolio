@@ -19,13 +19,17 @@ export default class App extends Component {
     })
   };
 
+  backDropClickHandler = () => {
+    this.setState({sideMenuOpen: false});
+  };
+
   render (){
     let sideMenu;
     let backDrop;
 
     if (this.state.sideMenuOpen) {
       sideMenu = <SideMenu />;
-      backDrop = <BackDrop />;
+      backDrop = <BackDrop click={this.backDropClickHandler}/>;
     }
 
     return(
@@ -34,7 +38,7 @@ export default class App extends Component {
         <Header sideMenuClickHandler={this.sideMenuClickHandler}/>
         {sideMenu}
         {backDrop}
-        <main style={{marginTop: '10%'}}>
+        <main style={{marginTop: '71px'}}>
           <Home />
         </main>
 
