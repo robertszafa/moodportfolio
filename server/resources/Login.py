@@ -10,10 +10,13 @@ class Login(Resource):
             email = request.json.get('email')
             password = request.json.get('password')
         except:
-            return jsonify({'loggedIn' : 'False', 'error' : 'noEmailOrPasswordSupplied'})
+            return jsonify({'loggedIn' : 'False', 
+                            'error' : 'noEmailOrPasswordSupplied',
+                            'authToken' : ""})
         
         return _verify_user(email, password)
-    
+
+        
     def get(self):
         user_id = _authenticate_user(request)
 
