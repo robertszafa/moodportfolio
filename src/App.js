@@ -15,10 +15,10 @@ export default class App extends Component {
   state = {
     sideMenuOpen: false,
     loggedIn: false
-  };
+  }
 
   componentDidMount() {
-        let authToken = sessionStorage.getItem("authToken");
+        let authToken = localStorage.getItem("authToken");
         console.log("SENDING TOKEN: ", authToken)
         fetch('http://localhost:5000/api/Login', {
             method: "GET", 
@@ -36,7 +36,7 @@ export default class App extends Component {
             console.log(json)
             if (!json.success) {
                 ReactDOM.render(
-                    <Login />,
+                    <Login href="/login"/>,
                     document.getElementById('root')
                 );
             }
@@ -66,7 +66,7 @@ export default class App extends Component {
     }
 
     return(
-        // {/* All of this has to be activated once user logs in */}
+        // {/* All of this is activated once user logs in */}
         <Router>
           <div>
             <Header sideMenuClickHandler={this.sideMenuClickHandler}/>
@@ -78,7 +78,6 @@ export default class App extends Component {
                   <Route exact path={"/"} component={Home} />
                   <Route path={"/capture"} component={Capture} />
                   <Route path={"/graph"} component={Graph} />
-                  <Route path={"/register"} component={Register} />
               </main>
             </Switch>
           </div>

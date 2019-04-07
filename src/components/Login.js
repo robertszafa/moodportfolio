@@ -36,7 +36,7 @@ const LoginApp = ({
         placeholder="Your Password"/>
       </div>
 
-      <button type="submit">Submit</button>
+      <button type="submit">Login</button>
 
     </Form>
 
@@ -69,7 +69,7 @@ const Login = withFormik ({
         .then((res) => res.json())
         .then(json => {
           if (json.loggedIn) {
-            sessionStorage.setItem("authToken", json.authToken);
+            localStorage.setItem("authToken", json.authToken);
             ReactDOM.render(
               <App />,
               document.getElementById('root')

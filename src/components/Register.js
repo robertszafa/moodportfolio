@@ -114,7 +114,7 @@ const Register = withFormik ({
         .then((res) => res.json())
         .then(json => {
           console.log(json)
-          sessionStorage.setItem("authToken", json.authToken);
+          localStorage.setItem("authToken", json.authToken);
           ReactDOM.render(
             <App />,
             document.getElementById('root')
