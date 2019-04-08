@@ -26,7 +26,7 @@ CREATE TABLE User
 
 CREATE TABLE Photo
 (
-    photoID INT(4), 
+    photoID INT(4) AUTO_INCREMENT, 
     userID INT(4), 
     timestamp TIMESTAMP, 
     path VARCHAR(255), 
@@ -41,7 +41,7 @@ CREATE TABLE Photo
 
 CREATE TABLE Tag
 (
-    tagID INT(4), 
+    tagID INT(4) AUTO_INCREMENT, 
     name VARCHAR(30), 
     count INT(4), 
     PRIMARY KEY (tagID)

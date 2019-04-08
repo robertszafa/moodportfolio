@@ -21,6 +21,7 @@ class Register(Resource):
                                                                             (name, password, email, now))
             mysql.connection.commit()
             cur.close()
+
             user_id = _get_user_id(email)
             auth_token = _encode_auth_token(user_id)
         except Exception as err:

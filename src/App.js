@@ -44,6 +44,14 @@ export default class App extends Component {
                 this.loggedIn = true
             }
         })
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((pos) => {
+              let crd = pos.coords;
+              sessionStorage.setItem("latitude", crd.latitude)
+              sessionStorage.setItem("longitude", crd.longitude)
+          });
+      } 
     }
 
   sideMenuClickHandler = () => {

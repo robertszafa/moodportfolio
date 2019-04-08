@@ -3,6 +3,8 @@ import jwt
 from flask import request, jsonify
 from passlib.hash import sha256_crypt
 from config import app, mysql
+import reverse_geocoder as rg
+
 
 
 def _authenticate_user(request):
@@ -78,6 +80,19 @@ def _get_user_id(email):
 
     return user_id
 
+def _get_num_of_photos(user_id):
+    cur = mysql.connection.cursor()
+
+    try:
+        num_of_photos = cur.execute(f'SELECT * FROM Photo WHERE userID={user_id}')
+        cur.close() 
+    except Exception as err:
+        print('Error at _get_num_of_photos:', err)
+        cur.close() 
+        return 0
+
+    return num_of_photos
+
 # return tuple (verified, errors)
 def _verify_user(email, password):
     loggedIn = False
@@ -103,3 +118,10 @@ def _verify_user(email, password):
 
 def _hash_password(password):
     return sha256_crypt.encrypt(password)
+
+
+def _get_place(lat, lon):
+    loc_data = rg.search((lat, lon))
+    cc = loc_data[0]['cc']
+    city = loc_data[0]['admin2']
+    return cc, city

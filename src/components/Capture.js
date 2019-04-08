@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
 import 'react-html5-camera-photo/build/css/index.css'
 
+
+
 export default class Capture extends Component {
     constructor(props) {
         super(props);
@@ -9,6 +11,9 @@ export default class Capture extends Component {
 
     onTakePhoto (dataUri) {
         let authToken = localStorage.getItem("authToken");
+        let latitude = sessionStorage.getItem("latitude");
+        let longitude = sessionStorage.getItem("longitude");
+
         fetch('http://localhost:5000/api/Emotions', {
             method: "POST", 
             mode: "cors",
@@ -19,7 +24,9 @@ export default class Capture extends Component {
                 "Authorization": authToken,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ 'dataUri': dataUri })
+            body: JSON.stringify({ "dataUri": dataUri,
+                                    "latitude": latitude,
+                                    "longitude": longitude })
         })
         .then((res) => res.json())
         .then(json => {
@@ -38,11 +45,8 @@ export default class Capture extends Component {
                 imageType = {IMAGE_TYPES.JPG}
                 imageCompression = {0.97}
                 isMaxResolution = {false}
-                // isImageMirror = {false}
                 isDisplayStartCameraError = {true}
                 sizeFactor = {1}
-                // onCameraStart = { (stream) => { this.onCameraStart(stream); } }
-                // onCameraStop = { () => { this.onCameraStop(); } }
             />
           </div>
         );
