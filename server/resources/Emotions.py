@@ -8,8 +8,6 @@ import datetime
 
 
 
-
-
 class Emotions(Resource):
     def post(self):
         user_id = _authenticate_user(request)
