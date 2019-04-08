@@ -39,7 +39,7 @@ export default class Header extends React.Component {
                         <ul>
                             <li><a componentClass={Link} href="/capture" to="/capture">Capture</a></li>
                             <li><a componentClass={Link} href="/graph" to="/graph">Graph</a></li>
-                            <li><a href="/">Profile</a></li>
+                            <li><a componentClass={Link} href="/profile" to="/profile">Profile</a></li>
                             <li><a componentClass={Link} href="/login" onClick={this.handleLogoutClick}>Logout</a></li>
                         </ul>
                     </div>

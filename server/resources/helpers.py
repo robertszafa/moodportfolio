@@ -20,7 +20,7 @@ def _authenticate_user(request):
 def _encode_auth_token(user_id):
     try:
         payload = {
-            'exp': datetime.utcnow() + timedelta(days=1, seconds=0),
+            'exp': datetime.utcnow() + timedelta(days=7, seconds=0),
             'iat': datetime.utcnow(),
             'sub': user_id
         }
