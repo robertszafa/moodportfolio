@@ -7,12 +7,13 @@ import Login from './Login'
 export default class Home extends React.Component {
     constructor(props) {
       super(props);
+      this.emotion = props.emotion;
     }
 
     render() {
       return (
           <div>
-              <h1>Hello! You are: </h1>
+              <h1>Hello! You are: {this.emotion}</h1>
           </div>
       );
     }
