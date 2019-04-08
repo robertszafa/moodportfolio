@@ -1,4 +1,4 @@
-Image augmentation - randomnly generates training images by flipping, rotating, shifting or doing a series of such operation on images.
+﻿Image augmentation - randomnly generates training images by flipping, rotating, shifting or doing a series of such operation on images.
 
 CONTRAST STRETCHING: Adjust contrast of the image (rescales intensity values)
 
@@ -45,3 +45,6 @@ The train() function is feeding our data (X_train_lr, Y_train_lr) minibatch by m
 OPENING IMG FROM URL:
 url = "https://cntk.ai/jup/201/00014.png"
 myimg = np.array(PIL.Image.open(urlopen(url)), dtype=np.float32)
+
+SAVING MODEL TO DEPLOY:
+https://cntk.ai/pythondocs/CNTK_200_GuidedTour.html#Deploying-your-Model
