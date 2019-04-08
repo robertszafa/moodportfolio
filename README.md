@@ -1,9 +1,13 @@
-# To run
-(if first time) -> initialize the database from the server/DB.sql file
-1. install npm, flask, flask_cors, flask_mysqldb
-2. from moodportfolio run npm install
-3. from moodportfolio/server run python server.py
-4. from moodportfolio run npm start
+# Install
+1. git clone https://github.com/robertszafa/moodportfolio.git
+2. initialise the database from the DB.sql file
+3. pip install -r server/requirements.txt
+4. npm install
+
+
+# Run
+1. from moodportfolio/server run: python server.py
+2. from moodportfolio run npm start
 
 
 ## Remember
