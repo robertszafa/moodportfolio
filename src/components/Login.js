@@ -48,10 +48,10 @@ const LoginApp = ({
 
 
 const Login = withFormik ({
-    mapPropsToValues({name, email, password}) {
+    mapPropsToValues({email, password}) {
         return {
             email: email || '',
-            password: password ||''
+            password: password || '',
         }
     },
 

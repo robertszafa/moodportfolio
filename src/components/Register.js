@@ -4,10 +4,13 @@ import {withFormik, Form, Field} from 'formik'
 import * as Yup from 'yup'
 import App from '../App'
 import Login from './Login'
+import Header from './Header'
 import '../stylesheet/register.css'
 import logo from '../images/logo.png'
+import Button from 'react-bootstrap/Button';
 
 const passwordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+let buttonDisabled = false;
 
 function redirectToLogin() {
   ReactDOM.render(
@@ -15,6 +18,7 @@ function redirectToLogin() {
     document.getElementById('root')
   ); 
 }
+
 
 const RegisterApp = ({
   values,
@@ -48,9 +52,17 @@ const RegisterApp = ({
         {touched.password && errors.password && <p> {errors.password}</p>}
       </div>
 
-      <button type="submit">Submit</button>
+      <Button
+          type="submit"
+          variant="primary"
+          disabled={buttonDisabled}
+      >
+          {buttonDisabled ? 'Wait...' : 'Register'}
+      </Button>
+      <label>A verification email will be sent to your email.</label>
     </Form>
 
+    <br></br><br></br>
     <label>Already have an account?</label>
     <button type="submit" onClick={redirectToLogin}>Log in!</button>
   </div>
@@ -99,6 +111,7 @@ const Register = withFormik ({
     }),
     
     handleSubmit(values) {
+        buttonDisabled = true;
         fetch('http://localhost:5000/api/Register', {
           method: "POST", 
           mode: "cors",
@@ -114,11 +127,11 @@ const Register = withFormik ({
         .then((res) => res.json())
         .then(json => {
           console.log(json)
-          // localStorage.setItem("authToken", json.authToken);
-          // ReactDOM.render(
-            // <App />,
-            // document.getElementById('root')
-          // );
+          buttonDisabled = false;
+          ReactDOM.render(
+            <Login />,
+            document.getElementById('root')
+          );
         })
     }
 }) (RegisterApp)
