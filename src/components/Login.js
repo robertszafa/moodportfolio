@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import {withFormik, Form, Field} from 'formik'
 import App from '../App'
 import Register from './Register'
+import ForgotPassword from './ForgotPassword'
 import logo from '../images/logo.png'
 import '../stylesheet/register.css'
 
@@ -14,6 +15,14 @@ function redirectToRegister() {
     document.getElementById('root')
   ); 
 }
+
+function redirectToForgotPassword() {
+  ReactDOM.render(
+    <ForgotPassword />,
+    document.getElementById('root')
+  ); 
+}
+
 
 const LoginApp = ({
   values,
@@ -37,6 +46,11 @@ const LoginApp = ({
       </div>
 
       <button type="submit">Login</button>
+
+      <br></br>
+      <label>Forgot password?</label>
+      <br></br>
+      <button type="submit" onClick={redirectToForgotPassword}>Reset password</button>
 
     </Form>
 

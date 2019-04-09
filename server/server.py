@@ -7,12 +7,14 @@ from resources.Register import Register
 from resources.Login import Login
 from resources.UserExists import UserExists
 from resources.Emotions import Emotions
+from resources.ResetPassword import ResetPassword
 
 
 api.add_resource(Register, '/Register')
 api.add_resource(UserExists, '/UserExists')
 api.add_resource(Login, '/Login')
 api.add_resource(Emotions, '/Emotions')
+api.add_resource(ResetPassword, '/ResetPassword')
 
 
 
