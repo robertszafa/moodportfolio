@@ -114,11 +114,11 @@ const Register = withFormik ({
         .then((res) => res.json())
         .then(json => {
           console.log(json)
-          localStorage.setItem("authToken", json.authToken);
-          ReactDOM.render(
-            <App />,
-            document.getElementById('root')
-          );
+          // localStorage.setItem("authToken", json.authToken);
+          // ReactDOM.render(
+            // <App />,
+            // document.getElementById('root')
+          // );
         })
     }
 }) (RegisterApp)

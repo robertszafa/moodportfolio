@@ -14,7 +14,7 @@ import './stylesheet/app.css'
 export default class App extends Component {
   state = {
     sideMenuOpen: false,
-    loggedIn: false
+    loggedIn: false,
   }
 
   componentDidMount() {

@@ -21,7 +21,6 @@ api.add_resource(Emotions, '/Emotions')
 def index():
     return render_template('index.html')
 
-
 @app.errorhandler(404)
 def handle_error(e):
     return make_response(jsonify({'error': 'Not found'}), 404)

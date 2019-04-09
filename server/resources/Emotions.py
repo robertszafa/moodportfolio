@@ -24,9 +24,11 @@ class Emotions(Resource):
         data = b64decode(encoded)
         
         # store the photo dataURI in a txt file .photos/{user_id}/{photo_index}.txt
-        photo_index = _get_num_of_photos(user_id) + 1
-        photo_uri_dir = f'photos/{user_id}/{photo_index}.txt' 
-        with open(photo_uri_dir, "w") as f:
+        photo_index = f'{_get_num_of_photos(user_id) + 1}.txt'
+        photo_uri_dir = f'photos/{user_id}/' 
+        if not os.path.exists(photo_uri_dir):
+            os.makedirs(photo_uri_dir)
+        with open(photo_uri_dir + photo_index, "w") as f:
             f.write(data_uri)
 
         ############## CLASSIFY PHOTO HERE ###################################################

@@ -74,3 +74,5 @@ Werkzeug==0.14.1
 wrapt==1.10.11
 WTForms==2.2.1
 zope.interface==4.6.0
+Flask-Mail==0.9.1 
+blinker==1.4
