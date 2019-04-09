@@ -4,7 +4,7 @@ import argparse
 import cntk as ct
 import numpy as np
 
-from loadData import ImageData
+from loadData import *
 from modelArchitecture import VGG13
 
 class AIRecognizer(object):
@@ -28,28 +28,32 @@ class AIRecognizer(object):
 #DO PLD - PROBABILISTIC LABEL DRAWING
 
     def genData(self):
+        
+        trainingParams = Parameters(self.num_classes, self.model.input_height,
+            self.model.input_width, False, True)
+        validationParams = Parameters(self.num_classes, self.model.input_height,
+            self.model.input_width, True, False)
+        testingParams = Parameters(self.num_classes, self.model.input_height,
+            self.model.input_width, True, False)
 
         print("generating training image data")
         self.trainingValues = ImageData(self.base_folder,'FER2013Train',
-            "label.csv",self.model.input_height,self.model.input_width,
-            self.num_classes,False)
+            "label.csv",trainingParams)
         
         print("generating validation image data")
         self.validationValues = ImageData(self.base_folder,'FER2013Valid',
-            "label.csv", self.model.input_height,self.model.input_width,
-            self.num_classes,True)
+            "label.csv", validationParams)
         
         print("generating testing image data")
         self.testingValues = ImageData(self.base_folder,'FER2013Test',
-            "label.csv", self.model.input_height,self.model.input_width,
-            self.num_classes,True)
+            "label.csv", testingParams)
 
     def modelInit(self):
 
         #create output model folder:
-        output_model_folder = os.path.join(self.base_folder, R'models')
-        if not os.path.exists(output_model_folder):
-            os.makedirs(output_model_folder)
+        self.output_model_folder = os.path.join(self.base_folder, R'models')
+        if not os.path.exists(self.output_model_folder):
+            os.makedirs(self.output_model_folder)
 
         self.model = VGG13()
         self.input_var =ct.input((1, self.model.input_height,
@@ -65,9 +69,9 @@ class AIRecognizer(object):
         #criterian of model: loss, metric:
         #loss = cross_entropy_with_softmax
         #metric = classification error
-        z = self.model.model(self.input_var)
-        loss = ct.cross_entropy_with_softmax(z, self.label_var)
-        metric = ct.classification_error(z, self.label_var) 
+        self.z = self.model.model(self.input_var)
+        loss = ct.cross_entropy_with_softmax(self.z, self.label_var)
+        metric = ct.classification_error(self.z, self.label_var) 
 
         """
         pred = ct.softmax(z)
@@ -86,9 +90,9 @@ class AIRecognizer(object):
 
         # construct the trainer 
         #learner performs model updates. can be adam() or sgd()
-        learner = ct.momentum_sgd(z.parameters, lr_schedule, mm_schedule)
+        learner = ct.momentum_sgd(self.z.parameters, lr_schedule, mm_schedule)
         # The Trainer optimizes the loss by SGD, and logs the metric
-        self.trainer = ct.Trainer(z, (loss, metric), learner)
+        self.trainer = ct.Trainer(self.z, (loss, metric), learner)
 
         print("created trainer and learner")
 
@@ -149,7 +153,7 @@ class AIRecognizer(object):
                 best_epoch = epoch
                 max_val_accuracy = val_accuracy
 
-                self.trainer.save_checkpoint(os.path.join(output_model_folder, "model_{}".format(best_epoch)))
+                self.trainer.save_checkpoint(os.path.join(self.output_model_folder, "model_{}".format(best_epoch)))
 
                 print("TESTING (since validation accuracy went higher)")
                 while self.testingValues.hasMoreMinibatches():
@@ -171,10 +175,46 @@ class AIRecognizer(object):
 
             epoch +=1
 
+        #SAVE MODEL
+        self.z.save("../saved_model.dnn")
+
         print("Best validation accuracy:\t\t{:.2f} %, epoch {}, its test accuracy:\t\t{:.2f} %".format(max_val_accuracy * 100, best_epoch,final_test_accuracy * 100))
     
         print("Best test accuracy:\t\t{:.2f} %".format(best_test_accuracy* 100))
 
+emotion_table = {0 : 'neutral'  , 
+                 1 : 'happiness', 
+                 2 : 'surprise' , 
+                 3 : 'sadness'  , 
+                 4 : 'anger'    , 
+                 5 : 'disgust'  , 
+                 6 : 'fear'     , 
+                 7 :'contempt'  }
+
+def test_SingleInstance(saved_model_path,img_path):
+    model = ct.load_model(saved_model_path)
+    out = ct.softmax(model)
+    
+    testingParams = Parameters(8,64,64, True, False)
+    img = preprocessTestImage(img_path,testingParams)
+
+    pred_probs = out.eval({out.arguments[0]:img})
+    print(pred_probs)
+    emotion = np.argmax(pred_probs)
+    print(emotion_table[emotion])
+
+def testSeveralInstances(saved_model_path,img_paths):
+    model = ct.load_model(saved_model_path)
+    out = ct.softmax(model)
+    
+    testingParams = Parameters(8,64,64, True, False)
+
+    for path in img_paths : 
+        img = preprocessTestImage(path,testingParams)
+
+        pred_probs = out.eval({out.arguments[0]:img})
+        emotion = np.argmax(pred_probs)
+        print(emotion_table[emotion])  
         
 
 if __name__ == "__main__":
@@ -190,5 +230,6 @@ if __name__ == "__main__":
                         default=100,
                         help = "Specify the number of epochs (defaults to 100)")
 
-    args = parser.parse_args()
+    args = parser.parse_args()    
     AIRecognizer(args.base_folder, args.epochs)
+    #testSeveralInstances("../saved_model.dnn",["../data/FER2013Test/fer0032228.png"])

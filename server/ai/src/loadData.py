@@ -5,22 +5,19 @@ from PIL import Image
 import img_preprocess as imgUtils
 from rect_util import Rect
 
-class ImageData(object):
-
-    def __init__(self, base_folder, sub_folder,labels_csv,
-        image_height,image_width,num_classes,deterministic):
-        
-
-        self.data, self.indices = self.load_data(base_folder, 
-            sub_folder,labels_csv)
-        self.currentBatchStartPoint = 0        
-        self.height = image_height
-        self.width = image_width
-        self.A, self.A_pinv = imgUtils.compute_norm_mat(self.width, self.height)
-        self.num_classes = num_classes
+class Parameters(object): #useful for individual testing...
+    '''
+    FER+ reader parameters
+    '''
+    def __init__(self, num_classes, height, width, determinisitc = False, shuffle = True):
+        self.num_classes   = num_classes
+        self.width         = width
+        self.height        = height
+        self.determinisitc = determinisitc
+        self.shuffle       = shuffle
 
         # data augmentation - determinisitc
-        if deterministic:
+        if determinisitc:
             self.max_shift = 0.0
             self.max_scale = 1.0
             self.max_angle = 0.0
@@ -33,6 +30,16 @@ class ImageData(object):
             self.max_skew = 0.05
             self.do_flip = True
 
+class ImageData(object):
+
+    def __init__(self, base_folder, sub_folder,labels_csv, params):
+
+        self.params = params
+        self.data, self.indices = self.load_data(base_folder, 
+            sub_folder,labels_csv)
+        self.currentBatchStartPoint = 0        
+        self.A, self.A_pinv = imgUtils.compute_norm_mat(self.params.width,
+            self.params.height)
 
     def load_data(self,base_folder, sub_folder,labels_csv):
         ''' Load the actual images from disk. While loading, we normalize the 
@@ -56,7 +63,7 @@ class ImageData(object):
                 image_path = os.path.join(folder_path,imageNames[i])    
                 image_data = Image.open(image_path)
                 image_data.load()  
-                # face rectangle #(48,48)
+                # face rectangle #(0,0,48,48)
                 img_box = list(map(int, box[i][1:-1].split(',')))
                 face_rc = Rect(img_box)
                 allData.append((image_path,image_data,processesed_emotions,face_rc))
@@ -64,7 +71,8 @@ class ImageData(object):
         self.lenOfData = len(allData)
         print("Done storing pictorial data of length", self.lenOfData)
         indices = np.arange(self.lenOfData)
-        np.random.shuffle(indices)  #shuffle data
+        if self.params.shuffle:
+            np.random.shuffle(indices)  #shuffle data
         return allData,indices
         
     def processEmotionForPLD(self, emotions_raw):
@@ -126,7 +134,6 @@ class ImageData(object):
             return False
         return True
 
-
     def getNextMinibatch(self,batch_size):        
 
         #batch end point is either end of data or c=startpoint+batch size
@@ -134,17 +141,17 @@ class ImageData(object):
             self.lenOfData)
         # current batch size might not be 32!
         currBatchSize = self.batchEndPoint - self.currentBatchStartPoint
-
-        print("Current Batch start point:", self.currentBatchStartPoint)
+        if (self.currentBatchStartPoint % 96 == 0):
+            print("Current Batch start point:", self.currentBatchStartPoint)
 
         #incase lenOfData is a multiple of 32:
         if currBatchSize < 0:
             raise Exception('Reach the end of the training data.')
         
         #shape of x,y matrices. 1- channel first in cntk!
-        inputs = np.empty(shape=(currBatchSize,1,self.height,self.width), 
-            dtype=np.float32)
-        targets=np.empty(shape=(currBatchSize,1,self.num_classes), 
+        inputs = np.empty(shape=(currBatchSize,1,self.params.height,
+            self.params.width), dtype=np.float32)
+        targets=np.empty(shape=(currBatchSize,1,self.params.num_classes), 
             dtype=np.float32)
 
         for i in range(self.currentBatchStartPoint,self.batchEndPoint):
@@ -152,13 +159,13 @@ class ImageData(object):
             # (image_path,image_data,emotions,face_rc) = self.data[index]
             distorted_image = imgUtils.distort_img(self.data[index][1], 
                                             self.data[index][3], 
-                                            self.width, 
-                                            self.height, 
-                                            self.max_shift, 
-                                            self.max_scale, 
-                                            self.max_angle, 
-                                            self.max_skew, 
-                                            self.do_flip)
+                                            self.params.width, 
+                                            self.params.height, 
+                                            self.params.max_shift, 
+                                            self.params.max_scale, 
+                                            self.params.max_angle, 
+                                            self.params.max_skew, 
+                                            self.params.do_flip)
             final_image = imgUtils.preproc_img(distorted_image, A=self.A, 
                 A_pinv=self.A_pinv)
 
@@ -186,4 +193,27 @@ class ImageData(object):
         self.currentBatchStartPoint = 0
 
 
+def preprocessTestImage(image_path,testingParams):
+
+    image_data = Image.open(image_path)
+    image_data.load()  
+    img_box = [0,0,48,48]
+    # face rectangle #(48,48)
+    face_rc = Rect(img_box)
+
+    distorted_image = imgUtils.distort_img(image_data, face_rc, 
+                                            testingParams.width, 
+                                            testingParams.height, 
+                                            testingParams.max_shift, 
+                                            testingParams.max_scale, 
+                                            testingParams.max_angle, 
+                                            testingParams.max_skew, 
+                                            testingParams.do_flip)
+    A, A_pinv = imgUtils.compute_norm_mat(testingParams.width,
+            testingParams.height)
+    final_image = imgUtils.preproc_img(distorted_image, A=A, 
+        A_pinv=A_pinv)
+    final_image = np.expand_dims(final_image, axis=0)
+
+    return final_image
 
