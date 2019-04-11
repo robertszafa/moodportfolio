@@ -1,0 +1,41 @@
+# HTTP — redirect all traffic to HTTPS
+server {
+    listen 80;
+    listen [::]:80 default_server ipv6only=on;
+    return 301 https://$host$request_uri;
+}
+
+# React
+server {
+    #listen [::]:443 ssl ipv6only=on;
+    listen 443 ssl;
+    server_name moodportfolio.ml www.moodportfolio.ml;
+    root /home/team40/moodportfolio/build;
+    index index.html;
+
+    # Use the Let’s Encrypt certificates for moodportfolio.ml, www.moodportfolio.ml
+    ssl_certificate /etc/letsencrypt/live/moodportfolio.ml/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/moodportfolio.ml/privkey.pem;
+
+    access_log /var/log/nginx/moodportfolio.access.log;
+    error_log /var/log/nginx/moodportfolio.error.log;
+    location / {
+        try_files $uri /index.html =404;
+    }
+
+}
+
+# Flask
+server {
+    listen 443 ssl;
+    server_name api.moodportfolio.ml;
+
+    # Use the Let’s Encrypt certificates for api.moodportfolio.ml
+    ssl_certificate /etc/letsencrypt/live/api.moodportfolio.ml/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.moodportfolio.ml/privkey.pem;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:/home/team40/moodportfolio/server/server.sock;
+    }
+}
