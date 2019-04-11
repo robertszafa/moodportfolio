@@ -1,64 +1,47 @@
-# FER+
-The FER+ annotations provide a set of new labels for the standard Emotion FER dataset. In FER+, each image has been labeled by 10 crowd-sourced taggers, which provide better quality ground truth for still image emotion than the original FER labels. Having 10 taggers for each image enables researchers to estimate an emotion probability distribution per face. This allows constructing algorithms that produce statistical distributions or multi-label outputs instead of the conventional single-label output, as described in: https://arxiv.org/abs/1608.01041
+This is readme just for us (NOT PRODUCTION) to keep things simple.
 
-The format of the CSV file is as follows: usage,	neutral, happiness,	surprise, sadness, anger, disgust, fear, contempt, unknown, NF. Columns "usage" is the same as the original FER label to differentiate between training, public test and private test sets. The other columns are the vote count for each emotion with the addition of unknown and NF (Not a Face).
+TO RUN THE CODE, FIRST **ENSURE THAT YOU ARE IN THE (server/ai/) directory!**
 
-## Datasets and CSVs:
+Now follow the steps:
 
-# PS: ASK ME FOR THE fer2013.csv file (too big to upload here)
+# STEP 1 - PREREQUISITIES
+```$ pip install -r requirements.txt```
 
-**_fer2013new.csv_** - usage (train,test or validation),image name, emotion confidence values for 8+2 emotions
-(neutral,happiness,surprise,sadness,anger,disgust,fear,contempt,unknown,Non-Face)
+# STEP 2: GENERATING IMAGES FROM DATASETS and CSVs
 
-**_fer2013.csv_** - main emotion,image name, pixel values
+## ASK ME FOR THE fer2013.csv file (too big to upload here).
+Save the file in the (server/ai/) directory (where the fer2013new.csv file is stored)
+Now - 
 
-The pixels must be converted to images and stored in the right sub-folders within [data](data)
-
-To store the images run:
-```
-cd src
-python getImages.py -d <dataset base folder> -fer <fer2013.csv path> -ferplus <fer2013new.csv path>
-```
-For example:
+** To create and store the images run **:
 ```
 cd src
 python getImages.py -d ../data -fer '../fer2013.csv' -ferplus '../fer2013new.csv'
 ``` 
 
-if  both the csvs are stored in the parent folder (/server/ai)
+# STEP 3 - TRAIN
 
-## Training
-My implementation uses PLD training mode (Probabilistic Label Drawing) described in https://arxiv.org/abs/1608.01041.
+I have already trained 1 epoch (i.e. epoch number 0). That trained model is checkpointed and stored in (server/ai/data/models) folder
+
+### **TO RESTORE TRAINING FROM A CHECKPOINT**
 ```
 cd src
-python -W ignore train.py -d <dataset base folder> -e <number of epochs>
+python -W ignore train.py -d ../data -ckp ../data/models/model_0 -e 1
 ```
-for example: `python -W ignore train.py -d ../data -e 1`
+**NOTE:-** 
+HERE, I AM RESTORING after the training for first epoch (epoch 0) was completed.
+```HENCE -ckp ../data/models/model_0
+-e 1 says to resume from epoch 1 (since epoch 0 is already done).
+```
 
-## FER+ layout for Training
-There is a folder named data that has the following layout:
+SO FOR EXAMPLE, if someone trained till epoch number 10, you will see model_10 in server/ai/data/models directory
+SO YOUR COMMAND WILL BE:
 ```
-/data
-  /FER2013Test
-    label.csv
-  /FER2013Train
-    label.csv
-  /FER2013Valid
-    label.csv
+cd src
+python -W ignore train.py -d ../data -ckp ../data/models/model_10 -e 11
 ```
-*label.csv* in each folder contains the actual label for each image, the image name is in the following format: ferXXXXXXXX.png, where XXXXXXXX is the row index of the original FER csv file. So here the names of the first few images:
-```
-fer0000000.png
-fer0000001.png
-fer0000002.png
-fer0000003.png
-```
-# Citation
-If you use the new FER+ label or the sample code or part of it in your research, please cite the following:
+(to tell code to resume from epoch 11.)
 
-**@inproceedings{BarsoumICMI2016,  
-&nbsp;&nbsp;&nbsp;&nbsp;title={Training Deep Networks for Facial Expression Recognition with Crowd-Sourced Label Distribution},  
-&nbsp;&nbsp;&nbsp;&nbsp;author={Barsoum, Emad and Zhang, Cha and Canton Ferrer, Cristian and Zhang, Zhengyou},  
-&nbsp;&nbsp;&nbsp;&nbsp;booktitle={ACM International Conference on Multimodal Interaction (ICMI)},  
-&nbsp;&nbsp;&nbsp;&nbsp;year={2016}  
-}**
+TOTAL OF 100 EPOCHS (epoch number 99 is final!)
+**NOTE:-** load model_0, not model_0.ckp !!!!!!!
+

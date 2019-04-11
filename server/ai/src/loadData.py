@@ -49,6 +49,7 @@ class ImageData(object):
         allData = []
 
         df = pd.read_csv(file_path)
+
         imageNames = df.iloc[:,0].values 
         box = df.iloc[:,1].values
         y = df.iloc[:,2:].values 
@@ -193,27 +194,5 @@ class ImageData(object):
         self.currentBatchStartPoint = 0
 
 
-def preprocessTestImage(image_path,testingParams):
 
-    image_data = Image.open(image_path)
-    image_data.load()  
-    img_box = [0,0,48,48]
-    # face rectangle #(48,48)
-    face_rc = Rect(img_box)
-
-    distorted_image = imgUtils.distort_img(image_data, face_rc, 
-                                            testingParams.width, 
-                                            testingParams.height, 
-                                            testingParams.max_shift, 
-                                            testingParams.max_scale, 
-                                            testingParams.max_angle, 
-                                            testingParams.max_skew, 
-                                            testingParams.do_flip)
-    A, A_pinv = imgUtils.compute_norm_mat(testingParams.width,
-            testingParams.height)
-    final_image = imgUtils.preproc_img(distorted_image, A=A, 
-        A_pinv=A_pinv)
-    final_image = np.expand_dims(final_image, axis=0)
-
-    return final_image
 

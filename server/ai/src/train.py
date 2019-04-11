@@ -9,7 +9,8 @@ from modelArchitecture import VGG13
 
 class AIRecognizer(object):
 
-    def __init__(self,base_folder='../data',max_epochs=100):
+    def __init__(self,base_folder,ckp_path,currEpoch,max_epochs):
+        #base_folder='../data',ckp_path="",currEpoch=0,max_epochs=100
         self.base_folder = base_folder
         self.emotion_table = {'neutral'  : 0, 
                  'happiness': 1, 
@@ -23,7 +24,7 @@ class AIRecognizer(object):
         self.max_epochs = max_epochs
 
         self.modelInit()
-        self.train()
+        self.train(ckp_path,currEpoch)
 
 #DO PLD - PROBABILISTIC LABEL DRAWING
 
@@ -55,7 +56,7 @@ class AIRecognizer(object):
         if not os.path.exists(self.output_model_folder):
             os.makedirs(self.output_model_folder)
 
-        self.model = VGG13()
+        self.model = VGG13(self.num_classes)
         self.input_var =ct.input((1, self.model.input_height,
             self.model.input_width),np.float32)
         self.label_var = ct.input((self.num_classes), np.float32) 
@@ -96,7 +97,7 @@ class AIRecognizer(object):
 
         print("created trainer and learner")
 
-    def train(self):
+    def train(self,ckp_path="",epoch=0):
         # Get minibatches of images to train with and perform model training
         max_val_accuracy    = 0.0
         final_test_accuracy = 0.0
@@ -104,7 +105,10 @@ class AIRecognizer(object):
         best_epoch = 0
 
         minibatch_size = 32
-        epoch = 0
+        
+        if ckp_path != "":
+            self.trainer.restore_from_checkpoint(ckp_path)
+
         while epoch < self.max_epochs :
             print("\nepoch: ", epoch)
             # reset
@@ -152,8 +156,8 @@ class AIRecognizer(object):
             if val_accuracy > max_val_accuracy:
                 best_epoch = epoch
                 max_val_accuracy = val_accuracy
-
-                self.trainer.save_checkpoint(os.path.join(self.output_model_folder, "model_{}".format(best_epoch)))
+                
+                # https://docs.microsoft.com/en-us/cognitive-toolkit/serialization - RESTORE FROM CHECKPOINT TO CONTINUE TRAINING.
 
                 print("TESTING (since validation accuracy went higher)")
                 while self.testingValues.hasMoreMinibatches():
@@ -173,49 +177,15 @@ class AIRecognizer(object):
             print("validation accuracy:\t\t{:.2f} %".format(val_accuracy * 100))
             print("test accuracy:\t\t{:.2f} %".format(test_accuracy * 100))
 
+            self.trainer.save_checkpoint(os.path.join(self.output_model_folder, "model_{}".format(epoch)))
             epoch +=1
 
         #SAVE MODEL
-        self.z.save("../saved_model.dnn")
+        self.z.save("../vgg13.model")
 
         print("Best validation accuracy:\t\t{:.2f} %, epoch {}, its test accuracy:\t\t{:.2f} %".format(max_val_accuracy * 100, best_epoch,final_test_accuracy * 100))
     
-        print("Best test accuracy:\t\t{:.2f} %".format(best_test_accuracy* 100))
-
-emotion_table = {0 : 'neutral'  , 
-                 1 : 'happiness', 
-                 2 : 'surprise' , 
-                 3 : 'sadness'  , 
-                 4 : 'anger'    , 
-                 5 : 'disgust'  , 
-                 6 : 'fear'     , 
-                 7 :'contempt'  }
-
-def test_SingleInstance(saved_model_path,img_path):
-    model = ct.load_model(saved_model_path)
-    out = ct.softmax(model)
-    
-    testingParams = Parameters(8,64,64, True, False)
-    img = preprocessTestImage(img_path,testingParams)
-
-    pred_probs = out.eval({out.arguments[0]:img})
-    print(pred_probs)
-    emotion = np.argmax(pred_probs)
-    print(emotion_table[emotion])
-
-def testSeveralInstances(saved_model_path,img_paths):
-    model = ct.load_model(saved_model_path)
-    out = ct.softmax(model)
-    
-    testingParams = Parameters(8,64,64, True, False)
-
-    for path in img_paths : 
-        img = preprocessTestImage(path,testingParams)
-
-        pred_probs = out.eval({out.arguments[0]:img})
-        emotion = np.argmax(pred_probs)
-        print(emotion_table[emotion])  
-        
+        print("Best test accuracy:\t\t{:.2f} %".format(best_test_accuracy* 100))        
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -224,12 +194,23 @@ if __name__ == "__main__":
                         type = str, 
                         help = "Base folder containing the training, validation and testing data.", 
                         required = True)
+    parser.add_argument("-ckp", 
+                        "--checkpoint", 
+                        type = str, 
+                        default = "",
+                        help = "path to the latest checkpoint to reload training.")
     parser.add_argument("-e", 
                         "--epochs", 
+                        type = int,
+                        default=0,
+                        help = "Specify the number of epochs (defaults to 100)")
+    parser.add_argument("-maxe", 
+                        "--max_epochs", 
                         type = int,
                         default=100,
                         help = "Specify the number of epochs (defaults to 100)")
 
     args = parser.parse_args()    
-    AIRecognizer(args.base_folder, args.epochs)
-    #testSeveralInstances("../saved_model.dnn",["../data/FER2013Test/fer0032228.png"])
+    AIRecognizer(args.base_folder, args.checkpoint, args.epochs,args.max_epochs)    
+    # python -W ignore train.py -d ../data -maxe 100
+    # python -W ignore train.py -d ../data -ckp ../data/models/model_0 -e 1 -maxe 100
