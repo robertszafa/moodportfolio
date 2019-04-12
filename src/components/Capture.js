@@ -23,7 +23,7 @@ export default class Capture extends Component {
         let latitude = sessionStorage.getItem("latitude");
         let longitude = sessionStorage.getItem("longitude");
 
-        fetch('http://localhost:5000/api/Emotions', {
+        fetch('https://api.moodportfolio.ml/api/Emotions', {
             method: "POST", 
             mode: "cors",
             cache: "no-cache",

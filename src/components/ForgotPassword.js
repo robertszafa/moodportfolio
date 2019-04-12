@@ -58,7 +58,7 @@ const ForgotPassword = withFormik ({
               .required('Email is required')
               .test("checkEmail", "Email doesn't exist", 
                 async function(email) {
-                  const res = await fetch('http://localhost:5000/api/UserExists', {
+                  const res = await fetch('https://api.moodportfolio.ml/api/UserExists', {
                     method: "POST",
                     mode: "cors",
                     cache: "no-cache",
@@ -75,7 +75,7 @@ const ForgotPassword = withFormik ({
     
     handleSubmit(values) {
         buttonDisabled = true;
-        fetch('http://localhost:5000/api/ResetPassword', {
+        fetch('https://api.moodportfolio.ml/api/ResetPassword', {
           method: "POST", 
           mode: "cors",
           cache: "no-cache",

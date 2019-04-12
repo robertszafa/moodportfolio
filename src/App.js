@@ -20,7 +20,8 @@ export default class App extends Component {
   componentDidMount() {
         let authToken = localStorage.getItem("authToken");
         console.log("SENDING TOKEN: ", authToken)
-        fetch('http://localhost:5000/api/Login', {
+        console.log("THE CHANGE IS HERE")
+        fetch('https://api.moodportfolio.ml/api/Login', {
             method: "GET", 
             mode: "cors",
             cache: "no-cache",
@@ -33,6 +34,7 @@ export default class App extends Component {
         })
         .then((res) => res.json())
         .then(json => {
+            console.log("Request was sent to API")
             console.log(json)
             if (!json.success) {
                 ReactDOM.render(

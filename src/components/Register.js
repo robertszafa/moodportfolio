@@ -90,7 +90,7 @@ const Register = withFormik ({
               .required('Email is required')
               .test("checkEmail", "Email was already used", 
                 async function(email) {
-                  const res = await fetch('http://localhost:5000/api/UserExists', {
+                  const res = await fetch('https://api.moodportfolio.ml/api/UserExists', {
                     method: "POST",
                     mode: "cors",
                     cache: "no-cache",
@@ -112,7 +112,7 @@ const Register = withFormik ({
     
     handleSubmit(values) {
         buttonDisabled = true;
-        fetch('http://localhost:5000/api/Register', {
+        fetch('https://api.moodportfolio.ml/api/Register', {
           method: "POST", 
           mode: "cors",
           cache: "no-cache",
