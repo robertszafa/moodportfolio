@@ -6,9 +6,10 @@ import App from '../App'
 import {apiMoodportfolio} from '../App'
 import Login from './Login'
 import Header from './Header'
-import '../stylesheet/register.css'
+// import '../stylesheet/register.css'
 import logo from '../images/logo.png'
-import Button from 'react-bootstrap/Button';
+import { Button } from 'react-bootstrap'
+
 
 const passwordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
 let buttonDisabled = false;
@@ -54,8 +55,8 @@ const RegisterApp = ({
       </div>
 
       <Button
-          type="submit"
           variant="primary"
+          type="submit"
           disabled={buttonDisabled}
       >
           {buttonDisabled ? 'Wait...' : 'Register'}
@@ -65,7 +66,7 @@ const RegisterApp = ({
 
     <br></br><br></br>
     <label>Already have an account?</label>
-    <button type="submit" onClick={redirectToLogin}>Log in!</button>
+    <Button variant="success" type="submit" onClick={redirectToLogin}>Log in!</Button>
   </div>
   
 )
