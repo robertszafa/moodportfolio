@@ -7,6 +7,7 @@ import Register from './Register'
 import ForgotPassword from './ForgotPassword'
 import logo from '../images/logo.png'
 import '../stylesheet/register.css'
+import { Button } from 'react-bootstrap'
 
 
 
@@ -46,17 +47,18 @@ const LoginApp = ({
         placeholder="Your Password"/>
       </div>
 
-      <button type="submit">Login</button>
+      <Button type="submit" variant="primary" size="lg">Login</Button>
+      
 
       <br></br>
       <label>Forgot password?</label>
       <br></br>
-      <button type="submit" onClick={redirectToForgotPassword}>Reset password</button>
+      <Button type="submit" variant="primary" size="lg" onClick={redirectToForgotPassword}>Reset password</Button>
 
     </Form>
 
     <label>No account?</label>
-    <button type="submit" onClick={redirectToRegister}>Sign up!</button>
+    <Button type="submit" variant="primary" size="lg" onClick={redirectToRegister}>Sign up!</Button>
 
   </div>
 )
