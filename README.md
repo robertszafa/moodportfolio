@@ -1,22 +1,14 @@
 # Prerequisites
 1. node.js
 2. npm
-3. initialise the database from the DB.sql file (you will need MySQL server)
+
 # Install
 1. git clone https://github.com/robertszafa/moodportfolio.git
-2. initialise the database from the DB.sql file
-3. pip install -r server/requirements.txt
-4. npm install
-
+2. cd moodportfolio
+3. npm install
 
 # Run
-1. from moodportfolio/server run: python server.py
-2. from moodportfolio run npm start
+1. npm start
 
-
-## Remember
-Remember to add any JavaScript dependencies to the package.json file. This will be done automatically if you run:
-- npm install --save 'something'
-or
-- yarn global add 'something'
-
+## Contacting the API
+By default, the API calls are made to the production server. If you have your own api.moodportfolio server running locally and want to make the API calls to that, then go to src/App.js and change the apiMoodportfolio constant on line 14.
