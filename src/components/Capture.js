@@ -4,6 +4,7 @@ import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
 import 'react-html5-camera-photo/build/css/index.css'
 import ImageUploader from 'react-images-upload';
 import Button from 'react-bootstrap/Button';
+import {apiMoodportfolio} from '../App'
 
 
 export default class Capture extends Component {
@@ -23,7 +24,7 @@ export default class Capture extends Component {
         let latitude = sessionStorage.getItem("latitude");
         let longitude = sessionStorage.getItem("longitude");
 
-        fetch('https://api.moodportfolio.ml/api/Emotions', {
+        fetch(apiMoodportfolio + '/api/Emotions', {
             method: "POST", 
             mode: "cors",
             cache: "no-cache",

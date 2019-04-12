@@ -1,5 +1,6 @@
 import React from 'react';
 import { Bar, Line, Pie } from 'react-chartjs-2';
+import {apiMoodportfolio} from '../App'
 
 //The Graph component. Draws pie, line and bar charts.
 export default class Graph extends React.Component {

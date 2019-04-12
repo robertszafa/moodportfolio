@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {withFormik, Form, Field} from 'formik'
 import App from '../App'
+import {apiMoodportfolio} from '../App'
 import Register from './Register'
 import ForgotPassword from './ForgotPassword'
 import logo from '../images/logo.png'
@@ -70,7 +71,7 @@ const Login = withFormik ({
     },
 
     handleSubmit(values) {
-        fetch('https://api.moodportfolio.ml/api/Login', {
+        fetch(apiMoodportfolio+ '/api/Login', {
           method: "POST", 
           mode: "cors",
           cache: "no-cache",

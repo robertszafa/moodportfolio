@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import {withFormik, Form, Field} from 'formik'
 import * as Yup from 'yup'
 import App from '../App'
+import {apiMoodportfolio} from '../App'
 import Login from './Login'
 import Header from './Header'
 import '../stylesheet/register.css'
@@ -90,7 +91,7 @@ const Register = withFormik ({
               .required('Email is required')
               .test("checkEmail", "Email was already used", 
                 async function(email) {
-                  const res = await fetch('https://api.moodportfolio.ml/api/UserExists', {
+                  const res = await fetch(apiMoodportfolio + '/api/UserExists', {
                     method: "POST",
                     mode: "cors",
                     cache: "no-cache",
@@ -112,7 +113,7 @@ const Register = withFormik ({
     
     handleSubmit(values) {
         buttonDisabled = true;
-        fetch('https://api.moodportfolio.ml/api/Register', {
+        fetch(apiMoodportfolio + '/api/Register', {
           method: "POST", 
           mode: "cors",
           cache: "no-cache",

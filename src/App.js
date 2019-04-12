@@ -11,6 +11,9 @@ import Login from './components/Login'
 import Register from './components/Register'
 import './stylesheet/app.css'
 
+export const apiMoodportfolio = 'https://api.moodportfolio.ml'; // API for server
+// export const apiMoodportfolio = 'localhost:5000'; // API for localhost
+
 export default class App extends Component {
   state = {
     sideMenuOpen: false,
@@ -20,8 +23,7 @@ export default class App extends Component {
   componentDidMount() {
         let authToken = localStorage.getItem("authToken");
         console.log("SENDING TOKEN: ", authToken)
-        console.log("THE CHANGE IS HERE")
-        fetch('https://api.moodportfolio.ml/api/Login', {
+        fetch(apiMoodportfolio + '/api/Login', {
             method: "GET", 
             mode: "cors",
             cache: "no-cache",
