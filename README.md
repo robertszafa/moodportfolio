@@ -1,3 +1,7 @@
+# Prerequisites
+1. node.js
+2. npm
+3. initialise the database from the DB.sql file (you will need MySQL server)
 # Install
 1. git clone https://github.com/robertszafa/moodportfolio.git
 2. initialise the database from the DB.sql file
