@@ -92,7 +92,7 @@ const Register = withFormik ({
               .required('Email is required')
               .test("checkEmail", "Email was already used", 
                 async function(email) {
-                  const res = await fetch(apiMoodportfolio + '/api/UserExists', {
+                  const res = await fetch(apiMoodportfolio + '/UserExists', {
                     method: "POST",
                     mode: "cors",
                     cache: "no-cache",
@@ -114,7 +114,7 @@ const Register = withFormik ({
     
     handleSubmit(values) {
         buttonDisabled = true;
-        fetch(apiMoodportfolio + '/api/Register', {
+        fetch(apiMoodportfolio + '/Register', {
           method: "POST", 
           mode: "cors",
           cache: "no-cache",

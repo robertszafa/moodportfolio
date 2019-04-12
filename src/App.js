@@ -24,7 +24,7 @@ export default class App extends Component {
   componentDidMount() {
         let authToken = localStorage.getItem("authToken");
         console.log("SENDING TOKEN: ", authToken)
-        fetch(apiMoodportfolio + '/api/Login', {
+        fetch(apiMoodportfolio + '/Login', {
             method: "GET", 
             mode: "cors",
             cache: "no-cache",
