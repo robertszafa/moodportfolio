@@ -11,8 +11,8 @@ import Login from './components/Login'
 import Register from './components/Register'
 import './stylesheet/app.css'
 
-export const apiMoodportfolio = 'https://api.moodportfolio.ml'; // API for server
-// export const apiMoodportfolio = 'localhost:5000'; // API for localhost
+// export const apiMoodportfolio = 'https://api.moodportfolio.ml'; // API for server
+export const apiMoodportfolio = 'http://127.0.0.1:5000'; // API for localhost
 
 export default class App extends Component {
   state = {
