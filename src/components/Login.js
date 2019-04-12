@@ -73,7 +73,7 @@ const Login = withFormik ({
     },
 
     handleSubmit(values) {
-        fetch(apiMoodportfolio+ '/api/Login', {
+        fetch(apiMoodportfolio+ '/Login', {
           method: "POST", 
           mode: "cors",
           cache: "no-cache",
