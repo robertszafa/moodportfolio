@@ -6,7 +6,7 @@ import {apiMoodportfolio} from '../App';
 
 // Add Capture2 to App and disable others for now
 
-export default class Capture2 extends Component {
+export default class Capture extends Component {
     constructor(props) {
         super(props);
         this.state = {
