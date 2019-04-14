@@ -4,30 +4,42 @@ import ImageUploader from 'react-images-upload';
 import { Button } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
 
-// Add Capture2 to App and disable others for now
-
 export default class Capture extends Component {
     constructor(props) {
         super(props);
         this.state = {
             dataUri: "",
+            webcamEnabled: true,
             isUploading: false
         }
         this.onDrop = this.onDrop.bind(this);
         this.onUploadPhoto = this.onUploadPhoto.bind(this);
     }
 
+    // Activates the webcam from react-webcam 
     setRef = webcam => {
         this.webcam = webcam;
     };
 
-    capture = () => {
+    // Capture the image in encoded base64
+    handleCapture = () => {
         const imageSrc =this.webcam.getScreenshot();
         this.setState({
             dataUri: imageSrc
         })
     };
+    
+    // Reset all states when user wants to choose another image
+    handleRecapture = e => {
+        e.preventDefault();
+        this.setState({
+            dataUri: "",
+            webcamEnabled: true,
+            isUploading: false
+        })
+    };
 
+    // Upload the photo to the database
     onUploadPhoto() {
         this.setState({ isUploading: true });
         let authToken = localStorage.getItem("authToken");
@@ -58,6 +70,7 @@ export default class Capture extends Component {
         )
     }
 
+    // Upload a photo from the user's files
     onDrop(picture) {
         let reader = new FileReader();
         reader.readAsDataURL(picture[0]);
@@ -76,8 +89,7 @@ export default class Capture extends Component {
     }
 
     render() {
-        const { isUploading } = this.state;
-        const { dataUri } = this.state;
+        const { isUploading, dataUri } = this.state;
 
         const videoConstraints = {
             width: 1280,
@@ -85,22 +97,16 @@ export default class Capture extends Component {
             facingMode: "user"
         };
 
-        return (
-            <div className="App">
-
-            {this.state.dataUri ? 
-                <div>
-                    <p><img src={this.state.dataUri} alt=""/></p>
-                </div>
-            : null}
-
+        const EnableCaptureAndUpload = (
+            <div>
                 <Webcam
-                audio={false}
-                // height={1250}
-                ref={this.setRef}
-                screenshotFormat="image/jpeg"
-                // width={650}
-                videoConstraints={videoConstraints}/>
+                    audio={false}
+                    // height={1250}
+                    ref={this.setRef}
+                    screenshotFormat="image/jpeg"
+                    // width={650}
+                    videoConstraints={videoConstraints}
+                />
 
                 <ImageUploader
                 withIcon={false}
@@ -114,10 +120,25 @@ export default class Capture extends Component {
 
                 <Button 
                 variant="primary"
-                disabled={!dataUri}
-                onClick={!isUploading ? this.capture : null}>Capture photo
+                // disabled={dataUri}
+                onClick={!isUploading ? this.handleCapture : null}>Capture photo
                 </Button>
+            </div>
+        )
 
+        return (
+            <div className="App">
+
+            {this.state.dataUri ? 
+                <div>
+                    <p><img src={this.state.dataUri} alt=""/></p>
+                    <Button 
+                    variant="primary"
+                    // disabled={dataUri}
+                    onClick={!isUploading ? this.handleRecapture : null}>Recapture
+                    </Button>
+                </div>
+            : EnableCaptureAndUpload }
             </div>
         )
     }
