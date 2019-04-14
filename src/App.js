@@ -9,6 +9,7 @@ import Capture from './components/Capture'
 import Graph from './components/Graph'
 import AboutUs from './components/AboutUs'
 import Login from './components/Login'
+import Profile from './components/Profile'
 import Register from './components/Register'
 import './stylesheet/app.css'
 
@@ -91,6 +92,7 @@ export default class App extends Component {
                   <Route exact path={"/"} component={Home} />
                   <Route path={"/capture"} component={Capture} />
                   <Route path={"/graph"} component={Graph} />
+                  <Route path={"/profile"} component={Profile} />
                   <Route path={"/about-us"} component={AboutUs} />
               </main>
             </Switch>

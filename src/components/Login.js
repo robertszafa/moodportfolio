@@ -31,8 +31,11 @@ const LoginApp = ({
   errors
 }) => (
   <div>
-    <Form className="formBody">
-      <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
+    <Form className="formBody" class="text-left">
+      {/* <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/> */}
+    </Form>
+
+    <Form class="text-center">
       <div>
         <Field className="field"
           type="email" 
@@ -48,17 +51,24 @@ const LoginApp = ({
       </div>
 
       <Button type="submit" variant="primary" size="lg">Login</Button>
+      <br></br>
+      <br></br>
       
 
-      <br></br>
       <label>Forgot password?</label>
       <br></br>
+      
       <Button type="submit" variant="primary" size="lg" onClick={redirectToForgotPassword}>Reset password</Button>
 
-    </Form>
+      <br></br>
+      <br></br>
+      <br></br>
 
     <label>No account?</label>
+    <br></br>
     <Button type="submit" variant="primary" size="lg" onClick={redirectToRegister}>Sign up!</Button>
+
+    </Form>
 
   </div>
 )

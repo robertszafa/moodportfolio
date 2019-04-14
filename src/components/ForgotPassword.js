@@ -12,6 +12,12 @@ import Button from 'react-bootstrap/Button';
 
 let buttonDisabled = false;
 
+function redirectToLogin() {
+  ReactDOM.render(
+    <Login />,
+    document.getElementById('root')
+  ); 
+}
 
 const FormApp = ({
   values,
@@ -21,6 +27,8 @@ const FormApp = ({
   <div>
     <Form className="formBody">
       <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
+      </Form>
+      <Form class="text-center">
 
       {/* touched.* makes sure that errors are checked only once the fiels is left */}
       <div>
@@ -39,6 +47,12 @@ const FormApp = ({
       </Button>
       <br></br>
       <label>A reset password link will be sent to your email.</label>
+
+      <br></br><br></br>
+    <label>Remembered your password?</label>
+    <br></br>
+    <Button variant="success" type="submit" onClick={redirectToLogin}>Log in!</Button>
+
     </Form>
   </div>
   

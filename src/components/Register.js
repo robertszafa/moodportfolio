@@ -30,6 +30,8 @@ const RegisterApp = ({
   <div>
     <Form className="formBody">
       <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
+      </Form>
+      <Form class="text-center">
       <div>
         <Field className="field"
           name="name"
@@ -62,11 +64,13 @@ const RegisterApp = ({
           {buttonDisabled ? 'Wait...' : 'Register'}
       </Button>
       <label>A verification email will be sent to your email.</label>
-    </Form>
+    
 
     <br></br><br></br>
     <label>Already have an account?</label>
+    <br></br>
     <Button variant="success" type="submit" onClick={redirectToLogin}>Log in!</Button>
+    </Form>
   </div>
   
 )
