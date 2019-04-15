@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import Webcam from 'react-webcam';
+import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
 import ImageUploader from 'react-images-upload';
-import { Button } from 'react-bootstrap';
+import { Button, Container, Row, Col } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
 
 export default class Capture extends Component {
@@ -10,25 +10,13 @@ export default class Capture extends Component {
         this.state = {
             dataUri: "",
             webcamEnabled: true,
+            canUpload: false,
             isUploading: false
         }
         this.onDrop = this.onDrop.bind(this);
         this.onUploadPhoto = this.onUploadPhoto.bind(this);
     }
 
-    // Activates the webcam from react-webcam 
-    setRef = webcam => {
-        this.webcam = webcam;
-    };
-
-    // Capture the image in encoded base64
-    handleCapture = () => {
-        const imageSrc =this.webcam.getScreenshot();
-        this.setState({
-            dataUri: imageSrc
-        })
-    };
-    
     // Reset all states when user wants to choose another image
     handleRecapture = e => {
         e.preventDefault();
@@ -91,54 +79,59 @@ export default class Capture extends Component {
     render() {
         const { isUploading, dataUri } = this.state;
 
-        const videoConstraints = {
-            width: 1280,
-            height: 720,
-            facingMode: "user"
-        };
-
         const EnableCaptureAndUpload = (
             <div>
-                <Webcam
-                    audio={false}
-                    // height={1250}
-                    ref={this.setRef}
-                    screenshotFormat="image/jpeg"
-                    // width={650}
-                    videoConstraints={videoConstraints}
-                />
+                    <ImageUploader
+                        withIcon={false}
+                        withLabel={false}
+                        buttonText='Choose image from filestorage'
+                        onChange={this.onDrop}
+                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                        maxFileSize={5242880}
+                        singleImage={true} />
 
-                <ImageUploader
-                withIcon={false}
-                withLabel={false}
-                buttonText='Choose image from filestorage'
-                onChange={this.onDrop}
-                imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                maxFileSize={5242880}
-                singleImage={true}
-                />
+                <div className="cam">
+                    <Camera
+                        onTakePhoto = { (dataUri) => {
+                            this.setState({ canUpload: true,
+                                            dataUri: dataUri })
+                        } }
+                        idealFacingMode = {FACING_MODES.USER}
+                        idealResolution = {{width: 480, height: 480}}
+                        imageType = {IMAGE_TYPES.JPG}
+                        imageCompression = {0.97}
+                        isMaxResolution = {false}
+                        isDisplayStartCameraError = {true}
+                        sizeFactor = {1}
+                    />
+        
+                </div>
 
                 <Button 
-                variant="primary"
-                // disabled={dataUri}
-                onClick={!isUploading ? this.handleCapture : null}>Capture photo
+                    variant="primary"
+                    disabled={dataUri}
+                    onClick={!isUploading ? this.onUploadPhoto : null}>Capture photo
                 </Button>
             </div>
         )
 
         return (
-            <div className="App">
-
-            {this.state.dataUri ? 
-                <div>
-                    <p><img src={this.state.dataUri} alt=""/></p>
-                    <Button 
-                    variant="primary"
-                    // disabled={dataUri}
-                    onClick={!isUploading ? this.handleRecapture : null}>Recapture
-                    </Button>
-                </div>
-            : EnableCaptureAndUpload }
+            <div className="captureContainer">
+                <Container>
+                    <Row className="justify-content-md-center">
+    
+                    {this.state.dataUri ? 
+                        <div>
+                            <p><img src={this.state.dataUri} alt=""/></p>
+                            <Button 
+                            variant="primary"
+                            // disabled={dataUri}
+                            onClick={!isUploading ? this.handleRecapture : null}>Recapture
+                            </Button>
+                        </div>
+                    : EnableCaptureAndUpload }
+                    </Row>
+                </Container>
             </div>
         )
     }
