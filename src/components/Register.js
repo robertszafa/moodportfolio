@@ -31,8 +31,9 @@ const RegisterApp = ({
     <Form className="formBody">
       <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
       </Form>
-      <Form class="text-center" id = "entry-form">
+      <Form class="text-center inputForm" id = "entry-form">
       <div>
+        <label>Register for MoodPortfol.io</label>
         <Field className="field"
           name="name"
           placeholder="Your Name"/>
@@ -61,15 +62,16 @@ const RegisterApp = ({
           variant="primary"
           type="submit"
           disabled={buttonDisabled}
+          size = "sm"
       >
           {buttonDisabled ? 'Wait...' : 'Register'}
       </Button>
-      <label>A verification email will be sent to your email.</label>
+      <label>A verification email will be sent to you.</label>
 
 
     <br></br>
     <div id = "altButtonContainer">
-      <label>Already have an account?</label>
+      <label>Already signed up?</label>
       <Button className = "altButton" variant="light" type="submit" size = "sm"onClick={redirectToLogin}>Log in!</Button>
     </div>
     </Form>

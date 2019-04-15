@@ -36,7 +36,7 @@ const LoginApp = ({
     </Form>
     <Form class = "login-box">
     <div>
-      <Form class="text-center">
+      <Form class="text-center inputForm">
         <div>
           <Field className="field"
             type="email"

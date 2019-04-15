@@ -40,7 +40,7 @@
 }
 
 /* White box container for login/registration forms */
-.text-center{
+.inputForm{
   margin-top: 200px;
   width:350px;
   background: white;
