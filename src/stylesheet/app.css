@@ -1,3 +1,10 @@
+
 body {
-    background-color: white;
-}
+   min-height: 100% !important;
+   background-color:  #3399ff;
+ }
+
+#root {
+   min-height: 100% !important;
+   background-color:  #3399ff;
+ }

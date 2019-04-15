@@ -11,6 +11,7 @@ import AboutUs from './components/AboutUs'
 import Login from './components/Login'
 import Profile from './components/Profile'
 import Register from './components/Register'
+import ChangePassword from './components/ChangePassword'
 import './stylesheet/app.css'
 
 export const apiMoodportfolio = 'https://api.moodportfolio.ml'; // API for server
@@ -24,7 +25,6 @@ export default class App extends Component {
 
   componentDidMount() {
         let authToken = localStorage.getItem("authToken");
-        console.log("SENDING TOKEN: ", authToken)
         fetch(apiMoodportfolio + '/Login', {
             method: "GET", 
             mode: "cors",
@@ -38,7 +38,6 @@ export default class App extends Component {
         })
         .then((res) => res.json())
         .then(json => {
-            console.log("Request was sent to API")
             console.log(json)
             if (!json.success) {
                 ReactDOM.render(
@@ -88,12 +87,13 @@ export default class App extends Component {
             {backDrop}
 
             <Switch>
-              <main style={{marginTop: '71px'}}>
+              <main style={{marginTop: '54px'}}>
                   <Route exact path={"/"} component={Home} />
                   <Route path={"/capture"} component={Capture} />
                   <Route path={"/graph"} component={Graph} />
                   <Route path={"/profile"} component={Profile} />
                   <Route path={"/about-us"} component={AboutUs} />
+                  <Route path={"/change-password/:resetToken"} component={ChangePassword} />
               </main>
             </Switch>
           </div>
