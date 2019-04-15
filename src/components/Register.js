@@ -18,7 +18,7 @@ function redirectToLogin() {
   ReactDOM.render(
     <Login />,
     document.getElementById('root')
-  ); 
+  );
 }
 
 
@@ -31,7 +31,7 @@ const RegisterApp = ({
     <Form className="formBody">
       <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
       </Form>
-      <Form class="text-center">
+      <Form class="text-center" id = "entry-form">
       <div>
         <Field className="field"
           name="name"
@@ -42,8 +42,8 @@ const RegisterApp = ({
       {/* touched.* makes sure that errors are checked only once the fiels is left */}
       <div>
         <Field className="field"
-          type="email" 
-          name="email" 
+          type="email"
+          name="email"
           placeholder="Your Email"/>
           {touched.email && errors.email && <p> {errors.email}</p>}
       </div>
@@ -57,6 +57,7 @@ const RegisterApp = ({
       </div>
 
       <Button
+          className = "loginButton"
           variant="primary"
           type="submit"
           disabled={buttonDisabled}
@@ -64,15 +65,16 @@ const RegisterApp = ({
           {buttonDisabled ? 'Wait...' : 'Register'}
       </Button>
       <label>A verification email will be sent to your email.</label>
-    
 
-    <br></br><br></br>
-    <label>Already have an account?</label>
+
     <br></br>
-    <Button variant="success" type="submit" onClick={redirectToLogin}>Log in!</Button>
+    <div id = "altButtonContainer">
+      <label>Already have an account?</label>
+      <Button className = "altButton" variant="light" type="submit" size = "sm"onClick={redirectToLogin}>Log in!</Button>
+    </div>
     </Form>
   </div>
-  
+
 )
 
 
@@ -86,7 +88,7 @@ const Register = withFormik ({
     },
 
     validationSchema: Yup.object().shape({
-    name: Yup.string() 
+    name: Yup.string()
               .min(3, 'Name must be 3 characters or longer')
               .max(60, 'Name must be shorter than 60 characters')
               .required('Name is required'),
@@ -94,7 +96,7 @@ const Register = withFormik ({
               .email('Email not valid')
               .max(100)
               .required('Email is required')
-              .test("checkEmail", "Email was already used", 
+              .test("checkEmail", "Email was already used",
                 async function(email) {
                   const res = await fetch(apiMoodportfolio + '/UserExists', {
                     method: "POST",
@@ -115,11 +117,11 @@ const Register = withFormik ({
                  .matches(passwordRegex, 'Password must have a number, capital letter and a special character.')
                  .required('Password is required')
     }),
-    
+
     handleSubmit(values) {
         buttonDisabled = true;
         fetch(apiMoodportfolio + '/Register', {
-          method: "POST", 
+          method: "POST",
           mode: "cors",
           cache: "no-cache",
           credentials: "same-origin",

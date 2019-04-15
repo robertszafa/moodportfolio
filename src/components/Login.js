@@ -32,7 +32,7 @@ const LoginApp = ({
 }) => (
   <div>
     <Form className="formBody" class="text-left">
-      {/* <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/> */}
+      { <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>}
     </Form>
     <Form class = "login-box">
     <div>
@@ -53,8 +53,8 @@ const LoginApp = ({
         <Button className = "loginButton" type="submit" variant="primary" size="md">Login</Button>
         <br></br>
         <div id="altButtonContainer">
-          <Button className = "altButton" type="submit" variant="light" size="sm" onClick={redirectToForgotPassword}>Reset password</Button>
-          <Button className = "altButton" type="submit" variant="light" size="sm" onClick={redirectToRegister}>Sign up!</Button>
+          <Button className = "altButton" type="submit" variant="light" size="sm" onClick={redirectToForgotPassword}>Reset Password</Button>
+          <Button className = "altButton" type="submit" variant="light" size="sm" onClick={redirectToRegister}>Register!</Button>
         </div>
       </Form>
     </div>
