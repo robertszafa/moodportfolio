@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {Link} from 'react-router-dom';
 import { Button } from 'react-bootstrap'
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import {withFormik, Form, Field} from 'formik'
@@ -13,7 +14,8 @@ export default class Profile extends Component {
 		super(props);
 		this.state = {
             userData: '',
-		};
+        };
+        // this.onChangePassword = this.onChangePassword.bind(this);
 	}
 
     componentDidMount() {
@@ -38,7 +40,18 @@ export default class Profile extends Component {
 
     render () {
         return(
+    <Jumbotron>
             <ProfileApp userData={this.state.userData}/>
+
+            <div class="text-center">
+                <Button 
+                    variant="secondary"
+                    type="submit"
+                >
+                    <Link to="/change-password">Change password</Link> 
+                </Button>
+            </div>
+    </Jumbotron>
         )
   }
 }
@@ -56,7 +69,7 @@ const ProfileForm = props => {
   } = props;
 
   return (
-    <Jumbotron>
+      <div>
         <div class="page-header">
             <h1 class="text-center">
                 Personal Profile
@@ -144,10 +157,11 @@ const ProfileForm = props => {
                     style={{ display: 'block' }}
                 >
                     {/* ISO/IEC 5218 standard */}
-                    <option value="0" label="" />
-                    <option value="1" label="Male" />
-                    <option value="2" label="Female" />
-                    <option value="9" label="Other" />
+                    <option selected> {props.userData.gender} </option>
+                    <option value="0" label="Not known"/>
+                    <option value="1" label="Male"/>
+                    <option value="2" label="Female"/>
+                    <option value="9" label="Other"/>
                 </select>
                 <p>Gender</p>
                 </div>
@@ -171,18 +185,8 @@ const ProfileForm = props => {
                     Save      
                 </Button>
             </Form>
-
-            <br></br>
-            <div class="text-center">
-                <Button 
-                    variant="secondary"
-                    type="submit"
-                >
-                    Change password
-                </Button>
-            </div>
         </div>
-    </Jumbotron>
+    </div>
   );
 };
 

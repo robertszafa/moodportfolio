@@ -11,6 +11,7 @@ import AboutUs from './components/AboutUs'
 import Login from './components/Login'
 import Profile from './components/Profile'
 import Register from './components/Register'
+import ChangePassword from './components/ChangePassword'
 import './stylesheet/app.css'
 
 export const apiMoodportfolio = 'https://api.moodportfolio.ml'; // API for server
@@ -92,6 +93,7 @@ export default class App extends Component {
                   <Route path={"/graph"} component={Graph} />
                   <Route path={"/profile"} component={Profile} />
                   <Route path={"/about-us"} component={AboutUs} />
+                  <Route path={"/change-password/:resetToken"} component={ChangePassword} />
               </main>
             </Switch>
           </div>
