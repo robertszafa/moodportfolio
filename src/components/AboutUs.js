@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import { } from 'react-bootstrap'
 import Jumbotron from 'react-bootstrap/Jumbotron'
 
-export default class AboutUs extends Component 
+export default class AboutUs extends Component
 {
-    render() 
+    render()
     {
-        return( 
+        return(
             <div>
                 <Jumbotron>
-                
+
                     <div class="page-header">
                         <h1 class="text-center">
                             Meet the team
@@ -48,18 +48,18 @@ export default class AboutUs extends Component
                         Gareth
                     </h3>
                     <p>
-                        Gareth can do everything 
+                        Gareth can do everything
                     </p>
 
                     <h3>
                         Matt
                     </h3>
                     <p>
-                        Matt is off on his jollies
+                        Matt is back and working hard!
                     </p>
 
                 </Jumbotron>;
             </div>
         )
-    } 
+    }
 }
