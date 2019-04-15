@@ -9,6 +9,7 @@
     border: none;
     cursor: pointer;
     box-sizing: border-box;
+    margin-top: -9px;
 }
 
 .toggleButton:focus {
@@ -17,6 +18,6 @@
 
 .toggleLine {
     width: 30px;
-    height: 3px;
-    background: white;
+    height: 4px;
+    background: black;
 }
