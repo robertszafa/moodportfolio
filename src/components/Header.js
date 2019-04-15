@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import {Link} from 'react-router-dom'
 import ToggleMenu from './menu/ToggleMenu'
 import '../stylesheet/header.css'
-import Logo from '../images/logo-2.png'
 import Login from './Login'
 import {apiMoodportfolio} from '../App'
 
@@ -29,13 +28,17 @@ export default class Header extends React.Component {
         return (
             <header className="menuBar">
                 <nav className="menuNavigation">
+
                     <div>
                         <ToggleMenu click={this.sideMenuClickHandler} />
                     </div>
 
-                    <div>
-                        <a componentClass={Link} href="/" to="/"><img className="menuLogo" src={Logo} alt="Moodportfol.io Logo"/></a>
+                    <div className="menuLogo">
+                        <a href="/"><p>Moodportfol.io</p></a>
                     </div>
+
+                    <div className="space"></div>
+                    
                     <div className="menuList">
                         <ul>
                             <li><a componentClass={Link} href="/capture" to="/capture">Capture</a></li>
@@ -45,6 +48,7 @@ export default class Header extends React.Component {
                             <li><a componentClass={Link} href="/login" onClick={this.handleLogoutClick}>Logout</a></li>
                         </ul>
                     </div>
+
                 </nav>
             </header>
         )

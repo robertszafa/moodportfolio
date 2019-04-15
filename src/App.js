@@ -88,7 +88,7 @@ export default class App extends Component {
             {backDrop}
 
             <Switch>
-              <main style={{marginTop: '71px'}}>
+              <main style={{marginTop: '54px'}}>
                   <Route exact path={"/"} component={Home} />
                   <Route path={"/capture"} component={Capture} />
                   <Route path={"/graph"} component={Graph} />
