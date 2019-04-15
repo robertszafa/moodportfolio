@@ -93,7 +93,7 @@ export default class App extends Component {
                   <Route path={"/graph"} component={Graph} />
                   <Route path={"/profile"} component={Profile} />
                   <Route path={"/about-us"} component={AboutUs} />
-                  <Route path={"/change-password/:resetToken"} component={ChangePassword} />
+                  <Route path={"/change-password"} component={ChangePassword} />
               </main>
             </Switch>
           </div>
