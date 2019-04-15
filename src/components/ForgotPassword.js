@@ -16,7 +16,7 @@ function redirectToLogin() {
   ReactDOM.render(
     <Login />,
     document.getElementById('root')
-  ); 
+  );
 }
 
 const FormApp = ({
@@ -28,13 +28,13 @@ const FormApp = ({
     <Form className="formBody">
       <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/>
       </Form>
-      <Form class="text-center">
+      <Form class="text-center inputForm">
 
       {/* touched.* makes sure that errors are checked only once the fiels is left */}
       <div>
         <Field className="field"
-          type="email" 
-          name="email" 
+          type="email"
+          name="email"
           placeholder="Your Email"/>
           {touched.email && errors.email && <p> {errors.email}</p>}
       </div>
@@ -47,15 +47,18 @@ const FormApp = ({
       </Button>
       <br></br>
       <label>A reset password link will be sent to your email.</label>
+      <div id = "altButtonContainer">
+        <label>Remembered your password?</label>
+        <Button
+         className = "altButton"
+         variant="light"
+         size = "sm"
+         onClick={redirectToLogin}>Log in!</Button>
 
-      <br></br><br></br>
-    <label>Remembered your password?</label>
-    <br></br>
-    <Button variant="success" type="submit" onClick={redirectToLogin}>Log in!</Button>
-
+      </div>
     </Form>
   </div>
-  
+
 )
 
 
@@ -71,7 +74,7 @@ const ForgotPassword = withFormik ({
               .email('Email not valid')
               .max(100)
               .required('Email is required')
-              .test("checkEmail", "Email doesn't exist", 
+              .test("checkEmail", "Email doesn't exist",
                 async function(email) {
                   const res = await fetch(apiMoodportfolio + '/UserExists', {
                     method: "POST",
@@ -87,11 +90,11 @@ const ForgotPassword = withFormik ({
                   return res_1.exists;
                 }),
     }),
-    
+
     handleSubmit(values) {
         buttonDisabled = true;
         fetch(apiMoodportfolio + '/ResetPassword', {
-          method: "POST", 
+          method: "POST",
           mode: "cors",
           cache: "no-cache",
           credentials: "same-origin",
