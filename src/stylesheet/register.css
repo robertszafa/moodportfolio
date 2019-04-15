@@ -21,3 +21,33 @@
     width: 80%;
     padding: 0.5em;
 } */
+
+.loginButton{
+  margin: 5px;
+}
+
+.altButton{
+  margin:2px;
+  background-color: transparent;
+}
+
+.field {
+  border-radius: 5px;
+  margin-top:10px;
+}
+
+.login-box{
+  margin-top: 200px;
+  width:350px;
+  background: white;
+  margin: auto;
+  border-radius: 10px;
+  max-width: 65%;
+  box-shadow: 5px 5px 5px grey;
+
+}
+
+#altButtonContainer {
+  background-color: #e6e6e6;
+  border-radius:5px;
+}

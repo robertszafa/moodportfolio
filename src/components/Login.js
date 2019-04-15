@@ -15,14 +15,14 @@ function redirectToRegister() {
   ReactDOM.render(
     <Register />,
     document.getElementById('root')
-  ); 
+  );
 }
 
 function redirectToForgotPassword() {
   ReactDOM.render(
     <ForgotPassword />,
     document.getElementById('root')
-  ); 
+  );
 }
 
 
@@ -34,42 +34,31 @@ const LoginApp = ({
     <Form className="formBody" class="text-left">
       {/* <img id="registerLogo" src={logo} alt="Moodportfol.io Logo"/> */}
     </Form>
+    <Form class = "login-box">
+    <div>
+      <Form class="text-center">
+        <div>
+          <Field className="field"
+            type="email"
+            name="email"
+            placeholder=" Your Email"/>
+        </div>
 
-    <Form class="text-center">
-      <div>
+        <div>
         <Field className="field"
-          type="email" 
-          name="email" 
-          placeholder="Your Email"/>
-      </div>
-
-      <div>
-      <Field className="field"
-        type="password"
-        name="password"
-        placeholder="Your Password"/>
-      </div>
-
-      <Button type="submit" variant="primary" size="lg">Login</Button>
-      <br></br>
-      <br></br>
-      
-
-      <label>Forgot password?</label>
-      <br></br>
-      
-      <Button type="submit" variant="primary" size="lg" onClick={redirectToForgotPassword}>Reset password</Button>
-
-      <br></br>
-      <br></br>
-      <br></br>
-
-    <label>No account?</label>
-    <br></br>
-    <Button type="submit" variant="primary" size="lg" onClick={redirectToRegister}>Sign up!</Button>
-
+          type="password"
+          name="password"
+          placeholder=" Your Password"/>
+        </div>
+        <Button className = "loginButton" type="submit" variant="primary" size="md">Login</Button>
+        <br></br>
+        <div id="altButtonContainer">
+          <Button className = "altButton" type="submit" variant="light" size="sm" onClick={redirectToForgotPassword}>Reset password</Button>
+          <Button className = "altButton" type="submit" variant="light" size="sm" onClick={redirectToRegister}>Sign up!</Button>
+        </div>
+      </Form>
+    </div>
     </Form>
-
   </div>
 )
 
@@ -84,7 +73,7 @@ const Login = withFormik ({
 
     handleSubmit(values) {
         fetch(apiMoodportfolio+ '/Login', {
-          method: "POST", 
+          method: "POST",
           mode: "cors",
           cache: "no-cache",
           credentials: "same-origin",
