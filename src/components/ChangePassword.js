@@ -14,7 +14,6 @@ export default class ChangePassword extends Component {
 	}
 
     componentDidMount() {
-        const { resetToken } = this.props.match.params
     }
 
     render () {
@@ -103,24 +102,32 @@ const PasswordApp = withFormik({
     }),
 
   handleSubmit: (values, { setSubmitting }) => {
-    let authToken = localStorage.getItem("authToken");
-    fetch(apiMoodportfolio + '/UserInfo', {
-        method: "POST", 
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-            "Authorization": authToken,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values)
-    })
-    .then((res) => res.json())
-    .then(json => {
-        console.log("json\n ", json);
-        setSubmitting(false);
-    })
+      let authToken = localStorage.getItem("authToken");
+      fetch(apiMoodportfolio + '/ResetPassword', {
+          method: "PUT", 
+          mode: "cors",
+          cache: "no-cache",
+          withCredentials: true,
+          credentials: "same-origin",
+          headers: {
+              "Authorization": authToken,
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({'currentPassword': values.currentPassword,
+                                'newPassword': values.password})
+      })
+      .then((res) => res.json())
+      .then(json => {
+          console.log(json)
+      })
 
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            let crd = pos.coords;
+            sessionStorage.setItem("latitude", crd.latitude)
+            sessionStorage.setItem("longitude", crd.longitude)
+        });
+      } 
   },
 
   displayName: 'BasicForm',
