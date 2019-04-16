@@ -112,6 +112,7 @@
 }
 
 .profileRight{
+ width: 50%;
  background-color: white;
  float:right;
  border-radius:10px;

@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap'
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import {withFormik, Form, Field} from 'formik'
 import {Datepicker} from 'react-formik-ui'
-import matt from '../images/Matt.jpg'
+import matt from '../images/Gareth.jpg'
 import * as Yup from 'yup'
 import {passwordRegex} from './Register'
 import {apiMoodportfolio} from '../App'
@@ -196,10 +196,6 @@ const ProfileForm = props => {
                     <option value="2" label="Female"/>
                     <option value="9" label="Other"/>
                 </select>
-
-                </div>
-
-                <div>
                 <p>Member since</p>
                 <Field className="field"
                     type="text"
@@ -209,17 +205,11 @@ const ProfileForm = props => {
                     name="signupDate"
                     disabled={true}/>
                     {touched.signupDate && errors.signupDate && <p>{errors.signupDate}</p>}
-
                 </div>
-                <Button
-                    variant="primary"
-                    type="submit"
-                >
+                <Button variant="primary" type="submit">
                     Save
                 </Button>
-
             </Form>
-
         </div>
     </div>
   );
