@@ -7,7 +7,7 @@ import phil from '../images/Phill.jpg'
 import rahul from '../images/Rahul.jpg'
 import rob from '../images/Rob.jpg'
 import thep from '../images/Thep.jpg'
-import gareth from '../images/Matt.jpg'
+import gareth from '../images/Gareth.jpg'
 import Carousel from 'react-bootstrap/Carousel'
 export default class AboutUs extends Component
 
@@ -74,7 +74,7 @@ export default class AboutUs extends Component
                 <Carousel.Item>
                   <img
                     className="d-block w-100 carouselImage"
-                    src={background}
+                    src={gareth}
                     alt="Fifth slide"
                   />
                   <Carousel.Caption>

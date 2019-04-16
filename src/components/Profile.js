@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap'
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import {withFormik, Form, Field} from 'formik'
 import {Datepicker} from 'react-formik-ui'
+import matt from '../images/Matt.jpg'
 import * as Yup from 'yup'
 import {passwordRegex} from './Register'
 import {apiMoodportfolio} from '../App'
@@ -69,19 +70,49 @@ const ProfileForm = props => {
   } = props;
 
   return (
-    <div class= "inputForm">
+    <div class= "profile">
         <div class="page-header">
             <h1 class="text-center">
                 Personal Profile
             </h1>
+            <br></br>
         </div>
-        <p id="name">{props.userData.name}</p>
 
 
-        <div>
-            <Form class="text-center" onSubmit={handleSubmit}>
-
+        <div class = "col-md-8 profileRight text-center">
+        <h3>Diary entries</h3>
+        <h5>Recent diary entry</h5>
+        <p class= "diaryEntry">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat
+           nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+            sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+            <br></br>
+        <h5>Recent diary entry 2</h5>
+            <p class = "diaryEntry">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+               nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </p>
+        </div>
+        <div class = "col-sm-4 profileLeft">
+            <h5 id="name">{props.userData.name}</h5>
+            <div className = "text-center">
+            <img
+            id = "profilePicture"
+            src={matt}
+            alt="Fifth slide"
+            />
+            </div>
+            <Form onSubmit={handleSubmit}>
                 <div>
+                <p>Email address</p>
                 <Field className="field"
                     type="email"
                     onChange={handleChange}
@@ -90,10 +121,11 @@ const ProfileForm = props => {
                     disabled={true}
                     value={props.userData.email}/>
                     {touched.email && errors.email && <p>{errors.email}</p>}
-                <p>Email address</p>
+
                 </div>
 
                 <div>
+                <p>Contact Email address</p>
                 <Field className="field"
                     type="email"
                     onChange={handleChange}
@@ -102,10 +134,10 @@ const ProfileForm = props => {
                     name="nominatedContact"
                     placeholder={props.userData.nominatedContact}/>
                     {touched.nominatedContact && errors.nominatedContact && <p>{errors.nominatedContact}</p>}
-                <p>Contact Email address</p>
                 </div>
 
                 <div>
+                <p>Country</p>
                 <Field className="field"
                     type="text"
                     onChange={handleChange}
@@ -114,10 +146,10 @@ const ProfileForm = props => {
                     name="country"
                     placeholder={props.userData.country}/>
                     {touched.country && errors.country && <p>{errors.country}</p>}
-                <p>Country</p>
                 </div>
 
                 <div>
+                <p>City</p>
                 <Field className="field"
                     type="text"
                     onChange={handleChange}
@@ -126,10 +158,10 @@ const ProfileForm = props => {
                     name="townCity"
                     placeholder={props.userData.townCity}/>
                     {touched.townCity && errors.townCity && <p>{errors.townCity}</p>}
-                <p>City</p>
                 </div>
 
                 <div>
+                <p>Date of birth</p>
                 <Datepicker className="field"
                     yearDropdownItemNumber={100}
                     showYearDropdown
@@ -145,11 +177,12 @@ const ProfileForm = props => {
                     disabled={props.userData.dob}
                     placeholder={!props.userData.dob && "Click to select"}/>
                     {touched.dob && errors.dob && <p>{errors.dob}</p>}
-                <p>Date of birth</p>
                 </div>
 
                 <div>
+                <p>Gender</p>
                 <select
+                    id = "genderSelect"
                     name="gender"
                     value={values.gender}
                     onChange={handleChange}
@@ -163,10 +196,11 @@ const ProfileForm = props => {
                     <option value="2" label="Female"/>
                     <option value="9" label="Other"/>
                 </select>
-                <p>Gender</p>
+
                 </div>
 
                 <div>
+                <p>Member since</p>
                 <Field className="field"
                     type="text"
                     onChange={handleChange}
@@ -175,26 +209,17 @@ const ProfileForm = props => {
                     name="signupDate"
                     disabled={true}/>
                     {touched.signupDate && errors.signupDate && <p>{errors.signupDate}</p>}
-                <p>Member since</p>
-                </div>
 
+                </div>
                 <Button
                     variant="primary"
                     type="submit"
                 >
                     Save
                 </Button>
+
             </Form>
 
-            <br></br>
-            <div class="text-center">
-                <Button
-                    variant="secondary"
-                    type="submit"
-                >
-                    Change password
-                </Button>
-            </div>
         </div>
     </div>
   );

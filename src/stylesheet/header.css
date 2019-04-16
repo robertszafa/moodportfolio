@@ -5,6 +5,7 @@
     left: 0;
     position: fixed;
     background-color: white;
+    z-index: 50000000 !important;
 }
 
 .menuNavigation {
@@ -38,7 +39,7 @@
     color: black;
 }
 
-.menuList a:hover, 
+.menuList a:hover,
 .menuList a:active {
     color: orange;
 }

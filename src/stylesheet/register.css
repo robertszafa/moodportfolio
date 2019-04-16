@@ -18,6 +18,16 @@
     padding: 0.5em;
 } */
 
+/* .formBody{
+  margin-top: 50px;
+  width:350px;
+  background: white;
+  margin: auto;
+  border-radius: 10px;
+  max-width: 65%;
+  box-shadow: 5px 5px 5px grey;
+} */
+
 #registerLogo {
   display: block;
     width: 350px;
@@ -36,7 +46,7 @@
 
 .field {
   border-radius: 5px;
-  margin:5px;
+  margin: 2px;
   max-width: 90%;
 }
 
@@ -49,6 +59,11 @@
   border-radius: 10px;
   max-width: 65%;
   box-shadow: 5px 5px 5px grey;
+}
+
+.overlay {
+  background-color: grey;
+  opacity: 0.20;
 }
 
 
@@ -72,4 +87,48 @@
   margin: 0 auto;
   border-radius: 10px;
 
+}
+
+#genderSelect {
+  display: inline-block;
+}
+
+.profile {
+  margin-top: 50px;
+  width: 2500px;
+  max-width: 80%;
+  margin: auto;
+  border-radius: 10px;
+  /*box-shadow: 5px 5px 5px grey;*/
+}
+
+.profileLeft{
+  display:block;
+  float:left;
+  background-color: white;
+  border-radius:10px;
+  box-shadow: 5px 5px 5px grey;
+  margin-bottom: 25px;
+}
+
+.profileRight{
+ background-color: white;
+ float:right;
+ border-radius:10px;
+ box-shadow: 5px 5px 5px grey;
+ margin-bottom: 25px;
+}
+
+#profilePicture{
+  border-radius: 50%;
+  border: solid #3399ff 5px;
+  max-width: 90%;
+  width:auto;
+  height: 150px;
+}
+
+.diaryEntry {
+  /* box-shadow: 5px 5px 5px grey; */
+  background-image: linear-gradient(white, #efefef) ;
+  border-radius: 10px;
 }
