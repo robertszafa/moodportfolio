@@ -45,6 +45,7 @@ const FormApp = ({
       >
           {buttonDisabled ? 'Wait...' : 'Send'}
       </Button>
+
       <br></br>
       <label>A reset password link will be sent to your email.</label>
       <div id = "altButtonContainer">
