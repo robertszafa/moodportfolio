@@ -66,9 +66,8 @@ const RegisterApp = ({
       >
           {buttonDisabled ? 'Wait...' : 'Register'}
       </Button>
+      <br></br>
       <label>A verification email will be sent to you.</label>
-
-
     <br></br>
     <div id = "altButtonContainer">
       <label>Already signed up?</label>

@@ -23,6 +23,8 @@
     width: 350px;
     margin: auto;
     max-width: 65%;
+    padding-top: 25px;
+    padding-bottom: 50px;
 }
 
 .loginButton{
@@ -30,7 +32,6 @@
 }
 .altButton{
   margin:3px;
-  background-color: transparent;
 }
 
 .field {
@@ -41,7 +42,7 @@
 
 /* White box container for login/registration forms */
 .inputForm{
-  margin-top: 200px;
+  margin-top: 50px;
   width:350px;
   background: white;
   margin: auto;
@@ -54,4 +55,9 @@
 #altButtonContainer {
   background-color: #e6e6e6;
   border-radius:3px;
+}
+
+#name{
+  align-self: center;
+  display: inline-block;
 }
