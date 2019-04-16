@@ -10,7 +10,7 @@ import {apiMoodportfolio} from '../App'
 
 
 export default class Profile extends Component {
-    constructor(props) {	
+    constructor(props) {
 		super(props);
 		this.state = {
             userData: '',
@@ -21,7 +21,7 @@ export default class Profile extends Component {
     componentDidMount() {
         let authToken = localStorage.getItem("authToken");
         fetch(apiMoodportfolio + '/UserInfo', {
-            method: "GET", 
+            method: "GET",
             mode: "cors",
             cache: "no-cache",
             credentials: "same-origin",
@@ -44,11 +44,11 @@ export default class Profile extends Component {
             <ProfileApp userData={this.state.userData}/>
 
             <div class="text-center">
-                <Button 
+                <Button
                     variant="secondary"
                     type="submit"
                 >
-                    <Link to="/change-password">Change password</Link> 
+                    <Link to="/change-password">Change password</Link>
                 </Button>
             </div>
     </Jumbotron>
@@ -69,20 +69,20 @@ const ProfileForm = props => {
   } = props;
 
   return (
-      <div>
+    <div class= "inputForm">
         <div class="page-header">
             <h1 class="text-center">
                 Personal Profile
             </h1>
         </div>
-        <p>{props.userData.name}</p> 
+        <p id="name">{props.userData.name}</p>
 
 
         <div>
             <Form class="text-center" onSubmit={handleSubmit}>
-                
+
                 <div>
-                <Field className="field" 
+                <Field className="field"
                     type="email"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -94,7 +94,7 @@ const ProfileForm = props => {
                 </div>
 
                 <div>
-                <Field className="field" 
+                <Field className="field"
                     type="email"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -106,7 +106,7 @@ const ProfileForm = props => {
                 </div>
 
                 <div>
-                <Field className="field" 
+                <Field className="field"
                     type="text"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -116,9 +116,9 @@ const ProfileForm = props => {
                     {touched.country && errors.country && <p>{errors.country}</p>}
                 <p>Country</p>
                 </div>
-        
+
                 <div>
-                <Field className="field" 
+                <Field className="field"
                     type="text"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -130,7 +130,7 @@ const ProfileForm = props => {
                 </div>
 
                 <div>
-                <Datepicker className="field" 
+                <Datepicker className="field"
                     yearDropdownItemNumber={100}
                     showYearDropdown
                     showMonthDropdown
@@ -167,7 +167,7 @@ const ProfileForm = props => {
                 </div>
 
                 <div>
-                <Field className="field" 
+                <Field className="field"
                     type="text"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -182,16 +182,26 @@ const ProfileForm = props => {
                     variant="primary"
                     type="submit"
                 >
-                    Save      
+                    Save
                 </Button>
             </Form>
+
+            <br></br>
+            <div class="text-center">
+                <Button
+                    variant="secondary"
+                    type="submit"
+                >
+                    Change password
+                </Button>
+            </div>
         </div>
     </div>
   );
 };
 
 const ProfileApp = withFormik({
-  mapPropsToValues: props => ({ 
+  mapPropsToValues: props => ({
         country: '',
         townCity: '',
         dob: '',
@@ -212,7 +222,7 @@ const ProfileApp = withFormik({
   handleSubmit: (values, { setSubmitting }) => {
     let authToken = localStorage.getItem("authToken");
     fetch(apiMoodportfolio + '/UserInfo', {
-        method: "POST", 
+        method: "POST",
         mode: "cors",
         cache: "no-cache",
         credentials: "same-origin",
@@ -232,4 +242,3 @@ const ProfileApp = withFormik({
 
   displayName: 'BasicForm',
 })(ProfileForm);
-
