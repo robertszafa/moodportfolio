@@ -1,11 +1,27 @@
-import React from 'react'
-import '../../stylesheet/sideMenu.css'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Link} from 'react-router-dom';
+import Login from '../Login';
+import '../../stylesheet/sideMenu.css';
+
+const handleLogoutClick = () => {
+    localStorage.removeItem("authToken");
+    ReactDOM.render(
+        <Login />,
+        document.getElementById('root')
+    );
+    console.log("Token delete")
+}
 
 const sideMenu = props => (
     <nav className="sideMenu">
         <ul>
-            <li><a href="/">Capture</a></li>
-            <li><a href="/">Graph</a></li>
+            <li><a componentClass={Link} href="/" to="/">Home</a></li>
+            <li><a componentClass={Link} href="/capture" to="/capture">Capture</a></li>
+            <li><a componentClass={Link} href="/graph" to="/graph">Graph</a></li>
+            <li><a componentClass={Link} href="/profile" to="/profile">Profile</a></li>
+            <li><a componentClass={Link} href="/about-us" to="/about-us">About Us</a></li>
+            <li><a componentClass={Link} href="/login" onClick={handleLogoutClick}>Logout</a></li>
         </ul>
     </nav>
 )
