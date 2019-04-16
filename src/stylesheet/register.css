@@ -61,3 +61,15 @@
   align-self: center;
   display: inline-block;
 }
+
+.aboutUsCarousel{
+  margin: 0 auto;
+  width: 80%;
+  max-width: 750px;
+}
+
+.carouselImage {
+  margin: 0 auto;
+  border-radius: 10px;
+
+}
