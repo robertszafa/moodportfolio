@@ -40,7 +40,7 @@ export default class Profile extends Component {
 
     render () {
         return(
-    <Jumbotron>
+    <div id="inputForm">
             <ProfileApp userData={this.state.userData}/>
 
             <div class="text-center">
@@ -51,7 +51,7 @@ export default class Profile extends Component {
                     <Link to="/change-password">Change password</Link>
                 </Button>
             </div>
-    </Jumbotron>
+    </div>
         )
   }
 }

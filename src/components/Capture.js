@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
+import 'react-html5-camera-photo/build/css/index.css'
 import ImageUploader from 'react-images-upload';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
@@ -11,23 +12,15 @@ export default class Capture extends Component {
             dataUri: "",
             webcamEnabled: true,
             canUpload: false,
-            isUploading: false
+            isUploading: false,
+            emotion: "",
+            error: "",
         }
         this.onDrop = this.onDrop.bind(this);
         this.onUploadPhoto = this.onUploadPhoto.bind(this);
     }
 
-    // Reset all states when user wants to choose another image
-    handleRecapture = e => {
-        e.preventDefault();
-        this.setState({
-            dataUri: "",
-            webcamEnabled: true,
-            isUploading: false
-        })
-    };
-
-    // Upload the photo to the database
+    // Upload the photo to the server for classification
     onUploadPhoto() {
         this.setState({ isUploading: true });
         let authToken = localStorage.getItem("authToken");
@@ -51,12 +44,29 @@ export default class Capture extends Component {
         .then((res) => res.json())
         .then(json => {
             console.log(json)
+            if (json.success) {
+                this.setState({ isUploading: false,
+                                emotion: json.emotion})
+            }
+            else {
+                this.setState({ isUploading: false,
+                                error: json.error})
+            }
         })
-        .then(
-            this.setState({ isUploading: false,
-                            dataUri: "" })
-        )
     }
+
+
+    // Reset all states when user wants to choose another image
+    handleRecapture = e => {
+        e.preventDefault();
+        this.setState({
+            dataUri: "",
+            webcamEnabled: true,
+            isUploading: false,
+            error: "",
+            emotion: "",
+        })
+    };
 
     // Upload a photo from the user's files
     onDrop(picture) {
@@ -81,14 +91,6 @@ export default class Capture extends Component {
 
         const EnableCaptureAndUpload = (
             <div>
-                    <ImageUploader
-                        withIcon={false}
-                        withLabel={false}
-                        buttonText='Choose image from filestorage'
-                        onChange={this.onDrop}
-                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                        maxFileSize={5242880}
-                        singleImage={true} />
 
                 <div className="cam">
                     <Camera
@@ -97,21 +99,26 @@ export default class Capture extends Component {
                                             dataUri: dataUri })
                         } }
                         idealFacingMode = {FACING_MODES.USER}
-                        idealResolution = {{width: 480, height: 480}}
+                        // idealResolution = {{width: 480, height: 480}}
                         imageType = {IMAGE_TYPES.JPG}
                         imageCompression = {0.97}
                         isMaxResolution = {false}
                         isDisplayStartCameraError = {true}
-                        sizeFactor = {1}
-                    />
-        
+                        sizeFactor = {1}/>
                 </div>
 
-                <Button 
-                    variant="primary"
-                    disabled={dataUri}
-                    onClick={!isUploading ? this.onUploadPhoto : null}>Capture photo
-                </Button>
+                <div className="file-photo">
+                    <ImageUploader
+                        withIcon={false}
+                        withLabel={false}
+                        buttonText='Choose from your files'
+                        onChange={this.onDrop}
+                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                        maxFileSize={5242880}
+                        singleImage={true} />
+                </div>
+
+
             </div>
         )
 
@@ -120,13 +127,25 @@ export default class Capture extends Component {
                 <Container>
                     <Row className="justify-content-md-center">
     
-                    {this.state.dataUri ? 
+                    {this.state.dataUri || this.state.emotion || this.state.error ? 
                         <div>
-                            <p><img src={this.state.dataUri} alt=""/></p>
+                            <p><img src={this.state.dataUri} alt="Your photo"
+                                    height="680" width="auto" crop="scale"/></p>
+
+                            {this.state.emotion && <p>You look: {this.state.emotion}</p>}
+                            {this.state.error && <p>An error occured: {this.state.error}</p>}
+                            
                             <Button 
                             variant="primary"
-                            // disabled={dataUri}
-                            onClick={!isUploading ? this.handleRecapture : null}>Recapture
+                            onClick={!isUploading ? this.handleRecapture : null}>
+                                Recapture
+                            </Button>
+
+                            <Button 
+                            variant="primary"
+                            disabled={!dataUri}
+                            onClick={!isUploading ? this.onUploadPhoto : null}>
+                                Upload
                             </Button>
                         </div>
                     : EnableCaptureAndUpload }

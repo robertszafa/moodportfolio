@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
 import { } from 'react-bootstrap'
 import Jumbotron from 'react-bootstrap/Jumbotron'
+import background from '../images/testbg.png'
+import matt from '../images/Matt.jpg'
+import phil from '../images/Phill.jpg'
+import rahul from '../images/Rahul.jpg'
+import rob from '../images/Rob.jpg'
+import thep from '../images/Thep.jpg'
+import gareth from '../images/Matt.jpg'
 import Carousel from 'react-bootstrap/Carousel'
 export default class AboutUs extends Component
+
 {
     render()
     {
@@ -17,8 +25,8 @@ export default class AboutUs extends Component
                 <Carousel>
                   <Carousel.Item>
                     <img
-                      className="d-block w-100"
-                      src="..."
+                      className="d-block w-100 carouselImage"
+                      src={matt}
                       alt="First slide"
                     />
                   <Carousel.Caption>
@@ -29,8 +37,8 @@ export default class AboutUs extends Component
 
                 <Carousel.Item>
                   <img
-                    className="d-block w-100"
-                    src="..."
+                    className="d-block w-100 carouselImage"
+                    src={rahul}
                     alt="Second slide"
                   />
                   <Carousel.Caption>
@@ -41,8 +49,8 @@ export default class AboutUs extends Component
 
                 <Carousel.Item>
                   <img
-                    className="d-block w-100"
-                    src="..."
+                    className="d-block w-100 carouselImage"
+                    src={thep}
                     alt="Third slide"
                   />
                   <Carousel.Caption>
@@ -53,8 +61,8 @@ export default class AboutUs extends Component
 
                 <Carousel.Item>
                   <img
-                    className="d-block w-100"
-                    src="..."
+                    className="d-block w-100 carouselImage"
+                    src={rob}
                     alt="fourth slide"
                   />
                   <Carousel.Caption>
@@ -65,8 +73,8 @@ export default class AboutUs extends Component
 
                 <Carousel.Item>
                   <img
-                    className="d-block w-100"
-                    src="..."
+                    className="d-block w-100 carouselImage"
+                    src={background}
                     alt="Fifth slide"
                   />
                   <Carousel.Caption>
@@ -77,8 +85,8 @@ export default class AboutUs extends Component
 
               <Carousel.Item>
                 <img
-                  className="d-block w-100"
-                  src="..."
+                  className="d-block w-100 carouselImage"
+                  src={phil}
                   alt="Sixth slide"
                 />
                 <Carousel.Caption>
@@ -87,7 +95,18 @@ export default class AboutUs extends Component
                 </Carousel.Caption>
               </Carousel.Item>
             </Carousel>
+            <div id="about us">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                 nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                  sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
             </div>
+            </div>
+
             </div>
         )
     }
