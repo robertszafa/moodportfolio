@@ -52,6 +52,7 @@
 
 /* White box container for login/registration forms */
 .inputForm{
+  padding-top: 10px;
   margin-top: 50px;
   width:350px;
   background: white;

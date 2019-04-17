@@ -14,3 +14,17 @@ html body {
   background-image: linear-gradient(white, #3399ff) ;
   max-width: 100%;
 }
+
+.captureContainer{
+  max-width: 80%;
+  margin:auto;
+  padding-top: 25px;
+}
+
+.toggleButton {
+  margin-bottom: 15px;
+}
+
+.toggleButton:hover{
+  box-shadow: 5px 5px 5px grey;
+}

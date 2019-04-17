@@ -28,7 +28,7 @@ export default class Capture extends Component {
         let longitude = sessionStorage.getItem("longitude");
 
         fetch(apiMoodportfolio + '/Emotions', {
-            method: "POST", 
+            method: "POST",
             mode: "cors",
             cache: "no-cache",
             withCredentials: true,
@@ -72,7 +72,7 @@ export default class Capture extends Component {
     onDrop(picture) {
         let reader = new FileReader();
         reader.readAsDataURL(picture[0]);
-        
+
         let dataUri = ""
         reader.onload = () => {
             dataUri = reader.result;
@@ -126,22 +126,22 @@ export default class Capture extends Component {
             <div className="captureContainer">
                 <Container>
                     <Row className="justify-content-md-center">
-    
-                    {this.state.dataUri || this.state.emotion || this.state.error ? 
+
+                    {this.state.dataUri || this.state.emotion || this.state.error ?
                         <div>
                             <p><img src={this.state.dataUri} alt="Your photo"
-                                    height="680" width="auto" crop="scale"/></p>
+                                    width="100%"/></p>
 
                             {this.state.emotion && <p>You look: {this.state.emotion}</p>}
                             {this.state.error && <p>An error occured: {this.state.error}</p>}
-                            
-                            <Button 
+
+                            <Button
                             variant="primary"
                             onClick={!isUploading ? this.handleRecapture : null}>
                                 Recapture
                             </Button>
 
-                            <Button 
+                            <Button
                             variant="primary"
                             disabled={!dataUri}
                             onClick={!isUploading ? this.onUploadPhoto : null}>

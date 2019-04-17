@@ -9,7 +9,7 @@ import {apiMoodportfolio} from '../App'
 
 
 export default class ChangePassword extends Component {
-    constructor(props) {	
+    constructor(props) {
 		super(props);
 	}
 
@@ -18,9 +18,7 @@ export default class ChangePassword extends Component {
 
     render () {
         return(
-            <Jumbotron>
                 <PasswordApp/>
-            </Jumbotron>
         )
   }
 }
@@ -38,7 +36,8 @@ const PasswordForm = props => {
   } = props;
 
   return (
-      <div>
+
+      <div class = "inputForm">
         <div class="page-header">
             <h1 class="text-center">
                 Change Password
@@ -75,7 +74,7 @@ const PasswordForm = props => {
                     variant="primary"
                     type="submit"
                 >
-                    Save      
+                    Save
                 </Button>
             </Form>
         </div>
@@ -84,7 +83,7 @@ const PasswordForm = props => {
 };
 
 const PasswordApp = withFormik({
-  mapPropsToValues: props => ({ 
+  mapPropsToValues: props => ({
         currentPassword: '',
         password: '',
         repeatPassword: '',
@@ -104,7 +103,7 @@ const PasswordApp = withFormik({
   handleSubmit: (values, { setSubmitting }) => {
       let authToken = localStorage.getItem("authToken");
       fetch(apiMoodportfolio + '/ResetPassword', {
-          method: "PUT", 
+          method: "PUT",
           mode: "cors",
           cache: "no-cache",
           withCredentials: true,
@@ -127,9 +126,8 @@ const PasswordApp = withFormik({
             sessionStorage.setItem("latitude", crd.latitude)
             sessionStorage.setItem("longitude", crd.longitude)
         });
-      } 
+      }
   },
 
   displayName: 'BasicForm',
 })(PasswordForm);
-
