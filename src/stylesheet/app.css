@@ -22,9 +22,13 @@ html body {
 }
 
 .toggleButton {
-  margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 
-.toggleButton:hover{
+/* .toggleButton:hover{
   box-shadow: 5px 5px 5px grey;
+} */
+
+.menuLogo{
+  margin-bottom: 15px;
 }
