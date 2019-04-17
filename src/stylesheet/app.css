@@ -32,3 +32,19 @@ html body {
 .menuLogo{
   margin-bottom: 15px;
 }
+
+.homeSecondary{
+  padding-top: 56.25%;
+  position:relative;
+  margin:auto;
+  width:80%;
+  background:orange;
+}
+.homeGraph{
+  padding-top: 56.25%;
+  position:relative;
+  margin:auto;
+  width:80%;
+  background:green;
+  margin-bottom: 30px;
+}
