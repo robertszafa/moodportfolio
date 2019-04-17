@@ -42,16 +42,18 @@ html body {
 
 .homeSecondary{
   padding-top: 56.25%;
-  position:relative;
   margin:auto;
   width:80%;
   background:orange;
+  max-height: 500px;
+  max-width: 900px;
 }
 .homeGraph{
   padding-top: 56.25%;
-  position:relative;
   margin:auto;
   width:80%;
   background:green;
   margin-bottom: 30px;
+  max-height: 500px;
+  max-width: 900px;
 }
