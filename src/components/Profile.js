@@ -43,15 +43,6 @@ export default class Profile extends Component {
         return(
     <div id="inputForm">
             <ProfileApp userData={this.state.userData}/>
-
-            <div class="text-center">
-                <Button
-                    variant="secondary"
-                    type="submit"
-                >
-                    <Link to="/change-password">Change password</Link>
-                </Button>
-            </div>
     </div>
         )
   }
@@ -209,6 +200,22 @@ const ProfileForm = props => {
                 <Button variant="primary" type="submit">
                     Save
                 </Button>
+
+
+
+                <br></br>
+                <br></br>
+                <div class="text-center">
+                <Button
+                    variant="secondary"
+                    type="submit"
+                >
+                    <Link to="/change-password">Change password</Link>
+                </Button>
+                <br></br>
+            </div>
+
+
             </Form>
         </div>
     </div>
