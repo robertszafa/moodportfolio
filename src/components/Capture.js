@@ -151,6 +151,18 @@ export default class Capture extends Component {
                     : EnableCaptureAndUpload }
                     </Row>
                 </Container>
+                <div class = "text-center moodDiary">
+                  <h3> Recent activities </h3>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Diary Entry: </span>
+                    </div>
+                    <div class="input-group-append">
+                      <button class="btn btn-dark" type="button">Save</button>
+                    </div>
+                    <textarea class="form-control" aria-label="With textarea"></textarea>
+                  </div>
+                </div>
             </div>
         )
     }
