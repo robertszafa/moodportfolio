@@ -102,6 +102,7 @@ export default class Capture extends Component {
             dataUri: "",
             webcamEnabled: true,
             isUploading: false,
+            description: "",
             error: "",
             emotion: "",
         })
