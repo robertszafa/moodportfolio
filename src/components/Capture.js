@@ -5,9 +5,11 @@ import ImageUploader from 'react-images-upload';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
 
+
 export default class Capture extends Component {
     constructor(props) {
         super(props);
+        this.maxDescriptionLength = 280;
         this.state = {
             dataUri: "",
             webcamEnabled: true,
@@ -15,9 +17,13 @@ export default class Capture extends Component {
             isUploading: false,
             emotion: "",
             error: "",
+            description: "",
+            uploadedPhotoPath: "",
         }
         this.onDrop = this.onDrop.bind(this);
         this.onUploadPhoto = this.onUploadPhoto.bind(this);
+        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+        this.onUploadDescription = this.onUploadDescription.bind(this);
     }
 
     // Upload the photo to the server for classification
@@ -46,13 +52,41 @@ export default class Capture extends Component {
             console.log(json)
             if (json.success) {
                 this.setState({ isUploading: false,
-                                emotion: json.emotion})
+                                emotion: json.emotion,
+                                uploadedPhotoPath: json.photoPath,})
+                    
             }
             else {
                 this.setState({ isUploading: false,
                                 error: json.error})
             }
         })
+    }
+
+    onUploadDescription() {
+        let authToken = localStorage.getItem("authToken");
+
+        fetch(apiMoodportfolio + '/PhotoDescription', {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            withCredentials: true,
+            credentials: "same-origin",
+            headers: {
+                "Authorization": authToken,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "photoPath": this.state.uploadedPhotoPath,
+                                    "description": this.state.description,})
+        })
+        .then((res) => res.json())
+        .then(json => {
+            console.log(json)
+        })
+    }
+
+    handleDescriptionChange(event) {
+        this.setState({description: event.target.value});
     }
 
 
@@ -137,13 +171,14 @@ export default class Capture extends Component {
 
                             <Button
                             variant="primary"
+                            disabled={isUploading}
                             onClick={!isUploading ? this.handleRecapture : null}>
                                 Recapture
                             </Button>
 
                             <Button
                             variant="primary"
-                            disabled={!dataUri}
+                            disabled={!dataUri || isUploading || this.state.emotion}
                             onClick={!isUploading ? this.onUploadPhoto : null}>
                                 Upload
                             </Button>
@@ -151,18 +186,38 @@ export default class Capture extends Component {
                     : EnableCaptureAndUpload }
                     </Row>
                 </Container>
-                <div class = "text-center moodDiary">
-                  <h3> Recent activities </h3>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">Diary Entry: </span>
+
+                {this.state.emotion &&
+                    <div class = "text-center moodDiary">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Add description: </span>
+                            </div>
+
+                            <textarea class="form-control" 
+                                    type="text"
+                                    maxLength="280"
+                                    aria-label="With textarea"
+                                    value={this.state.description}
+                                    onChange={this.handleDescriptionChange}>
+                            </textarea>
+
+                            <div class="input-group-append">
+                                <button class="btn btn-dark" 
+                                        type="submit" 
+                                        value="submit"
+                                        disabled={!this.state.description}
+                                        onClick={this.onUploadDescription}>
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            {this.state.description.length} / {this.maxDescriptionLength}
+                        </div>
                     </div>
-                    <div class="input-group-append">
-                      <button class="btn btn-dark" type="button">Save</button>
-                    </div>
-                    <textarea class="form-control" aria-label="With textarea"></textarea>
-                  </div>
-                </div>
+                }
             </div>
         )
     }
