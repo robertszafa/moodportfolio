@@ -16,6 +16,8 @@ export default class Capture extends Component {
             canUpload: false,
             isUploading: false,
             emotion: "",
+            dominantEmotion: "",
+            dominantEmotionValue: "",
             error: "",
             description: "",
             uploadedPhotoPath: "",
@@ -33,7 +35,7 @@ export default class Capture extends Component {
         let latitude = sessionStorage.getItem("latitude");
         let longitude = sessionStorage.getItem("longitude");
 
-        fetch(apiMoodportfolio + '/Emotions', {
+        fetch(apiMoodportfolio + '/ClassifyEmotion', {
             method: "POST",
             mode: "cors",
             cache: "no-cache",
@@ -51,8 +53,11 @@ export default class Capture extends Component {
         .then(json => {
             console.log(json)
             if (json.success) {
+
                 this.setState({ isUploading: false,
                                 emotion: json.emotion,
+                                dominantEmotion: Object.keys(json.dominantEmotion)[0],
+                                dominantEmotionValue: Object.values(json.dominantEmotion)[0],
                                 uploadedPhotoPath: json.photoPath,})
                     
             }
@@ -166,7 +171,8 @@ export default class Capture extends Component {
                             <p><img src={this.state.dataUri} alt="Your photo"
                                     width="100%"/></p>
 
-                            {this.state.emotion && <p>You look: {this.state.emotion}</p>}
+                            {this.state.emotion && 
+                                <p>You look: {this.state.dominantEmotionValue}% {this.state.dominantEmotion}</p>}
                             {this.state.error && <p>An error occured: {this.state.error}</p>}
 
                             <Button
