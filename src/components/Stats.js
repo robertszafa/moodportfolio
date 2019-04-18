@@ -21,6 +21,32 @@ export default class Stats extends React.Component {
 		this.handleTagClick = this.handleTagClick.bind(this);
 		this.handleEmotionClick = this.handleEmotionClick.bind(this);
 	}
+
+	componentDidMount() {
+        let authToken = localStorage.getItem("authToken");
+        let basedOn = "all";
+
+        fetch(apiMoodportfolio + '/EmotionsQuery', {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            withCredentials: true,
+            credentials: "same-origin",
+            headers: {
+                "Authorization": authToken,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "basedOn": basedOn,
+                                    "startDate": '18/04/2019',
+									"endDate": '19/04/2019',
+								})
+        })
+        .then((res) => res.json())
+        .then(json => {
+            console.log('result', json)
+		})
+		.catch(err => console.log(err))
+	}
 	
 	handleMenuClick(o){
 		this.setState({graphOption: o});
