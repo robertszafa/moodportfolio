@@ -1,0 +1,19 @@
+.center-outer-container {
+	text-align: center;
+	width: 90%;
+}
+
+.button-row {
+	width: 100%;
+	display: inline-block;
+}
+
+.card-carousel {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.card {
+    flex: 0 0 auto;
+}

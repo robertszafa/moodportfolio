@@ -6,7 +6,7 @@ import SideMenu from './components/menu/SideMenu'
 import BackDrop from './components/menu/BackDrop' 
 import Home from './components/Home'
 import Capture from './components/Capture'
-import Graph from './components/Graph'
+import Stats from './components/Stats'
 import AboutUs from './components/AboutUs'
 import Login from './components/Login'
 import Profile from './components/Profile'
@@ -90,7 +90,7 @@ export default class App extends Component {
               <main style={{marginTop: '54px'}}>
                   <Route exact path={"/"} component={Home} />
                   <Route path={"/capture"} component={Capture} />
-                  <Route path={"/graph"} component={Graph} />
+                  <Route path={"/stats"} component={Stats} />
                   <Route path={"/profile"} component={Profile} />
                   <Route path={"/about-us"} component={AboutUs} />
                   <Route path={"/change-password"} component={ChangePassword} />
