@@ -6,6 +6,7 @@ import '../stylesheet/stats.css';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Container from 'react-bootstrap/Container';
+import Photo from './Photo'
 import {apiMoodportfolio} from '../App';
 
 //Need to remember to reset graphOption to -1 when navigating away from component - unless it gets recreated?
@@ -14,9 +15,10 @@ export default class Stats extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			graphOption: -1 //what the graph is based on. 1 = all, 2 = emotion, 3 = tag
+			graphOption: -1, //what the graph is based on. 1 = all, 2 = emotion, 3 = tag
 		}
 		
+		this.photos = new Array();
 		this.handleMenuClick = this.handleMenuClick.bind(this);
 		this.handleTagClick = this.handleTagClick.bind(this);
 		this.handleEmotionClick = this.handleEmotionClick.bind(this);
@@ -43,9 +45,13 @@ export default class Stats extends React.Component {
         })
         .then((res) => res.json())
         .then(json => {
-            console.log('result', json)
+			const result = json.result
+			result.forEach(jsonData => {
+				this.photos.push(new Photo(jsonData));
+			});
 		})
 		.catch(err => console.log(err))
+
 	}
 	
 	handleMenuClick(o){
@@ -61,7 +67,6 @@ export default class Stats extends React.Component {
 	}
 	
 	render () {
-		
 		var j;
 		j = <Graph graphOption={this.state.graphOption}/>;
 		
