@@ -103,66 +103,6 @@ export default class Stats extends React.Component {
 				
 			</div>
 		);
-		/*
-		switch (this.state.graphOption){
-			case 1:
-				//all, straight into graph
-				return (
-					<Graph graphOption={this.state.graphOption}/>
-				);
-			case 2:
-				//Emotion, select emotion
-				if (this.state.emotion){
-					return (
-						<Graph graphOption={this.state.graphOption} emotion={this.state.emotion}/>
-					);//but also pass emotion
-				} else {
-					return (
-						<EmotionMenu onClick={this.handleEmotionClick} />
-					);
-				}
-			case 3:
-			//incorrect code here, TEMPORARY ONLY.
-			return (
-					<Graph graphOption={this.state.graphOption}/>
-				);
-
-			//use tag-buttons probably
-			/*
-				//Tag, select Tag(s)
-				if (this.state.tag) {
-					return (
-						<Graph graphOption={this.state.graphOption} tag={this.state.tag}/> 
-					);//but also pass tag
-				} else {
-					return (
-						<TagMenu onClick={this.handleTagClick} />
-					);
-				}
-				
-			default:
-				//Display menu of graph options
-				return (
-				<div class='center-outer-container'>
-					<StatsMenu onClick = {this.handleMenuClick}/>
-					</div>
-				);
-		}
-		*/
-		
-		/*
-		if (this.state.graphOption < 0){
-			//Display menu of graph options
-			return (
-				<StatsMenu onClick = {this.handleMenuClick}/>
-			);
-		} else {
-			//Display graph based on chosen option
-			return (
-				<Graph graphOption={this.state.graphOption}/>
-			);
-		}
-		*/
 	}
 
 }
