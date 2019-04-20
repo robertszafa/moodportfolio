@@ -7,11 +7,14 @@ export default class Photo extends Component {
         super(props);
 		this.state = {
             photoUri: "",
-            path: this.props.path,
+            photoId: this.props.photoID,
             timestamp: this.props.timestamp,
             emotion: JSON.parse(this.props.emotion),
             dominantEmotion: getDominantEmotion(JSON.parse(this.props.emotion)),
         };
+
+        console.log("Photo state: ", this.state);
+        
     }
     
 
@@ -25,7 +28,7 @@ export default class Photo extends Component {
             credentials: "same-origin",
             headers: {
                 "Authorization": authToken,
-                "Path": this.state.path,
+                "PhotoId": this.state.photoId,
                 "Content-Type": "application/json",
             },
         })
@@ -36,7 +39,16 @@ export default class Photo extends Component {
             })
         })
     }
+
+    render() {
+
+        return (
+            <p><img src={this.state.photoUri} alt="Your photo"width="100%"/></p>
+        )
+    }
 }
+
+
 
 
 function getDominantEmotion(emotions) {

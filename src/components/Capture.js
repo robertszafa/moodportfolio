@@ -4,6 +4,7 @@ import 'react-html5-camera-photo/build/css/index.css'
 import ImageUploader from 'react-images-upload';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
+import Tag from './Tag'
 
 
 export default class Capture extends Component {
@@ -18,9 +19,9 @@ export default class Capture extends Component {
             emotion: "",
             dominantEmotion: "",
             dominantEmotionValue: "",
-            error: "",
+            photoId: "",
             description: "",
-            uploadedPhotoPath: "",
+            error: "",
         }
         this.onDrop = this.onDrop.bind(this);
         this.onUploadPhoto = this.onUploadPhoto.bind(this);
@@ -56,14 +57,16 @@ export default class Capture extends Component {
 
                 this.setState({ isUploading: false,
                                 emotion: json.emotion,
+                                photoId: json.photoId,
                                 dominantEmotion: Object.keys(json.dominantEmotion)[0],
                                 dominantEmotionValue: Object.values(json.dominantEmotion)[0],
-                                uploadedPhotoPath: json.photoPath,})
+                            })
                     
             }
             else {
                 this.setState({ isUploading: false,
-                                error: json.error})
+                                error: json.error
+                            })
             }
         })
     }
@@ -81,8 +84,9 @@ export default class Capture extends Component {
                 "Authorization": authToken,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ "photoPath": this.state.uploadedPhotoPath,
-                                    "description": this.state.description,})
+            body: JSON.stringify({ "photoId": this.state.photoId,
+                                    "description": this.state.description,
+                                })
         })
         .then((res) => res.json())
         .then(json => {
@@ -105,6 +109,7 @@ export default class Capture extends Component {
             description: "",
             error: "",
             emotion: "",
+            photoId: "",
         })
     };
 

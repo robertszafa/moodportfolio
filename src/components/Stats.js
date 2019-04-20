@@ -25,33 +25,32 @@ export default class Stats extends React.Component {
 	}
 
 	componentDidMount() {
-        let authToken = localStorage.getItem("authToken");
-        let basedOn = "all";
+			let authToken = localStorage.getItem("authToken");
+			let basedOn = "all";
 
-        fetch(apiMoodportfolio + '/EmotionsQuery', {
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache",
-            withCredentials: true,
-            credentials: "same-origin",
-            headers: {
-                "Authorization": authToken,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ "basedOn": basedOn,
-                                    "startDate": '18/04/2019',
-									"endDate": '19/04/2019',
-								})
-        })
-        .then((res) => res.json())
-        .then(json => {
-			const result = json.result
-			result.forEach(jsonData => {
-				this.photos.push(new Photo(jsonData));
-			});
-		})
-		.catch(err => console.log(err))
-
+			fetch(apiMoodportfolio + '/EmotionsQuery', {
+					method: "POST",
+					mode: "cors",
+					cache: "no-cache",
+					withCredentials: true,
+					credentials: "same-origin",
+					headers: {
+							"Authorization": authToken,
+							"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ "basedOn": basedOn,
+																	"startDate": '18/04/2019',
+																	"endDate": '19/04/2019',
+							})
+			})
+			.then((res) => res.json())
+			.then(json => {
+				const result = json.result
+				result.forEach(jsonData => {
+					this.photos.push(new Photo(jsonData));
+				});
+			})
+			.catch(err => console.log(err))
 	}
 	
 	handleMenuClick(o){
@@ -94,10 +93,14 @@ export default class Stats extends React.Component {
 				//graph option not chosen yet, menu of graph options
 				j = <StatsMenu onClick = {this.handleMenuClick}/>
 		}
+
+		const photoTest = this.photos[0]
+		
 		
 		return (
 			<div className='text-center'>
 				{j}
+				
 			</div>
 		);
 		/*
