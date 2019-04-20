@@ -12,33 +12,44 @@ export default class Tag extends Component {
             name: "",
             photoID: "",
             tagID: "",
+            savedOnServer: false,
         };
     }
 
-    componentDidMount() {
+    osSaveTag() {
         let authToken = localStorage.getItem("authToken");
         fetch(apiMoodportfolio + '/PhotoTag', {
-            method: "GET",
+            method: "POST",
             mode: "cors",
             cache: "no-cache",
             withCredentials: true,
             credentials: "same-origin",
             headers: {
                 "Authorization": authToken,
-                "Path": this.state.path,
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+                    "photoId": this.state.photoID,                                
+                    "tagName": this.state.name,                     
+                })
         })
         .then(res => res.json())
         .then(json => {
-            this.setState({
-                photoUri: json.photoUri,
-            })
+            console.log(json);
+            
+            if (json.success) {
+                this.setState({
+                    savedOnServer: true,
+                })
+            }
         })
     }
 
     handleChange(e) {
-        this.setState({ name: e.target.value })
+        this.setState({ 
+            name: e.target.value,
+            savedOnServer: false,
+        })
     }
 
     render() {
@@ -47,7 +58,7 @@ export default class Tag extends Component {
             <TextField
                 label="Tag"
                 value={this.state.name}
-                onChange={this.handleChange()}
+                onChange={e => this.handleChange(e)}
                 margin="normal"
             />
         )

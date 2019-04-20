@@ -230,6 +230,13 @@ export default class Capture extends Component {
                         </div>
                     </div>
                 }
+
+                {this.state.emotion &&
+                    <div>
+                        <Tag photoId={this.state.photoId}></Tag>                    
+                    </div>
+                }
+
             </div>
         )
     }
