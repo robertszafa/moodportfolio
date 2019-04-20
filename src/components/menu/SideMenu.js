@@ -18,7 +18,7 @@ const sideMenu = props => (
         <ul>
             <li><a componentClass={Link} href="/" to="/">Home</a></li>
             <li><a componentClass={Link} href="/capture" to="/capture">Capture</a></li>
-            <li><a componentClass={Link} href="/graph" to="/graph">Graph</a></li>
+            <li><a componentClass={Link} href="/stats" to="/stats">Stats</a></li>
             <li><a componentClass={Link} href="/profile" to="/profile">Profile</a></li>
             <li><a componentClass={Link} href="/about-us" to="/about-us">About Us</a></li>
             <li><a componentClass={Link} href="/login" onClick={handleLogoutClick}>Logout</a></li>
