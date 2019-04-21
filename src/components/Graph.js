@@ -17,14 +17,15 @@ export default class Graph extends React.Component {
 			startDate: changeDate(1,getDayStart(Date.now()),-1),
 			endDate: getDayEnd(Date.now()),
 			selectedTime: 1, //Day = 1, Week = 2, Month  = 3
-			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected)
+			selectedGraph: 3, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected). Have left bar in for now.
 			graphData: {},
 			indexClicked: -1,
-			photos: []
+			photos: new Array()
 		}
 		
 		//this.photos = new Array(); //other way to set up the photos array if not meant to be state.
 		
+		this.dbEmotions = ['anger','contempt','disgust','fear','happiness','neutral','sadness','surprise'];
 		this.handleTimeClick = this.handleTimeClick.bind(this);
 		this.handleTypeClick = this.handleTypeClick.bind(this);
 		this.handleBackClick = this.handleBackClick.bind(this);
@@ -33,21 +34,73 @@ export default class Graph extends React.Component {
 	}
 	
 	componentWillMount(){
-		this.GetPhotos();
-		this.SetGraphData();
-		this.SetGraphOptions();
+		this.GetPhotos(this.state.startDate,this.state.endDate);
 	}
 	
 	//Get Graph Data
 	
-	GetPhotos(){
+	testData(){
+		
+		var testData = [20, 30, 15, 10, 20, 9, 8, 17];
+		
+		this.setState({
+			graphData: {
+				label: 'Pie data',
+				labels: [
+					'Anger',
+					'Contempt',
+					'Disgust',
+					'Fear',
+					'Joy',
+					'Surprise',
+					'Sadness',
+					'Neutral'
+				],
+				datasets: [{
+					data: testData,
+					backgroundColor: [
+						'#d270d3',
+						'#fb7821',
+						'#e83e17',
+						'#bfc0ee',
+						'#9f9e26',
+						'#700846',
+						'#771aab',
+						'#e24b5a'
+					],
+					hoverBackgroundColor: [
+						'#043d7e',
+						'#beafa9',
+						'#4fc690',
+						'#667559',
+						'#d29e81',
+						'#46bbe9',
+						'#13744c',
+						'#9125d5'
+					]
+				}]
+			}
+		});
+	}
+	
+	// Gets Photos from server and then stuff
+	// Uses startDate, endDate
+	GetPhotos(start, end){
 		
 		let authToken = localStorage.getItem("authToken");
 		let basedOn = "all";
-		let strt = formatDate(this.state.startDate);
-		let end = formatDate(this.state.endDate);
-		//console.log(strt + " - " + end);
-		console.log(strt + " - " + end);
+		start = formatDate(start);
+		end = formatDate(end);
+		console.log(start);
+		console.log(end);
+		//let strt = formatDate(this.state.startDate);
+		//let end = formatDate(this.state.endDate);
+
+		//EMPTY THE Photos
+		this.setState({
+			photos: new Array()
+		});
+		
 		fetch(apiMoodportfolio + '/EmotionsQuery', {
 					method: "POST",
 					mode: "cors",
@@ -59,7 +112,7 @@ export default class Graph extends React.Component {
 							"Content-Type": "application/json",
 					},
 					body: JSON.stringify({ "basedOn": basedOn,
-																	"startDate": strt,
+																	"startDate": start,
 																	"endDate": end,
 							})
 			})
@@ -69,14 +122,14 @@ export default class Graph extends React.Component {
 				result.forEach(jsonData => {
 					this.state.photos.push(new Photo(jsonData));
 				});
+				this.SetGraphData(this.selectedGraph);
+				this.SetGraphOptions();
 				//console.log(this.state.photos[0].props.timestamp);
 			})
 			.catch(err => console.log(err))
-		
 	}
 	
-	SetGraphOptions(timeCode){
-		
+	SetGraphOptions(timeCode, graphCode){
 		var timeValue;
 		switch (timeCode) {
 			case 1:
@@ -88,6 +141,8 @@ export default class Graph extends React.Component {
 			case 3:
 				timeValue = 28;
 		}
+		
+		//only call this when graph is over time
 		
 		this.setState({
 			
@@ -120,20 +175,89 @@ export default class Graph extends React.Component {
 			}
 		});
 	}
-	
-	SetGraphData(){
-		//if chart is line then need to average out the data, otherwise don't.
+
+	SetGraphData(graphCode){
 		
-		let emotions = [];
+		//if chart is line then need to average out the data, otherwise don't.
+		//extract data from photos
+		
+		let emotionProb = new Array();
+		
 		let timestamp = [];
-		var i;
+		let i;
 		for (i = 0; i < this.state.photos.length; i++){
-			emotions.push(this.state.photos.props.dominantEmotion[i]);
-			timestamp.push(this.state.photos.props.timestamp[i]);
+			emotionProb.push(JSON.stringify(this.state.photos[i].state.dominantEmotion));
+			timestamp.push(this.state.photos[i].props.timestamp);
 		}
-		console.log(emotions);
-		console.log(timestamp);
+		
+		var emotionsString = emotionProb.toString();
 		//turn photo info into graphData
+
+		//if graph is over time
+		if (graphCode === 2){
+			this.SetGraphData_OverTime(emotionsString,timestamp);
+		} else {
+			this.SetGraphData_Overall(emotionsString,timestamp);
+		}
+
+	}
+	
+	SetGraphData_Overall(emotionProbs, timestamp){
+		var emotionP = emotionProbs.split(",");
+		//loop through the emotions and count total of each
+		let emotionCount = new Array(this.dbEmotions.length).fill(0);
+		
+		let i, j;
+		for (i = 0; i < emotionP.length; i++){
+			for (j = 0; j < this.dbEmotions.length; j++){
+				if (emotionP[i].includes(this.dbEmotions[j])){
+					emotionCount[i] ++;
+				}
+			}
+		}
+
+		this.setState({
+			graphData: {
+				label: 'Emotions Overall',
+				labels: [
+					'Anger',
+					'Contempt',
+					'Disgust',
+					'Fear',
+					'Happy',
+					'Neutral',
+					'Sad',
+					'Surprise'
+				],
+				datasets: [{
+					data: emotionCount,
+					backgroundColor: [
+						'#d270d3',
+						'#fb7821',
+						'#e83e17',
+						'#bfc0ee',
+						'#9f9e26',
+						'#700846',
+						'#771aab',
+						'#e24b5a'
+					],
+					hoverBackgroundColor: [
+						'#043d7e',
+						'#beafa9',
+						'#4fc690',
+						'#667559',
+						'#d29e81',
+						'#46bbe9',
+						'#13744c',
+						'#9125d5'
+					]
+				}]
+			}
+		});
+	}
+	
+	SetGraphData_OverTime(emotions,timestamp){
+
 		this.setState ({
 			
 			graphData: {
@@ -173,7 +297,6 @@ export default class Graph extends React.Component {
 				}]
 			}
 		});
-
 	}
 	
 	//Button handling functions
@@ -181,7 +304,7 @@ export default class Graph extends React.Component {
 	handleTimeClick(o){
 		//if day then don't subtract
 		var d;
-		if (o == 1){
+		if (o === 1){
 			d = this.state.endDate;
 		} else {
 			d = changeDate(o,this.state.endDate,-1);
@@ -195,20 +318,31 @@ export default class Graph extends React.Component {
 	
 	handleTypeClick(o){
 		this.setState({selectedGraph: o});
+		this.GetPhotos(this.state.startDate, this.state.endDate);
 	}
 	
 	handleBackClick(){
+		
+		let start = changeDate(this.state.selectedTime, this.state.startDate, -1);
+		let end = changeDate(this.state.selectedTime, this.state.endDate, -1);
+		
 		this.setState({
-			startDate: changeDate(this.state.selectedTime, this.state.startDate, -1),
-			endDate: changeDate(this.state.selectedTime, this.state.endDate, -1)
+			startDate: start,
+			endDate: end
 		});
+		this.GetPhotos(start, end);
 	}
 	
 	handleForwardClick(){
+		
+		let start = changeDate(this.state.selectedTime, this.state.startDate, 1);
+		let end = changeDate(this.state.selectedTime, this.state.endDate, 1);
+		
 		this.setState({
-			startDate: changeDate(this.state.selectedTime, this.state.startDate, 1),
-			endDate: changeDate(this.state.selectedTime, this.state.endDate, 1)
+			startDate: start,
+			endDate: end
 		});
+		this.GetPhotos(start, end);
 	}
 	
 	handleNodeClick(e){
@@ -224,7 +358,6 @@ export default class Graph extends React.Component {
 	}
 	
 	render () {
-		console.log(this.state.selectedGraph);
 		//do different stuff based on if data is ready or not
 		
 		var j;
@@ -233,13 +366,14 @@ export default class Graph extends React.Component {
 		}
 		
 		return (
+		
 		<div className='text-center'>
 			{/* Time unit menu */}
 			<TimeMenu onClick = {this.handleTimeClick}/>
 			{/* Date menu */}
 			<DateSelector startDate={this.state.startDate} endDate={this.state.endDate} timeCode={this.state.selectedTime} onBackClick={this.handleBackClick} onForwardClick={this.handleForwardClick}/>
-			{/* Time unit menu */}
-			<GraphPlotter type = {this.state.selectedGraph} options = {this.state.graphOptions} data = {this.state.graphData} onClick={this.handleNodeClick}/>
+			{/* Graph Component */}
+			<GraphPlotter type = {this.state.selectedGraph} data = {this.state.graphData} onClick={this.handleNodeClick}/>
 			{/* Graph type menu */}
 			<GraphMenu onClick = {this.handleTypeClick}/>
 			{/* Node Viewer */}
@@ -252,7 +386,6 @@ export default class Graph extends React.Component {
 class DateSelector extends React.Component {
 	constructor(props) {
 		super(props);
-		
 		this.handleBackClick = this.handleBackClick.bind(this);
 		this.handleForwardClick = this.handleForwardClick.bind(this);
 	}
@@ -270,8 +403,8 @@ class DateSelector extends React.Component {
 		//if (changeDate(this.props.timeCode,this.props.endDate,1) > 
 		
 		var dateText;
-		if (this.props.timeCode == 1){
-			dateText = " " + formatDate(this.props.endDate) + " ";
+		if (this.props.timeCode === 1){
+			dateText = " " + formatDate(this.props.startDate) + " ";
 		} else {
 		dateText = (" " + formatDate(this.props.startDate) + " - " + formatDate(this.props.endDate) + " ");
 			//dateText = "ERROR";
@@ -311,11 +444,13 @@ class TimeMenu extends React.Component {
 	
 	render () {
 		return (
+		<div>
 			<ButtonGroup className="time-menu" size="sm">
 				{this.renderButton("Day",1)}
 				{this.renderButton("Week",2)}
 				{this.renderButton("Month",3)}
 			</ButtonGroup>
+			</div>
 		);
 	}
 }
@@ -354,9 +489,8 @@ class GraphMenu extends React.Component {
 	render () {
 		return (
 			<ButtonGroup className="graph-menu" size="sm">
-				{this.renderButton("Bar",1)}
-				{this.renderButton("Line",2)}
-				{this.renderButton("Pie",3)}
+				{this.renderButton("Over Time",2)}
+				{this.renderButton("Overall",3)}
 			</ButtonGroup>
 		);
 	}

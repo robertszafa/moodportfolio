@@ -3,6 +3,7 @@ import { Chart, Bar, Line, Pie } from 'react-chartjs-2';
 
 //The Graph component. Draws pie, line and bar charts. Add radio if have time.
 export default class GraphPlotter extends React.Component {
+	/*
 	constructor(props) {	
 		super(props);
 
@@ -11,6 +12,7 @@ export default class GraphPlotter extends React.Component {
 		};
 		
 	}
+	*/
 	
 	handleClick(e){
 		this.props.onClick(e);
@@ -31,7 +33,7 @@ export default class GraphPlotter extends React.Component {
 		return (
 			<LineGraph
 			options = {this.props.options}
-			value = {this.state.data}
+			value = {this.props.data}
 			getIndex = {(e) => this.handleClick(e)}
 			/>
 		);
@@ -41,7 +43,7 @@ export default class GraphPlotter extends React.Component {
 		Chart.defaults.global.legend.display = true;
 		return (
 			<PieGraph
-			value = {this.state.data}
+			value = {this.props.data}
 			getIndex = {(e) => this.handleClick(e)}
 			/>
 		);
@@ -50,7 +52,6 @@ export default class GraphPlotter extends React.Component {
 	render() {
 		
 		var j;
-		
 		switch (this.props.type) {
 			case 1:
 				j = this.renderBar();
