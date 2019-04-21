@@ -6,8 +6,6 @@ import '../stylesheet/stats.css';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Container from 'react-bootstrap/Container';
-import Photo from './Photo'
-import {apiMoodportfolio} from '../App';
 
 //Need to remember to reset graphOption to -1 when navigating away from component - unless it gets recreated?
 export default class Stats extends React.Component {
@@ -18,39 +16,9 @@ export default class Stats extends React.Component {
 			graphOption: -1, //what the graph is based on. 1 = all, 2 = emotion, 3 = tag
 		}
 		
-		this.photos = new Array();
 		this.handleMenuClick = this.handleMenuClick.bind(this);
 		this.handleTagClick = this.handleTagClick.bind(this);
 		this.handleEmotionClick = this.handleEmotionClick.bind(this);
-	}
-
-	componentDidMount() {
-			let authToken = localStorage.getItem("authToken");
-			let basedOn = "all";
-
-			fetch(apiMoodportfolio + '/EmotionsQuery', {
-					method: "POST",
-					mode: "cors",
-					cache: "no-cache",
-					withCredentials: true,
-					credentials: "same-origin",
-					headers: {
-							"Authorization": authToken,
-							"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ "basedOn": basedOn,
-																	"startDate": '18/04/2019',
-																	"endDate": '19/04/2019',
-							})
-			})
-			.then((res) => res.json())
-			.then(json => {
-				const result = json.result
-				result.forEach(jsonData => {
-					this.photos.push(new Photo(jsonData));
-				});
-			})
-			.catch(err => console.log(err))
 	}
 	
 	handleMenuClick(o){
@@ -93,8 +61,6 @@ export default class Stats extends React.Component {
 				//graph option not chosen yet, menu of graph options
 				j = <StatsMenu onClick = {this.handleMenuClick}/>
 		}
-
-		const photoTest = this.photos[0]
 		
 		
 		return (
@@ -134,11 +100,11 @@ class StatsMenu extends React.Component {
 				<p/>
 				<div className="menu-buttons">
 				<ButtonGroup vertical>
-					{this.renderButton("Eveything", 1)}
+					{this.renderButton("Everything", 1)}
 					<p/>
-					{this.renderButton("Emotion", 2)}
+					{this.renderButton("An Emotion", 2)}
 					<p/>
-					{this.renderButton("Tag", 3)}
+					{this.renderButton("A Tag", 3)}
 					</ButtonGroup>
 				</div>
 			</div>

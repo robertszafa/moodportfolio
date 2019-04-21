@@ -6,19 +6,24 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import NodeViewer from './NodeViewer.js';
 import ElementViewer from './ElementViewer.js';
+import Photo from './Photo'
+import {apiMoodportfolio} from '../App';
 
 //The graph and its menus. Also has the method for getting data for the graphs based on the selected options.
 export default class Graph extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			startDate: getDayStart(Date.now()),
+			startDate: changeDate(1,getDayStart(Date.now()),-1),
 			endDate: getDayEnd(Date.now()),
 			selectedTime: 1, //Day = 1, Week = 2, Month  = 3
-			selectedGraph: 3, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected)
+			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected)
 			graphData: {},
-			indexClicked: -1
+			indexClicked: -1,
+			photos: []
 		}
+		
+		//this.photos = new Array(); //other way to set up the photos array if not meant to be state.
 		
 		this.handleTimeClick = this.handleTimeClick.bind(this);
 		this.handleTypeClick = this.handleTypeClick.bind(this);
@@ -28,57 +33,147 @@ export default class Graph extends React.Component {
 	}
 	
 	componentWillMount(){
-		this.GetGraphData();
+		this.GetPhotos();
+		this.SetGraphData();
+		this.SetGraphOptions();
 	}
 	
 	//Get Graph Data
 	
-	GetGraphData(){
-		//API call here to get the data
+	GetPhotos(){
 		
-		//need to do various stuff based on:
-		//timeSpan
-		//over time, emotion or tag 
+		let authToken = localStorage.getItem("authToken");
+		let basedOn = "all";
+		let strt = formatDate(this.state.startDate);
+		let end = formatDate(this.state.endDate);
+		//console.log(strt + " - " + end);
+		console.log(strt + " - " + end);
+		fetch(apiMoodportfolio + '/EmotionsQuery', {
+					method: "POST",
+					mode: "cors",
+					cache: "no-cache",
+					withCredentials: true,
+					credentials: "same-origin",
+					headers: {
+							"Authorization": authToken,
+							"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ "basedOn": basedOn,
+																	"startDate": strt,
+																	"endDate": end,
+							})
+			})
+			.then((res) => res.json())
+			.then(json => {
+				const result = json.result;
+				result.forEach(jsonData => {
+					this.state.photos.push(new Photo(jsonData));
+				});
+				//console.log(this.state.photos[0].props.timestamp);
+			})
+			.catch(err => console.log(err))
 		
-		//switch over graphOption
-		this.setState ({
-				graphData: {
-					label: 'Pie data',
-					labels: [
-						'Anger',
-						'Contempt',
-						'Disgust',
-						'Fear',
-						'Joy',
-						'Surprise',
-						'Sadness',
-						'Neutral'
-					],
-					datasets: [{
-						data: [20, 30, 15, 10, 20, 9, 8, 17],
-						backgroundColor: [
-							'#d270d3',
-							'#fb7821',
-							'#e83e17',
-							'#bfc0ee',
-							'#9f9e26',
-							'#700846',
-							'#771aab',
-							'#e24b5a'
-						],
-						hoverBackgroundColor: [
-							'#043d7e',
-							'#beafa9',
-							'#4fc690',
-							'#667559',
-							'#d29e81',
-							'#46bbe9',
-							'#13744c',
-							'#9125d5'
-						]
+	}
+	
+	SetGraphOptions(timeCode){
+		
+		var timeValue;
+		switch (timeCode) {
+			case 1:
+				timeValue = 1;
+				break;
+			case 2:
+				timeValue = 7;
+				break;
+			case 3:
+				timeValue = 28;
+		}
+		
+		this.setState({
+			
+			options: {
+				title: {text: "No Idea"},
+				scales: {
+					xAxes: [{
+						title: "Time",
+						type: 'time',
+						gridLines: {
+							lineWidth: 2
+						},
+						time: {
+							unit: "day",
+							unitStepSize: timeValue,	
+							displayFormats: {
+								millisecond: 'MMM DD',
+								second: 'MMM DD',
+								minute: 'MMM DD',
+								hour: 'MMM DD',
+								day: 'MMM DD',
+								week: 'MMM DD',
+								month: 'MMM DD',
+								quarter: 'MMM DD',
+								year: 'MMM DD',
+							}
+						}
 					}]
 				}
+			}
 		});
+	}
+	
+	SetGraphData(){
+		//if chart is line then need to average out the data, otherwise don't.
+		
+		let emotions = [];
+		let timestamp = [];
+		var i;
+		for (i = 0; i < this.state.photos.length; i++){
+			emotions.push(this.state.photos.props.dominantEmotion[i]);
+			timestamp.push(this.state.photos.props.timestamp[i]);
+		}
+		console.log(emotions);
+		console.log(timestamp);
+		//turn photo info into graphData
+		this.setState ({
+			
+			graphData: {
+				label: 'Graph Data',
+				labels: [
+					'Anger',
+					'Contempt',
+					'Disgust',
+					'Fear',
+					'Happy',
+					'Neutral',
+					'Sad',
+					'Surprise'
+				],
+				datasets: [{
+					data: [20, 30, 15, 10, 20, 9, 8, 17],
+					backgroundColor: [
+						'#d270d3',
+						'#fb7821',
+						'#e83e17',
+						'#bfc0ee',
+						'#9f9e26',
+						'#700846',
+						'#771aab',
+						'#e24b5a'
+					],
+					hoverBackgroundColor: [
+						'#043d7e',
+						'#beafa9',
+						'#4fc690',
+						'#667559',
+						'#d29e81',
+						'#46bbe9',
+						'#13744c',
+						'#9125d5'
+					]
+				}]
+			}
+		});
+
 	}
 	
 	//Button handling functions
@@ -144,7 +239,7 @@ export default class Graph extends React.Component {
 			{/* Date menu */}
 			<DateSelector startDate={this.state.startDate} endDate={this.state.endDate} timeCode={this.state.selectedTime} onBackClick={this.handleBackClick} onForwardClick={this.handleForwardClick}/>
 			{/* Time unit menu */}
-			<GraphPlotter type = {this.state.selectedGraph} data = {this.state.graphData} onClick={this.handleNodeClick}/>
+			<GraphPlotter type = {this.state.selectedGraph} options = {this.state.graphOptions} data = {this.state.graphData} onClick={this.handleNodeClick}/>
 			{/* Graph type menu */}
 			<GraphMenu onClick = {this.handleTypeClick}/>
 			{/* Node Viewer */}
@@ -285,7 +380,9 @@ function changeDate(timecode, date, modifier) {
 function formatDate(date) {
 	var d = new Date(date);
 	return (
-		d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear()
+		('0' + d.getDate()).slice(-2) + '/' + 
+		('0' + (d.getMonth() + 1)).slice(-2) + '/' + 
+		d.getFullYear()
 	);
 }
 

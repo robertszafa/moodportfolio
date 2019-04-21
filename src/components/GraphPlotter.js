@@ -17,7 +17,7 @@ export default class GraphPlotter extends React.Component {
 	}
 	
 	renderBar(){
-		Chart.defaults.global.legend.display = false;
+		//Chart.defaults.global.legend.display = false;
 		return (
 			<BarGraph
 			value = {this.state.data}
@@ -30,6 +30,7 @@ export default class GraphPlotter extends React.Component {
 		Chart.defaults.global.legend.display = false;
 		return (
 			<LineGraph
+			options = {this.props.options}
 			value = {this.state.data}
 			getIndex = {(e) => this.handleClick(e)}
 			/>
@@ -62,7 +63,7 @@ export default class GraphPlotter extends React.Component {
 		}
 		
 		return (
-			<div class='text-center'>
+			<div className ='text-center'>
 				{j}
 			</div>
 		);
