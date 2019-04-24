@@ -122,6 +122,23 @@
  margin-bottom: 25px;
 }
 
+.stats{
+  margin-top: 50px;
+  width: 2500px;
+  max-width: 90%;
+  margin: auto;
+  border-radius: 10px;
+}
+
+.graph{
+  width: 100%;
+  background-color: white;
+  float:center;
+  border-radius:10px;
+  box-shadow: 5px 5px 5px grey;
+  margin-bottom: 25px;
+}
+
 #profilePicture{
   border-radius: 50%;
   border: solid #3399ff 5px;

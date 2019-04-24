@@ -64,9 +64,10 @@ export default class Stats extends React.Component {
 		
 		
 		return (
-			<div className='text-center'>
-				{j}
-				
+			<div className='container'>
+				<div className='col-md-8 stats text-center'>
+					{j}					
+				</div>
 			</div>
 		);
 	}

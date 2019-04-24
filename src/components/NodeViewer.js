@@ -41,7 +41,7 @@ export default class NodeViewer extends React.Component{
 
 function CarouselCard(props){
 	return (
-		<Card style={{ width: '10rem' }} className='card'>
+		<Card style={{ width: '5rem' }} className='card'>
 			<Card.Img variant="top" src=""/>
 			<Card.Body>
 				

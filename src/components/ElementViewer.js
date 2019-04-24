@@ -31,7 +31,7 @@ function ElementCard(props) {
 			<Card style={{ width: '100%' }} className='card'>
 			<Card.Img variant="top" src=""/>
 			<Card.Body>
-				<Card.Title>{this.props.emotion}<br/>{this.props.timestamp}</Card.Title>
+				<Card.Text>{this.props.emotion}<br/>{this.props.timestamp}</Card.Text>
 				{/* Tags */}
 				<Button variant="primary">"Change Emotion"</Button>
 				<Button variant="primary">"Delete"</Button>

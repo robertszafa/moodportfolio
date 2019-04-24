@@ -9,6 +9,12 @@
 }
 
 .card-carousel {
+  width: 50%;
+  background-color: white;
+  float:center;
+  border-radius:10px;
+  box-shadow: 5px 5px 5px grey;
+  margin-bottom: 25px;
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;

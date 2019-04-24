@@ -14,13 +14,15 @@ export default class Graph extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			startDate: changeDate(1,getDayStart(Date.now()),-1),
+			startDate: getDayStart(Date.now()),
 			endDate: getDayEnd(Date.now()),
+			currentDate: Date.now(),
 			selectedTime: 1, //Day = 1, Week = 2, Month  = 3
-			selectedGraph: 3, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected). Have left bar in for now.
+			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected). Have left bar in for now.
 			graphData: {},
-			indexClicked: -1,
-			photos: new Array()
+			graphOptions: {},
+			indexClicked: -1, 
+			photos: []
 		}
 		
 		//this.photos = new Array(); //other way to set up the photos array if not meant to be state.
@@ -35,6 +37,7 @@ export default class Graph extends React.Component {
 	
 	componentWillMount(){
 		this.GetPhotos(this.state.startDate,this.state.endDate);
+		//this.testDataTime(this.state.selectedTime,this.state.startDate,this.state.endDate);
 	}
 	
 	//Get Graph Data
@@ -83,6 +86,139 @@ export default class Graph extends React.Component {
 		});
 	}
 	
+	testDataTime(timecode,startdate,enddate){
+		console.log(startdate + " " + enddate);
+		let datetimeLabels = [];
+		datetimeLabels.length = 0;
+		let timeFormat = 'MM DDD';
+		let i = 0;
+		//make label array based on timeCode
+		//decide display format based on timeCode
+		let d = startdate;
+		let thedata = [];
+		thedata.length = 0;
+		let cols = ['#d270d3','#fb7821','#e83e17','#bfc0ee','#9f9e26','#700846','#771aab','#e24b5a'];
+		let bgcols = [];
+		let r;
+		let stepSize, timeValue;
+		let minDate, maxDate;
+		console.log("DATE:" + d);
+		console.log(timecode);
+		switch (timecode){
+			case 1: //day
+				timeFormat = 'hA';
+				stepSize = 'hour'
+				timeValue = 3;
+				minDate = startdate;
+				maxDate = enddate;
+				for (i = 0; i < 24; i++){
+					datetimeLabels.push(d);
+					r = Math.floor(Math.random() * 6);
+					thedata.push(r);
+					bgcols.push(cols[r]);
+					d = changeDate(0,d,1);
+				}
+				break;
+			case 2: //week
+				timeFormat = 'MMM DD';
+				stepSize = 'day'
+				timeValue = 1;
+				minDate = startdate;
+				maxDate = changeDate(1,enddate,-1);
+				for (i = 0; i < 7; i++){
+					datetimeLabels.push(d);
+					r = Math.floor(Math.random() * 6);
+					thedata.push(r);
+					bgcols.push(cols[r]);
+					d = changeDate(1,d,1);
+				}
+				break;
+			case 3: //month
+				timeFormat = 'MMM DD';
+				stepSize = 'day'
+				timeValue = 3;
+				minDate = startdate;
+				maxDate = changeDate(1,enddate,-1);
+					//until end of month, so just WHILE until startDate == endDate? or >?
+				while(d < enddate){ //shouldn't directly reference endDate here as might change. should be passed in.
+					datetimeLabels.push(d);
+					d = changeDate(1,d,1);
+					r = Math.floor(Math.random() * 6);
+					thedata.push(r);
+					bgcols.push(cols[r]);
+				}
+				break;
+			default:
+				console.log("Incorrect tiemcode in testDataTime");
+		}
+		console.log("DATA");
+		console.log(datetimeLabels);
+		
+		let yLabels = {
+			0: 'nothing',
+			1: 'Anger',
+			2: 'Contempt',
+			3: 'Disgust',
+			4: 'Fear',
+			5: 'Sadness',
+			6: 'Neutral',
+			7: 'Surprise',
+			8: 'Happiness'
+		}
+		
+		//so just need to set null when the data doesn't work
+		
+		this.setState({
+			graphData: {
+				label: 'Line data',
+				labels: datetimeLabels,
+				datasets: [{
+					label: "Emotions",
+					data: thedata,
+					borderColor: '#e24b5a',
+					fill: false
+				}]
+			},
+			
+			graphOptions: {
+				legend: {
+					display: false,
+				},
+				scales: {
+					yAxes: [{
+						title: "Emotion",
+						ticks: {
+							beginAtZero: true,
+							userCallBack: function(label,index,yLabels) {
+								return yLabels[label];
+							}
+						}
+					}],
+					xAxes: [{
+						type: 'time',
+						time: {
+							unit: stepSize,
+							unitStepSize: timeValue,
+							max: maxDate,
+							min: minDate,
+							displayFormats: {
+								'millisecond': timeFormat,
+								'second': timeFormat,
+								'minute': timeFormat,
+								'hour': timeFormat,
+								'day': timeFormat,
+								'week': timeFormat,
+								'month': timeFormat,
+								'quarter': timeFormat,
+								'year': timeFormat,
+							}
+							}
+					}],
+				},
+			}				
+		});
+	}
+	
 	// Gets Photos from server and then stuff
 	// Uses startDate, endDate
 	GetPhotos(start, end){
@@ -98,7 +234,7 @@ export default class Graph extends React.Component {
 
 		//EMPTY THE Photos
 		this.setState({
-			photos: new Array()
+			photos: []
 		});
 		
 		fetch(apiMoodportfolio + '/EmotionsQuery', {
@@ -112,8 +248,8 @@ export default class Graph extends React.Component {
 							"Content-Type": "application/json",
 					},
 					body: JSON.stringify({ "basedOn": basedOn,
-																	"startDate": start,
-																	"endDate": end,
+											"startDate": start,
+											"endDate": end,
 							})
 			})
 			.then((res) => res.json())
@@ -122,33 +258,66 @@ export default class Graph extends React.Component {
 				result.forEach(jsonData => {
 					this.state.photos.push(new Photo(jsonData));
 				});
-				this.SetGraphData(this.selectedGraph);
-				this.SetGraphOptions();
+				this.SetGraphData(this.state.selectedGraph);
 				//console.log(this.state.photos[0].props.timestamp);
 			})
 			.catch(err => console.log(err))
 	}
 	
 	SetGraphOptions(timeCode, graphCode){
-		var timeValue;
+		
+		let timeValue;
+		let stepSize;
+		let d = this.state.currentDate;
+
 		switch (timeCode) {
 			case 1:
 				timeValue = 1;
+				stepSize = "hour";
 				break;
 			case 2:
 				timeValue = 7;
+				stepSize = "day";
 				break;
 			case 3:
-				timeValue = 28;
+				timeValue = getMonthEnd(d.getMonth()).getDate() + 1; //need to get current months num of days
+				stepSize = "day";
+				break;
+			default:
+				console.log("Timecode wrong in SetGraphOptions");
+		}
+
+		let yLabels = {
+			0: '',
+			1: 'Anger',
+			2: 'Contempt',
+			3: 'Disgust',
+			4: 'Fear',
+			5: 'Sadness',
+			6: 'Neutral',
+			7: 'Surprise',
+			8: 'Happiness'
 		}
 		
 		//only call this when graph is over time
 		
 		this.setState({
 			
-			options: {
+			graphOptions: {
+				legend: {
+					display: false
+				},
 				title: {text: "No Idea"},
 				scales: {
+					yAxes: [{
+						title: "Emotion",
+						ticks: {
+							beginAtZero: true,
+							userCallBack: function(label,index,labels) {
+								return yLabels[label];
+							}
+						}
+					}],
 					xAxes: [{
 						title: "Time",
 						type: 'time',
@@ -156,8 +325,12 @@ export default class Graph extends React.Component {
 							lineWidth: 2
 						},
 						time: {
-							unit: "day",
-							unitStepSize: timeValue,	
+							/*
+							unit: stepSize,
+							unitStepSize: timeValue,
+							max: this.state.endDate,
+							min: this.state.startDate,
+							*/
 							displayFormats: {
 								millisecond: 'MMM DD',
 								second: 'MMM DD',
@@ -174,6 +347,7 @@ export default class Graph extends React.Component {
 				}
 			}
 		});
+		
 	}
 
 	SetGraphData(graphCode){
@@ -181,38 +355,37 @@ export default class Graph extends React.Component {
 		//if chart is line then need to average out the data, otherwise don't.
 		//extract data from photos
 		
-		let emotionProb = new Array();
-		
+		let emotionProb = [];
 		let timestamp = [];
 		let i;
 		for (i = 0; i < this.state.photos.length; i++){
 			emotionProb.push(JSON.stringify(this.state.photos[i].state.dominantEmotion));
 			timestamp.push(this.state.photos[i].props.timestamp);
 		}
-		
-		var emotionsString = emotionProb.toString();
+		//var emotionsString = emotionProb.toString();
 		//turn photo info into graphData
 
 		//if graph is over time
 		if (graphCode === 2){
-			this.SetGraphData_OverTime(emotionsString,timestamp);
+			this.SetGraphData_OverTime(emotionProb,timestamp);
 		} else {
-			this.SetGraphData_Overall(emotionsString,timestamp);
+			this.SetGraphData_Overall(emotionProb);
 		}
 
 	}
 	
-	SetGraphData_Overall(emotionProbs, timestamp){
-		var emotionP = emotionProbs.split(",");
+	SetGraphData_Overall(emotionProbs){
+		this.state.graphOptions = {};
+		//var emotionP = emotionProbs;
 		//loop through the emotions and count total of each
 		let emotionCount = new Array(this.dbEmotions.length).fill(0);
 		
 		let i, j;
-		for (i = 0; i < emotionP.length; i++){
+		for (i = 0; i < emotionProbs.length; i++){
 			for (j = 0; j < this.dbEmotions.length; j++){
-				if (emotionP[i].includes(this.dbEmotions[j])){
+				if (emotionProbs[i].includes(this.dbEmotions[j])){
 					emotionCount[i] ++;
-				}
+				}	
 			}
 		}
 
@@ -256,24 +429,36 @@ export default class Graph extends React.Component {
 		});
 	}
 	
-	SetGraphData_OverTime(emotions,timestamp){
+	SetGraphData_OverTime(emotionProbs,timestamp){
+
+		let formattedDate = [];
+		let i;
+		for (i = 0; i < timestamp.length; i++){
+			formattedDate.push(formatDate(timestamp[i]));
+		}
+		console.log(formattedDate);
+		//Create xLabels - either hours or days
+		let xLabels = [];
+		let tempDate = this.state.startDate;
+		let targetDate = this.state.endDate;
+		let emotionData = [];
+		while(tempDate < targetDate){
+			xLabels.push(tempDate);
+			emotionData.push(2);
+			tempDate = changeDate(1,tempDate,1);
+		}
+	
+		console.log(xLabels);
+	
+		this.SetGraphOptions(this.state.selectedTime, this.state.selectedGraph);
 
 		this.setState ({
 			
 			graphData: {
-				label: 'Graph Data',
-				labels: [
-					'Anger',
-					'Contempt',
-					'Disgust',
-					'Fear',
-					'Happy',
-					'Neutral',
-					'Sad',
-					'Surprise'
-				],
+				label: 'Emotions over Time',
+				labels: timestamp,
 				datasets: [{
-					data: [20, 30, 15, 10, 20, 9, 8, 17],
+					data: emotionData,
 					backgroundColor: [
 						'#d270d3',
 						'#fb7821',
@@ -297,54 +482,141 @@ export default class Graph extends React.Component {
 				}]
 			}
 		});
+		
 	}
 	
 	//Button handling functions
 	
-	handleTimeClick(o){
-		//if day then don't subtract
-		var d;
-		if (o === 1){
-			d = this.state.endDate;
+	//When clicking Day/Week/Month
+	handleTimeClick(selectedUnit){
+		//var oldStart = this.state.startDate;
+		//var oldEnd = this.state.endDate;
+		var current = new Date(this.state.currentDate);
+		var start, end;
+		end = current;
+		console.log("CURRENT" + current);
+		console.log(current);
+		switch (selectedUnit){
+			case 1: //day
+				start = getDayStart(current);
+				break;
+			case 2: //week
+				start = getDayStart((changeDate(selectedUnit,current,-1)));
+				break;
+			case 3: //month
+				start = getMonthStart(current);
+				end = getMonthEnd(current);
+				break;
+			default:
+				console.log("Wrong selected unit in handleTimeClick");
+		}
+		/*
+		if (selectedUnit === 1){
+			start = this.state.endDate;
 		} else {
-			d = changeDate(o,this.state.endDate,-1);
+			start = changeDate(selectedUnit,this.state.endDate,-1);
+		}
+		*/
+		
+		this.setState({
+			selectedTime: selectedUnit,
+			startDate: start
+		}); //may not need to store this at all but keeping for now in hopes of fixing the buttongroups
+		
+		//if (selectedUnit === 3){
+		this.setState({
+			endDate: end
+		})
+		//}
+		
+		console.log("Handle Time Click");
+		console.log("S: " + start + "    E: " + end);
+		//this.GetPhotos(start, end);
+		this.testDataTime(selectedUnit, start, end);
+	}
+	
+	//When clicking Over Time/Overall
+	handleTypeClick(o){
+		this.setState({selectedGraph: o});
+		//this.GetPhotos(this.state.startDate, this.state.endDate);
+		this.testDataTime(this.state.startDate,this.state.endDate);
+	}
+	
+	//When clicking < in date selector
+	handleBackClick(){
+		let selectedUnit = this.state.selectedTime;
+		let current = this.state.currentDate;
+		let start = this.state.startDate;
+		let end = this.state.endDate;
+		
+		switch (selectedUnit){
+			case 1: //day
+				current = changeDate(1,current,-1);
+				start=changeDate(1,start,-1);
+				end=changeDate(1,end,-1);
+				break;
+			case 2: //week
+				current=changeDate(2,current,-1);
+				start=changeDate(2,start,-1);
+				end=changeDate(2,end,-1);
+				break;
+			case 3: //month
+				current = changeDate(3,current,-1);
+				end = getMonthEnd(changeDate(1,start,-1));
+				start = getMonthStart(changeDate(1,start,-1));
+				break;
+			default:
+				console.log("Wrong SelectedUnit in back click");
 		}
 		
 		this.setState({
-			selectedTime: o,
-			startDate: d
-		}); //may not need to store this at all but keeping for now in hopes of fixing the buttongroups
-	}
-	
-	handleTypeClick(o){
-		this.setState({selectedGraph: o});
-		this.GetPhotos(this.state.startDate, this.state.endDate);
-	}
-	
-	handleBackClick(){
-		
-		let start = changeDate(this.state.selectedTime, this.state.startDate, -1);
-		let end = changeDate(this.state.selectedTime, this.state.endDate, -1);
-		
-		this.setState({
+			currentDate: current,
 			startDate: start,
 			endDate: end
 		});
-		this.GetPhotos(start, end);
+		
+		//this.GetPhotos(start, end);
+		this.testDataTime(selectedUnit, start, end);
 	}
 	
+	//When clicking > in date selector
 	handleForwardClick(){
+		let selectedUnit = this.state.selectedTime;
+		let current = this.state.currentDate;
+		let start = this.state.startDate;
+		let end = this.state.endDate;
 		
-		let start = changeDate(this.state.selectedTime, this.state.startDate, 1);
-		let end = changeDate(this.state.selectedTime, this.state.endDate, 1);
+		switch (selectedUnit){
+			case 1: //day
+				current = changeDate(1,current,1);
+				start=changeDate(1,start,1);
+				end=changeDate(1,end,1);
+				break;
+			case 2: //week
+				current=changeDate(2,current,1);
+				start=changeDate(2,start,1);
+				end=changeDate(2,end,1);
+				break;
+			case 3: //month
+				current=changeDate(3,current,1);
+				start = getMonthStart(changeDate(1,end,1));
+				end = getMonthEnd(changeDate(1,end,1));
+				break;
+			default:
+				console.log();
+		}
 		
 		this.setState({
+			currentDate: current,
 			startDate: start,
 			endDate: end
 		});
-		this.GetPhotos(start, end);
+		
+		//this.GetPhotos(start, end);
+		this.testDataTime(this.state.selectedTime, start, end);
 	}
 	
+	//When clicking a node of the graph
 	handleNodeClick(e){
 		var index = -1;
 		
@@ -361,19 +633,24 @@ export default class Graph extends React.Component {
 		//do different stuff based on if data is ready or not
 		
 		var j;
-		if (this.state.indexClicked != -1){
+		if (this.state.indexClicked !== -1){
 			j = <NodeViewer emotion={"Happy"} timestamp={Date.now()}/>;
 		}
+		
+		//Have temporarily added a blank button above the time unit menu as wasn't working for some reason.
+		//Also added paragraph as otherwise top half of buttons won't click.
 		
 		return (
 		
 		<div className='text-center'>
+			<Button></Button>
+			<p></p>
 			{/* Time unit menu */}
 			<TimeMenu onClick = {this.handleTimeClick}/>
 			{/* Date menu */}
 			<DateSelector startDate={this.state.startDate} endDate={this.state.endDate} timeCode={this.state.selectedTime} onBackClick={this.handleBackClick} onForwardClick={this.handleForwardClick}/>
 			{/* Graph Component */}
-			<GraphPlotter type = {this.state.selectedGraph} data = {this.state.graphData} onClick={this.handleNodeClick}/>
+			<GraphPlotter type = {this.state.selectedGraph} options = {this.state.graphOptions} data = {this.state.graphData} onClick={this.handleNodeClick}/>
 			{/* Graph type menu */}
 			<GraphMenu onClick = {this.handleTypeClick}/>
 			{/* Node Viewer */}
@@ -403,23 +680,44 @@ class DateSelector extends React.Component {
 		//if (changeDate(this.props.timeCode,this.props.endDate,1) > 
 		
 		var dateText;
+		console.log(this.props.startDate);
+		switch (this.props.timeCode){
+			case 1: //day
+				dateText = formatDate(this.props.startDate);
+				break;
+			case 2: //week
+				dateText = (formatDate(this.props.startDate) + " - " + formatDate(changeDate(1,this.props.endDate,-1)));
+				break;
+			case 3: //month
+			console.log();
+				dateText = GetMonthText(this.props.startDate.getMonth()) + " " + this.props.startDate.getFullYear();
+				break;
+			default:
+				console.log("Wrong timecode in DataSelector");
+				break;
+		}
+		/*
 		if (this.props.timeCode === 1){
 			dateText = " " + formatDate(this.props.startDate) + " ";
 		} else {
 		dateText = (" " + formatDate(this.props.startDate) + " - " + formatDate(this.props.endDate) + " ");
-			//dateText = "ERROR";
-			//dateText= " " + formatDate(this.props.startDate)} <b> " - " </b> formatDate(this.props.endDate) + " ";
-			//dateText = {" " + formatDate(this.props.startDate)} + {<b>" - "</b>} + {formatDate(this.props.endDate) + " "}
 		}
+		*/
 		
 		return (
-			<div className='date-selector'>
+			<div className='date-selector-container'>
 				<Button variant="primary" onClick={this.handleBackClick}>{"<"}</Button>
-				{dateText}
+				{" " + dateText + " "}
 				<Button variant="primary" onClick={this.handleForwardClick}>{">"}</Button>
 			</div>
 		);
 	}
+}
+
+function GetMonthText(monthIndex){
+	console.log(monthIndex);
+	var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+	return months[monthIndex];
 }
 
 class TimeMenu extends React.Component {
@@ -444,12 +742,12 @@ class TimeMenu extends React.Component {
 	
 	render () {
 		return (
-		<div>
-			<ButtonGroup className="time-menu" size="sm">
-				{this.renderButton("Day",1)}
-				{this.renderButton("Week",2)}
-				{this.renderButton("Month",3)}
-			</ButtonGroup>
+			<div className='time-menu-container'>
+				<ButtonGroup className="time-menu" size="sm">
+					{this.renderButton("Day",1)}
+					{this.renderButton("Week",2)}
+					{this.renderButton("Month",3)}
+				</ButtonGroup>
 			</div>
 		);
 	}
@@ -488,31 +786,42 @@ class GraphMenu extends React.Component {
 	
 	render () {
 		return (
-			<ButtonGroup className="graph-menu" size="sm">
-				{this.renderButton("Over Time",2)}
-				{this.renderButton("Overall",3)}
-			</ButtonGroup>
+			<div className='graph-menu-container'>
+				<ButtonGroup className="graph-menu" size="sm">
+					{this.renderButton("Over Time",2)}
+					{this.renderButton("Overall",3)}
+				</ButtonGroup>
+			</div>
 		);
 	}
 }
 
-function changeDate(timecode, date, modifier) {
-		var d = new Date(date);
+function changeDate(timecode, adate, modifier) {
+		var d = new Date(adate);
+		var temp;
 		switch (timecode){
+			case 0:
+			/* Hour */
+				return new Date(d.setHours(d.getHours() + (1 * modifier)));
 			case 1:
 				/* Day */
 				return new Date(d.setDate(d.getDate() + (1 * modifier)));
 			case 2:
 				/* Week */
 				return new Date(d.setDate(d.getDate() + (7 * modifier)));
-			default:
+			case 3:
 				/* Month */
 				return new Date(d.setMonth(d.getMonth() + (1 * modifier)));
+				//return new Date(d.setMonth(d.getMonth() + (1 * modifier)));
+			default: 
+				/* wrong */
+				console.log("WRONG TIMECODE");
+				return d;
 		}
 }
 
-function formatDate(date) {
-	var d = new Date(date);
+function formatDate(adate) {
+	var d = new Date(adate);
 	return (
 		('0' + d.getDate()).slice(-2) + '/' + 
 		('0' + (d.getMonth() + 1)).slice(-2) + '/' + 
@@ -520,14 +829,30 @@ function formatDate(date) {
 	);
 }
 
-function getDayEnd(date){
-	var d = new Date(date);
+function getDayEnd(adate){
+	var d = new Date(adate);
 	d.setHours(23,59,59,999);
 	return new Date(d);
 }
 
-function getDayStart(date){
-	var d = new Date(date);
+function getDayStart(adate){
+	var d = new Date(adate);
+	d.setHours(0,0,0,0);
+	return new Date(d);
+}
+
+function getMonthStart(adate){
+	var d = new Date(adate);
+	d.setDate(1);
+	d.setHours(0,0,0,0);
+	return new Date(d);
+}
+
+function getMonthEnd(adate){
+	var d = new Date(adate);
+	d = changeDate(3,d,1);
+	d = getMonthStart(d);
+	d = changeDate(1,d,-1);
 	d.setHours(0,0,0,0);
 	return new Date(d);
 }

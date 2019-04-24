@@ -1,5 +1,6 @@
 import React from 'react';
 import { Chart, Bar, Line, Pie } from 'react-chartjs-2';
+import '../stylesheet/stats.css';
 
 //The Graph component. Draws pie, line and bar charts. Add radio if have time.
 export default class GraphPlotter extends React.Component {
@@ -22,7 +23,7 @@ export default class GraphPlotter extends React.Component {
 		//Chart.defaults.global.legend.display = false;
 		return (
 			<BarGraph
-			value = {this.state.data}
+			value = {this.props.data}
 			getIndex = {(e) => this.handleClick(e)}
 			/>
 		);
@@ -30,6 +31,7 @@ export default class GraphPlotter extends React.Component {
 	
 	renderLine(){
 		Chart.defaults.global.legend.display = false;
+		Chart.defaults.global.maintainAspectRatio = false;
 		return (
 			<LineGraph
 			options = {this.props.options}
@@ -41,6 +43,7 @@ export default class GraphPlotter extends React.Component {
 	
 	renderPie(){
 		Chart.defaults.global.legend.display = true;
+		Chart.defaults.global.maintainAspectRatio = false;
 		return (
 			<PieGraph
 			value = {this.props.data}
@@ -76,7 +79,7 @@ export default class GraphPlotter extends React.Component {
 
 function PieGraph(props) {
 	return (
-		<div>
+		<div className='graph'>
 			<Pie 
 			data = {props.value} 
 			getElementAtEvent = {(element) => props.getIndex(element)}
@@ -87,9 +90,10 @@ function PieGraph(props) {
 
 function LineGraph(props) {
 	return (
-		<div>
+		<div className='graph'>
 			<Line 
 			data = {props.value}
+			options = {props.options}
 			getElementAtEvent = {(element) => props.getIndex(element)}
 			/>
 		</div>
@@ -98,7 +102,7 @@ function LineGraph(props) {
 
 function BarGraph(props) {
 	return (
-		<div>
+		<div className='graph'>
 			<Bar 
 			data = {props.value}
 			getElementAtEvent = {(element) => props.getIndex(element)}
