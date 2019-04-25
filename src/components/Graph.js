@@ -40,185 +40,6 @@ export default class Graph extends React.Component {
 		//this.testDataTime(this.state.selectedTime,this.state.startDate,this.state.endDate);
 	}
 	
-	//Get Graph Data
-	/*
-	testData(){
-		
-		var testData = [20, 30, 15, 10, 20, 9, 8, 17];
-		
-		this.setState({
-			graphData: {
-				label: 'Pie data',
-				labels: [
-					'Anger',
-					'Contempt',
-					'Disgust',
-					'Fear',
-					'Joy',
-					'Surprise',
-					'Sadness',
-					'Neutral'
-				],
-				datasets: [{
-					data: testData,
-					backgroundColor: [
-						'#d270d3',
-						'#fb7821',
-						'#e83e17',
-						'#bfc0ee',
-						'#9f9e26',
-						'#700846',
-						'#771aab',
-						'#e24b5a'
-					],
-					hoverBackgroundColor: [
-						'#043d7e',
-						'#beafa9',
-						'#4fc690',
-						'#667559',
-						'#d29e81',
-						'#46bbe9',
-						'#13744c',
-						'#9125d5'
-					]
-				}]
-			}
-		});
-	}
-	
-	testDataTime(timecode,startdate,enddate){
-		console.log(startdate + " " + enddate);
-		let datetimeLabels = [];
-		datetimeLabels.length = 0;
-		let timeFormat = 'MM DDD';
-		let i = 0;
-		//make label array based on timeCode
-		//decide display format based on timeCode
-		let d = startdate;
-		let thedata = [];
-		thedata.length = 0;
-		let cols = ['#d270d3','#fb7821','#e83e17','#bfc0ee','#9f9e26','#700846','#771aab','#e24b5a'];
-		let bgcols = [];
-		let r;
-		let stepSize, timeValue;
-		let minDate, maxDate;
-		console.log("DATE:" + d);
-		console.log(timecode);
-		switch (timecode){
-			case 1: //day
-				timeFormat = 'hA';
-				stepSize = 'hour'
-				timeValue = 3;
-				minDate = startdate;
-				maxDate = enddate;
-				for (i = 0; i < 24; i++){
-					datetimeLabels.push(d);
-					r = Math.floor(Math.random() * 6);
-					thedata.push(r);
-					bgcols.push(cols[r]);
-					d = changeDate(0,d,1);
-				}
-				break;
-			case 2: //week
-				timeFormat = 'MMM DD';
-				stepSize = 'day'
-				timeValue = 1;
-				minDate = startdate;
-				maxDate = changeDate(1,enddate,-1);
-				for (i = 0; i < 7; i++){
-					datetimeLabels.push(d);
-					r = Math.floor(Math.random() * 6);
-					thedata.push(r);
-					bgcols.push(cols[r]);
-					d = changeDate(1,d,1);
-				}
-				break;
-			case 3: //month
-				timeFormat = 'MMM DD';
-				stepSize = 'day'
-				timeValue = 3;
-				minDate = startdate;
-				maxDate = changeDate(1,enddate,-1);
-					//until end of month, so just WHILE until startDate == endDate? or >?
-				while(d < enddate){ //shouldn't directly reference endDate here as might change. should be passed in.
-					datetimeLabels.push(d);
-					d = changeDate(1,d,1);
-					r = Math.floor(Math.random() * 6);
-					thedata.push(r);
-					bgcols.push(cols[r]);
-				}
-				break;
-			default:
-				console.log("Incorrect tiemcode in testDataTime");
-		}
-		console.log("DATA");
-		console.log(datetimeLabels);
-		
-		let yLabels = {
-			0: 'nothing',
-			1: 'Anger',
-			2: 'Contempt',
-			3: 'Disgust',
-			4: 'Fear',
-			5: 'Sadness',
-			6: 'Neutral',
-			7: 'Surprise',
-			8: 'Happiness'
-		}
-		
-		//so just need to set null when the data doesn't work
-		
-		this.setState({
-			graphData: {
-				label: 'Line data',
-				labels: datetimeLabels,
-				datasets: [{
-					label: "Emotions",
-					data: thedata,
-					borderColor: '#e24b5a',
-					fill: false
-				}]
-			},
-			
-			graphOptions: {
-				legend: {
-					display: false,
-				},
-				scales: {
-					yAxes: [{
-						title: "Emotion",
-						ticks: {
-							beginAtZero: true,
-							userCallBack: function(label,index,yLabels) {
-								return yLabels[label];
-							}
-						}
-					}],
-					xAxes: [{
-						type: 'time',
-						time: {
-							unit: stepSize,
-							unitStepSize: timeValue,
-							max: maxDate,
-							min: minDate,
-							displayFormats: {
-								'millisecond': timeFormat,
-								'second': timeFormat,
-								'minute': timeFormat,
-								'hour': timeFormat,
-								'day': timeFormat,
-								'week': timeFormat,
-								'month': timeFormat,
-								'quarter': timeFormat,
-								'year': timeFormat,
-							}
-							}
-					}],
-				},
-			}				
-		});
-	}
-	*/
 	// Gets Photos from server and then stuff
 	// Uses startDate, endDate
 	GetPhotos(start, end){
@@ -268,93 +89,7 @@ export default class Graph extends React.Component {
 			})
 			.catch(err => console.log(err))
 	}
-	/*
-	SetGraphOptions(timeCode, graphCode){
-		
-		let timeValue;
-		let stepSize;
-		let d = this.state.currentDate;
 
-		switch (timeCode) {
-			case 1:
-				timeValue = 1;
-				stepSize = "hour";
-				break;
-			case 2:
-				timeValue = 7;
-				stepSize = "day";
-				break;
-			case 3:
-				timeValue = getMonthEnd(d.getMonth()).getDate() + 1; //need to get current months num of days
-				stepSize = "day";
-				break;
-			default:
-				console.log("Timecode wrong in SetGraphOptions");
-		}
-
-		let yLabels = {
-			0: '',
-			1: 'Anger',
-			2: 'Contempt',
-			3: 'Disgust',
-			4: 'Fear',
-			5: 'Sadness',
-			6: 'Neutral',
-			7: 'Surprise',
-			8: 'Happiness'
-		}
-		
-		//only call this when graph is over time
-		
-		this.setState({
-			
-			graphOptions: {
-				legend: {
-					display: false
-				},
-				title: {text: "No Idea"},
-				scales: {
-					yAxes: [{
-						title: "Emotion",
-						ticks: {
-							beginAtZero: true,
-							userCallBack: function(label,index,labels) {
-								return yLabels[label];
-							}
-						}
-					}],
-					xAxes: [{
-						title: "Time",
-						type: 'time',
-						gridLines: {
-							lineWidth: 2
-						},
-						time: {
-							//
-							unit: stepSize,
-							unitStepSize: timeValue,
-							max: this.state.endDate,
-							min: this.state.startDate,
-							//
-							displayFormats: {
-								millisecond: 'MMM DD',
-								second: 'MMM DD',
-								minute: 'MMM DD',
-								hour: 'MMM DD',
-								day: 'MMM DD',
-								week: 'MMM DD',
-								month: 'MMM DD',
-								quarter: 'MMM DD',
-								year: 'MMM DD',
-							}
-						}
-					}]
-				}
-			}
-		});
-		
-	}
-*/
 	SetGraphData(graphCode,start,end){
 		
 		//if chart is line then need to average out the data, otherwise don't.
@@ -674,6 +409,7 @@ export default class Graph extends React.Component {
 							},
 						max: 8,
 						min: 0,
+						unitStepSize: 1,
 						}
 					}],
 					xAxes: [{
@@ -699,62 +435,6 @@ export default class Graph extends React.Component {
 				}
 			}
 		});
-	
-		/*
-		let formattedDate = [];
-		let i;
-		for (i = 0; i < timestamp.length; i++){
-			formattedDate.push(formatDate(timestamp[i]));
-		}
-		console.log(formattedDate);
-		//Create xLabels - either hours or days
-		let xLabels = []; 	
-		let tempDate = this.state.startDate;
-		let targetDate = this.state.endDate;
-		let emotionData = [];
-		while(tempDate < targetDate){
-			xLabels.push(tempDate);
-			emotionData.push(2);
-			tempDate = changeDate(1,tempDate,1);
-		}
-	
-		console.log(xLabels);
-	
-		this.SetGraphOptions(this.state.selectedTime, this.state.selectedGraph);
-
-		this.setState ({
-			
-			graphData: {
-				label: 'Emotions over Time',
-				labels: timestamp,
-				datasets: [{
-					data: emotionData,
-					backgroundColor: [
-						'#d270d3',
-						'#fb7821',
-						'#e83e17',
-						'#bfc0ee',
-						'#9f9e26',
-						'#700846',
-						'#771aab',
-						'#e24b5a'
-					],
-					hoverBackgroundColor: [
-						'#043d7e',
-						'#beafa9',
-						'#4fc690',
-						'#667559',
-						'#d29e81',
-						'#46bbe9',
-						'#13744c',
-						'#9125d5'
-					]
-				}]
-			}
-		});
-		
-		*/
-		
 	}
 	
 	//Button handling functions
@@ -918,6 +598,7 @@ export default class Graph extends React.Component {
 		var j;
 		if (this.state.indexClicked !== -1){
 			j = <NodeViewer emotion={"Happy"} timestamp={Date.now()}/>;
+			j = <NodeViewer nodeClicked={this.state.indexClicked} xLabels={this.state.datetimeLabels} data={this.state.photos}/> 
 		}
 		
 		//Have temporarily added a blank button above the time unit menu as wasn't working for some reason.

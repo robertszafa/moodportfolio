@@ -68,8 +68,10 @@ export default class GraphPlotter extends React.Component {
 		}
 		
 		return (
-			<div className ='text-center'>
-				{j}
+			<div className ='graph-container'>
+				<div className='graph'>
+					{j}
+				</div>
 			</div>
 		);
 		
@@ -80,34 +82,28 @@ export default class GraphPlotter extends React.Component {
 
 function PieGraph(props) {
 	return (
-		<div className='graph'>
 			<Pie 
 			data = {props.value} 
 			getElementAtEvent = {(element) => props.getIndex(element)}
 			/>
-		</div>
 	);
 }
 
 function LineGraph(props) {
 	return (
-		<div className='graph'>
 			<Line 
 			data = {props.value}
 			options = {props.options}
 			getElementAtEvent = {(element) => props.getIndex(element)}
 			/>
-		</div>
 	);
 }
 
 function BarGraph(props) {
 	return (
-		<div className='graph'>
 			<Bar 
 			data = {props.value}
 			getElementAtEvent = {(element) => props.getIndex(element)}
 			/>
-		</div>
 	);
 }
