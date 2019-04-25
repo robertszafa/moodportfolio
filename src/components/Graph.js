@@ -175,26 +175,17 @@ export default class Graph extends React.Component {
 	
 	SetGraphData_OverTime(emotionProbs,timestamp,startdate,enddate){
 		
-		console.log("TIMESTAMPS");
-		console.log(timestamp);
-		
 		let datetimeLabels = [];
 		datetimeLabels.length = 0;
 		let timeFormat = 'MM DDD';
 		let i = 0, j = 0;
-		//make label array and display format based on timeCode
+
 		let d = startdate; //startdate?
 		let thedata = [];
 		thedata.length = 0;
 		let stepSize, timeValue, minDate, maxDate, lastHour, lastDay, missingHours, missingDays;
 		
 		let emotionCompare = [];
-		
-		//break into separate days
-		console.log("TEST");
-		console.log(timestamp[1]);
-		console.log(timestamp[1].getHours());
-		//this.setGraphOptions(this.state.selectedTime,this.state.selectedGraph); //ideally should be passed to this function
 		
 		switch (this.state.selectedTime){
 			case 1: //day
@@ -239,7 +230,9 @@ export default class Graph extends React.Component {
 					i++;
 				}
 				
-				//if last hour did not fill rest might need to populate data with nulls
+				if (emotionCompare.length > 0){
+					thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+				}
 				
 				break;
 			case 2: //week
@@ -277,7 +270,6 @@ export default class Graph extends React.Component {
 						
 						//find most prominent emotion, get it's index
 						if (emotionCompare.length > 0){
-							console.log("TRIES TO PUSH");
 							thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
 						}
 						//clear emotionCompare
@@ -291,14 +283,17 @@ export default class Graph extends React.Component {
 				}
 				
 				if (emotionCompare.length > 0){
-					console.log("TRIES TO PUSH");
 					thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
 				}
 				
-				console.log("thedata");
-				console.log(thedata);
-				
-				//if last day did not fill rest might need to populate data with nulls
+				let lastDays = timestamp[timestamp.length - 1].getDate();
+				let endDays = enddate.getDate();
+				let diff = lastDays - endDays;
+				if (diff > 0){
+					for (i = 0; i < diff; i++){
+						thedata.push(null);
+					}
+				}
 				
 				break;
 			case 3: //month
@@ -350,8 +345,9 @@ export default class Graph extends React.Component {
 					i++;
 				}
 				
-				//if last day did not fill rest might need to populate data with nulls
-				//eg if day was 25, need to add nulls for 26-monthend
+				if (emotionCompare.length > 0){
+					thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+				}
 				
 				break;
 			default:
