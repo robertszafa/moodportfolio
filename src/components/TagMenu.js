@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import { Button} from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
 import Tag from '../components/Tag';
+import '../stylesheet/tagMenu.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 
 
 export default class TagMenu extends Component {
@@ -46,28 +49,25 @@ export default class TagMenu extends Component {
     }
 
     deleteTag = event => {
-        console.log("delete");
-        console.log(event);
         this.setState({tags: this.state.tags.filter(function(tag) {
             return tag !== event;
         })})
     }
 
     render() {
-        const TagList = this.state.tags.map(tag => <li key={tag}>{tag}<Button onClick={() => this.deleteTag(tag)} style={{marginLeft: '12px'}}>Delete</Button></li>)
+        const TagList = this.state.tags.map(tag => <div><li key={tag}>{tag}<FontAwesomeIcon className="binIcon" onClick={() => this.deleteTag(tag)} icon={faTrashAlt} /></li></div>)
 
         return(
-            <div>
-                <input type="text" on={this.state.newTag} onChange={this.onChange}></input>
+            <div className="tagMenuComponent">
+                <ul className="single-tag">
                 <form>
+                    <input className="fakeInput"></input>
                     <input type="text" value={this.state.newTag} onChange={this.onChange}></input>
                     <Button onClick={this.onAddTag}>Add Tag</Button>
                 </form>
-                <ul className="single-tag">
                     {TagList}
                 </ul>
                 {/* For testing */}
-                <Tag />
             </div>
         );
     }
