@@ -1,42 +1,22 @@
 import React, {Component} from 'react';
+import { Button, Container, Row, Col } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+
+
 
 export default class Tag extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedTag: "",
+            name: "",
             photoID: "",
-            newTag: "",
-            tagList: ["Football", "Study", "Breakfast", "Work", "Gym", 
-                    "Family", "Party", "Friends", "Books", "Tidying"],
+            tagID: "",
             savedOnServer: false,
         };
     }
 
-    componentDidMount() {
-        let authToken = localStorage.getItem("authToken");
-        fetch(apiMoodportfolio + '/Tag', {
-            method: "GET",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "same-origin",
-            headers: {
-                "Authorization": authToken,
-                "Content-Type": "application/json",
-            },
-        })
-        .then((res) => res.json())
-        .then(json => {
-            console.log("json\n ", json);
-            const userData = json.success ? json.data : null;
-            this.setState({userData: userData});
-        })
-    }
-
-    onSaveTag() {
+    osSaveTag() {
         let authToken = localStorage.getItem("authToken");
         fetch(apiMoodportfolio + '/PhotoTag', {
             method: "POST",
@@ -50,7 +30,7 @@ export default class Tag extends Component {
             },
             body: JSON.stringify({
                     "photoId": this.state.photoID,                                
-                    "tag": this.state.selectedTag,                     
+                    "tagName": this.state.name,                     
                 })
         })
         .then(res => res.json())
@@ -67,30 +47,20 @@ export default class Tag extends Component {
 
     handleChange(e) {
         this.setState({ 
-            selectedTag: e.target.value,
+            name: e.target.value,
             savedOnServer: false,
         })
     }
 
-    handleSelectTag = tag => {
-        this.setState({
-            selectedTag: [...this.state.selectedTag, this.state.tag]
-        })
-    }
-
     render() {
-        const TagList = this.state.tagList.map(tag => <Button onClick={() => this.handleSelectTag(tag)} variant="contained" color="secondary">{tag}</Button>)
 
         return (
-            <div className="TagComponent">
-                {TagList}
-                <TextField
-                    label="Tag"
-                    value={this.state.selectedTag}
-                    onChange={e => this.handleChange(e)}
-                    margin="normal"
-                /> 
-            </div>
+            <TextField
+                label="Tag"
+                value={this.state.name}
+                onChange={e => this.handleChange(e)}
+                margin="normal"
+            />
         )
     }
 

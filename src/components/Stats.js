@@ -5,6 +5,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'; //can't seem t
 import '../stylesheet/stats.css';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Container from 'react-bootstrap/Container';
 
 //Need to remember to reset graphOption to -1 when navigating away from component - unless it gets recreated?
 export default class Stats extends React.Component {
