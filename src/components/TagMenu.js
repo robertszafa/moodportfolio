@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Button} from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
+import Tag from '../components/Tag';
 
 
 export default class TagMenu extends Component {
@@ -8,7 +9,8 @@ export default class TagMenu extends Component {
         super(props);
         this.state = {
             newTag: "",
-            tags: ["Football", "Studying", "Cooking"]
+            tags: ["Football", "Study", "Breakfast", "Work", "Gym", 
+                    "Family", "Party", "Friends", "Books", "Tidying"]
         };
     }
 
@@ -61,7 +63,11 @@ export default class TagMenu extends Component {
                     <input type="text" value={this.state.newTag} onChange={this.onChange}></input>
                     <Button onClick={this.onAddTag}>Add Tag</Button>
                 </form>
-                {TagList}
+                <ul className="single-tag">
+                    {TagList}
+                </ul>
+                {/* For testing */}
+                <Tag />
             </div>
         );
     }
