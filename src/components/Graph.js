@@ -259,8 +259,10 @@ export default class Graph extends React.Component {
 				result.forEach(jsonData => {
 					this.state.photos.push(new Photo(jsonData));
 				});
+				/*
 				console.log("PHOTOS");
 				console.log(this.state.photos);
+				*/
 				this.SetGraphData(this.state.selectedGraph,start,end);
 				//console.log(this.state.photos[0].props.timestamp);
 			})
@@ -357,9 +359,11 @@ export default class Graph extends React.Component {
 		
 		//if chart is line then need to average out the data, otherwise don't.
 		//extract data from photos
+		
+		/*
 		console.log("PIE CHART");
 		console.log(start + "\n" + end);
-		
+		*/
 		let emotionProb = [];
 		let timestamp = [];
 		let i;
@@ -452,7 +456,9 @@ export default class Graph extends React.Component {
 		let emotionCompare = [];
 		
 		//break into separate days
-		
+		console.log("TEST");
+		console.log(timestamp[1]);
+		console.log(timestamp[1].getHours());
 		//this.setGraphOptions(this.state.selectedTime,this.state.selectedGraph); //ideally should be passed to this function
 		
 		switch (this.state.selectedTime){
@@ -468,8 +474,9 @@ export default class Graph extends React.Component {
 				}
 				
 				i = 0;
-				lastHour = -1;
+				lastHour = 0;
 				missingHours = 0;
+				
 				while (i < timestamp.length) {
 					//check if part of the current hour
 					if (timestamp[i].getHours() === lastHour){
@@ -506,20 +513,27 @@ export default class Graph extends React.Component {
 				timeValue = 1;
 				minDate = startdate;
 				maxDate = changeDate(1,enddate,-1);
+				console.log("MAXDATE: " + maxDate);
 				for (i = 0; i < 7; i++){
 					datetimeLabels.push(d);
 					d = changeDate(1,d,1);
 				}
 				
+				console.log("WEEK");
+				console.log("First timestamp: " + startdate.getDate());
+				
 				i = 0;
-				lastDay = -1;
+				lastDay = startdate.getDate();
 				missingDays = 0;
 				while (i < timestamp.length){
 					if (timestamp[i].getDate() === lastDay){
+						console.log("A1");
 						emotionCompare.push(emotionProbs[i]);
 					} else {
+						console.log("A2");
 						//if new day
 						missingDays = timestamp[i].getDate() - lastDay;
+						console.log("MISSING DAYS: " + missingDays + "," + i);
 						if (missingDays > 0){
 							for (j = 0; j < missingDays; j++){
 								thedata.push(null); //might have to be 'null'?
@@ -528,11 +542,11 @@ export default class Graph extends React.Component {
 						
 						//find most prominent emotion, get it's index
 						if (emotionCompare.length > 0){
+							console.log("TRIES TO PUSH");
 							thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
 						}
 						//clear emotionCompare
 						emotionCompare = [];
-						//add the current element to emotionCompare
 						emotionCompare.push(emotionProbs[i]);
 						//set the current hour being looked at
 						lastDay = timestamp[i].getDate();
@@ -540,6 +554,14 @@ export default class Graph extends React.Component {
 					}
 					i++;
 				}
+				
+				if (emotionCompare.length > 0){
+					console.log("TRIES TO PUSH");
+					thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+				}
+				
+				console.log("thedata");
+				console.log(thedata);
 				
 				//if last day did not fill rest might need to populate data with nulls
 				
@@ -557,29 +579,37 @@ export default class Graph extends React.Component {
 				}
 				
 				i = 0;
-				lastDay = -1;
+				lastDay = 0;
 				missingDays = 0;
 				while (i < timestamp.length){
 					if (timestamp[i].getDate() === lastDay){
 						emotionCompare.push(emotionProbs[i]);
 					} else {
 						//if new day
+						//push nulls for any missing days
 						missingDays = timestamp[i].getDate() - lastDay;
 						if (missingDays > 0){
 							for (j = 0; j < missingDays; j++){
 								thedata.push(null); //might have to be 'null'?
 							}
 						}
+						
+						//add the current element to emotionCompare
+						emotionCompare.push(emotionProbs[i]);
+						
 						//find most prominent emotion, get it's index
 						if (emotionCompare.length > 0){
 							thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
 						}
+						
+
+		
 						//clear emotionCompare
 						emotionCompare = [];
-						//add the current element to emotionCompare
-						emotionCompare.push(emotionProbs[i]);
+
 						//set the current hour being looked at
 						lastDay = timestamp[i].getDate();
+						console.log("LAST " + lastDay);
 						
 					}
 					i++;
@@ -594,7 +624,7 @@ export default class Graph extends React.Component {
 		}
 		
 		let yLabels = {
-			0: 'nothing',
+			0: '',
 			1: 'Anger',
 			2: 'Contempt',
 			3: 'Disgust',
@@ -604,11 +634,13 @@ export default class Graph extends React.Component {
 			7: 'Surprise',
 			8: 'Happiness'
 		}
-		
+		/*
 		console.log("LINE CHART");
 		console.log("Date Time Labels");
 		console.log(datetimeLabels);
-		
+		*/
+		console.log("THE DATA ");
+		console.log(thedata);
 		this.setState({
 			
 			graphData: {
@@ -628,14 +660,18 @@ export default class Graph extends React.Component {
 					display: false,
 				},
 				
+				tooltips: {
+					enabled: false
+				},
+				
 				scales: {
 					yAxes: [{
 						title: "Emotion",
 						ticks: {
 							beginAtZero: true,
-							userCallBack: function(label,index,yLabels) {
-								return yLabels[label];
-							}
+							callback: function(value,index,values) {
+								return yLabels[value];
+							},
 						}
 					}],
 					xAxes: [{
@@ -723,21 +759,25 @@ export default class Graph extends React.Component {
 	
 	//When clicking Day/Week/Month
 	handleTimeClick(selectedUnit){
+		/*
 		console.log("TIME CHGANED");
+		*/
 		//var oldStart = this.state.startDate;
-		//var oldEnd = this.state.endDate;
 		var current = new Date(this.state.currentDate);
+		//var oldEnd = this.state.endDate;
 		var start, end;
 		end = current;
+		/*
 		console.log("CURRENT" + current);
 		console.log(current);
+		*/
 		switch (selectedUnit){
 			case 1: //day
 				start = getDayStart(current);
 				end = getDayStart(changeDate(1,current,1));
 				break;
 			case 2: //week
-				start = getDayStart((changeDate(selectedUnit,current,-1)));
+				start = getDayStart(changeDate(1,(changeDate(selectedUnit,current,-1)),1));
 				end = getDayEnd(current);
 				break;
 			case 3: //month
@@ -765,9 +805,10 @@ export default class Graph extends React.Component {
 			endDate: end
 		})
 		//}
-		
+		/*
 		console.log("Handle Time Click");
 		console.log("S: " + start + "    E: " + end);
+		*/
 		this.GetPhotos(start, end);
 		//this.testDataTime(selectedUnit, start, end);
 	}
@@ -799,8 +840,8 @@ export default class Graph extends React.Component {
 				break;
 			case 3: //month
 				current = changeDate(3,current,-1);
-				end = getMonthEnd(changeDate(1,start,-1));
-				start = getMonthStart(changeDate(1,start,-1));
+				end = getMonthEnd(changeDate(3,start,-1));
+				start = getMonthStart(changeDate(3,start,-1));
 				break;
 			default:
 				console.log("Wrong SelectedUnit in back click");
@@ -811,7 +852,7 @@ export default class Graph extends React.Component {
 			startDate: start,
 			endDate: end
 		});
-		
+
 		this.GetPhotos(start, end);
 		//this.testDataTime(selectedUnit, start, end);
 	}
@@ -1096,7 +1137,7 @@ function getMonthEnd(adate){
 	var d = new Date(adate);
 	d = changeDate(3,d,1);
 	d = getMonthStart(d);
-	d = changeDate(1,d,-1);
+	//d = changeDate(1,d,-1);
 	d.setHours(0,0,0,0);
 	return new Date(d);
 }
@@ -1139,7 +1180,8 @@ function getEmotionIndex(emo){
 		if (displayOrder[i] === emo){
 			return i;
 		}
-		console.log("getEmotionIndex error: emotion not found");
-	return -1;
 	}
+	
+	console.log("getEmotionIndex error: emotion not found");
+	return -1;
 }
