@@ -16,6 +16,7 @@ export default class GraphPlotter extends React.Component {
 	*/
 	
 	handleClick(e){
+		console.log(e);
 		this.props.onClick(e);
 	}
 	

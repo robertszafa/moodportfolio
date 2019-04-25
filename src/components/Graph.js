@@ -672,6 +672,8 @@ export default class Graph extends React.Component {
 							callback: function(value,index,values) {
 								return yLabels[value];
 							},
+						max: 8,
+						min: 0,
 						}
 					}],
 					xAxes: [{
@@ -924,8 +926,7 @@ export default class Graph extends React.Component {
 		return (
 		
 		<div className='text-center'>
-			<Button></Button>
-			<p></p>
+			<br/><br/>
 			{/* Time unit menu */}
 			<TimeMenu onClick = {this.handleTimeClick}/>
 			{/* Date menu */}
@@ -961,7 +962,7 @@ class DateSelector extends React.Component {
 		//if (changeDate(this.props.timeCode,this.props.endDate,1) > 
 		
 		var dateText;
-		console.log(this.props.startDate);
+
 		switch (this.props.timeCode){
 			case 1: //day
 				dateText = formatDate(this.props.startDate);
