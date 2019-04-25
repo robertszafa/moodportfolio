@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { } from 'react-bootstrap'
-import Jumbotron from 'react-bootstrap/Jumbotron'
-import background from '../images/testbg.png'
 import matt from '../images/Matt.jpg'
 import phil from '../images/Phill.jpg'
 import rahul from '../images/Rahul.jpg'

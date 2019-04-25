@@ -20,6 +20,7 @@ const sideMenu = props => (
             <li></li>
             <li><a componentClass={Link} href="/capture" to="/capture">Capture</a></li>
             <li><a componentClass={Link} href="/stats" to="/stats">Stats</a></li>
+            <li><a componentClass={Link} href="/tag" to="/tag">Tag</a></li>
             <li><a componentClass={Link} href="/profile" to="/profile">Profile</a></li>
             <li><a componentClass={Link} href="/about-us" to="/about-us">About Us</a></li>
             <li><a componentClass={Link} href="/login" onClick={handleLogoutClick}>Logout</a></li>

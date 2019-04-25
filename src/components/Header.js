@@ -4,9 +4,6 @@ import {Link} from 'react-router-dom'
 import ToggleMenu from './menu/ToggleMenu'
 import '../stylesheet/header.css'
 import Login from './Login'
-import {apiMoodportfolio} from '../App'
-
-
 
 export default class Header extends React.Component {
     constructor(props) {
@@ -43,6 +40,7 @@ export default class Header extends React.Component {
                         <ul>
                             <li><a componentClass={Link} href="/capture" to="/capture">Capture</a></li>
                             <li><a componentClass={Link} href="/stats" to="/stats">Stats</a></li>
+                            <li><a componentClass={Link} href="/tag" to="/tag">Tags</a></li>
                             <li><a componentClass={Link} href="/profile" to="/profile">Profile</a></li>
                             <li><a componentClass={Link} href="/about-us" to="/about-us">About Us</a></li>
                             <li><a componentClass={Link} href="/login" onClick={this.handleLogoutClick}>Logout</a></li>

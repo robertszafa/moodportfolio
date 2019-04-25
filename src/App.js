@@ -10,7 +10,6 @@ import Stats from './components/Stats'
 import AboutUs from './components/AboutUs'
 import Login from './components/Login'
 import Profile from './components/Profile'
-import Register from './components/Register'
 import ChangePassword from './components/ChangePassword'
 import './stylesheet/app.css'
 import TagMenu from './components/TagMenu';

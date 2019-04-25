@@ -1,11 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import GraphPlotter from './GraphPlotter.js';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';  //not clear why i don't need these
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import NodeViewer from './NodeViewer.js';
-import ElementViewer from './ElementViewer.js';
 import Photo from './Photo'
 import {apiMoodportfolio} from '../App';
 
