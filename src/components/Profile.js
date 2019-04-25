@@ -114,7 +114,7 @@ const ProfileForm = props => {
                     {touched.email && errors.email && <p>{errors.email}</p>}
 
                 </div>
-
+                <br></br>
                 <div>
                 <p>Contact Email address</p>
                 <Field className="field"
@@ -126,7 +126,7 @@ const ProfileForm = props => {
                     placeholder={props.userData.nominatedContact}/>
                     {touched.nominatedContact && errors.nominatedContact && <p>{errors.nominatedContact}</p>}
                 </div>
-
+                <br></br>
                 <div>
                 <p>Country</p>
                 <Field className="field"
@@ -138,7 +138,7 @@ const ProfileForm = props => {
                     placeholder={props.userData.country}/>
                     {touched.country && errors.country && <p>{errors.country}</p>}
                 </div>
-
+                <br></br>
                 <div>
                 <p>City</p>
                 <Field className="field"
@@ -150,7 +150,7 @@ const ProfileForm = props => {
                     placeholder={props.userData.townCity}/>
                     {touched.townCity && errors.townCity && <p>{errors.townCity}</p>}
                 </div>
-
+                <br></br>
                 <div>
                 <p>Date of birth</p>
                 <Datepicker className="field"
@@ -169,7 +169,7 @@ const ProfileForm = props => {
                     placeholder={!props.userData.dob && "Click to select"}/>
                     {touched.dob && errors.dob && <p>{errors.dob}</p>}
                 </div>
-
+                <br></br>
                 <div>
                 <p>Gender</p>
                 <select
@@ -182,11 +182,12 @@ const ProfileForm = props => {
                 >
                     {/* ISO/IEC 5218 standard */}
                     <option selected> {props.userData.gender} </option>
-                    <option value="0" label="Not known"/>
+                    {/* <option value="0" label="Not known"/> */}
                     <option value="1" label="Male"/>
                     <option value="2" label="Female"/>
                     <option value="9" label="Other"/>
                 </select>
+                <br></br>
                 <p>Member since</p>
                 <Field className="field"
                     type="text"
