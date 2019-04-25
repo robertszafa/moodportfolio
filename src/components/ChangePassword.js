@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
-import Jumbotron from 'react-bootstrap/Jumbotron'
 import {withFormik, Form, Field} from 'formik'
-import {Datepicker} from 'react-formik-ui'
 import * as Yup from 'yup'
 import {passwordRegex} from './Register'
 import {apiMoodportfolio} from '../App'

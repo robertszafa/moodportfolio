@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import { Button} from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
-import Tag from '../components/Tag';
 import '../stylesheet/tagMenu.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import {faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 
 
 export default class TagMenu extends Component {
@@ -67,7 +66,6 @@ export default class TagMenu extends Component {
                 </form>
                     {TagList}
                 </ul>
-                {/* For testing */}
             </div>
         );
     }

@@ -10,11 +10,9 @@ import Stats from './components/Stats'
 import AboutUs from './components/AboutUs'
 import Login from './components/Login'
 import Profile from './components/Profile'
-import Register from './components/Register'
 import ChangePassword from './components/ChangePassword'
 import './stylesheet/app.css'
 import TagMenu from './components/TagMenu';
-import { library } from '@fortawesome/fontawesome-svg-core'
 
 
 export const apiMoodportfolio = 'https://api.moodportfolio.ml'; // API for server
