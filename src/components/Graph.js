@@ -18,7 +18,7 @@ export default class Graph extends React.Component {
 			endDate: getDayEnd(Date.now()),
 			currentDate: Date.now(),
 			selectedTime: 3, //Day = 1, Week = 2, Month  = 3
-			selectedGraph: 3, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected). Have left bar in for now.
+			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected). Have left bar in for now.
 			graphData: {},
 			graphOptions: {},
 			indexClicked: -1, 
@@ -222,13 +222,14 @@ export default class Graph extends React.Component {
 	// Gets Photos from server and then stuff
 	// Uses startDate, endDate
 	GetPhotos(start, end){
-		
+		console.log("DATES");
+		console.log(start + "\n" + end);
 		let authToken = localStorage.getItem("authToken");
 		let basedOn = "all";
-		start = formatDate(start);
-		end = formatDate(end);
-		console.log(start);
-		console.log(end);
+		let formattedStart = formatDate(start);
+		let formattedEnd = formatDate(end);
+		console.log(formattedStart);
+		console.log(formattedEnd);
 		//let strt = formatDate(this.state.startDate);
 		//let end = formatDate(this.state.endDate);
 
@@ -248,8 +249,8 @@ export default class Graph extends React.Component {
 							"Content-Type": "application/json",
 					},
 					body: JSON.stringify({ "basedOn": basedOn,
-											"startDate": start,
-											"endDate": end,
+											"startDate": formattedStart,
+											"endDate": formattedEnd,
 							})
 			})
 			.then((res) => res.json())
@@ -356,13 +357,15 @@ export default class Graph extends React.Component {
 		
 		//if chart is line then need to average out the data, otherwise don't.
 		//extract data from photos
+		console.log("PIE CHART");
+		console.log(start + "\n" + end);
 		
 		let emotionProb = [];
 		let timestamp = [];
 		let i;
 		for (i = 0; i < this.state.photos.length; i++){
 			emotionProb.push(JSON.stringify(this.state.photos[i].state.dominantEmotion));
-			timestamp.push(this.state.photos[i].props.timestamp);
+			timestamp.push(new Date(this.state.photos[i].props.timestamp)); //added new Date here to get datatype right
 		}
 		//var emotionsString = emotionProb.toString();
 		//turn photo info into graphData
@@ -386,7 +389,7 @@ export default class Graph extends React.Component {
 		for (i = 0; i < emotionProbs.length; i++){
 			for (j = 0; j < this.dbEmotions.length; j++){
 				if (emotionProbs[i].includes(this.dbEmotions[j])){
-					emotionCount[i] ++;
+					emotionCount[j] ++;
 				}	
 			}
 		}
@@ -481,12 +484,17 @@ export default class Graph extends React.Component {
 						}
 						//find most prominent emotion
 						//get its number and push it
-						thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+						if (emotionCompare.length > 0){
+							thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+						}
 						//clear emotionCompare
 						emotionCompare = [];
+						//add the current element to emotionCompare
+						emotionCompare.push(emotionProbs[i]);
 						//set the current hour being looked at
 						lastHour = timestamp[i].getHours();
 					}
+					i++;
 				}
 				
 				//if last hour did not fill rest might need to populate data with nulls
@@ -507,11 +515,11 @@ export default class Graph extends React.Component {
 				lastDay = -1;
 				missingDays = 0;
 				while (i < timestamp.length){
-					if (timestamp[i].getHours() === lastDay){
+					if (timestamp[i].getDate() === lastDay){
 						emotionCompare.push(emotionProbs[i]);
 					} else {
 						//if new day
-						missingDays = timestamp[i].getHours() - lastDay;
+						missingDays = timestamp[i].getDate() - lastDay;
 						if (missingDays > 0){
 							for (j = 0; j < missingDays; j++){
 								thedata.push(null); //might have to be 'null'?
@@ -519,13 +527,18 @@ export default class Graph extends React.Component {
 						}
 						
 						//find most prominent emotion, get it's index
-						thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+						if (emotionCompare.length > 0){
+							thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+						}
 						//clear emotionCompare
 						emotionCompare = [];
+						//add the current element to emotionCompare
+						emotionCompare.push(emotionProbs[i]);
 						//set the current hour being looked at
 						lastDay = timestamp[i].getDate();
 						
 					}
+					i++;
 				}
 				
 				//if last day did not fill rest might need to populate data with nulls
@@ -547,25 +560,29 @@ export default class Graph extends React.Component {
 				lastDay = -1;
 				missingDays = 0;
 				while (i < timestamp.length){
-					if (timestamp[i].getHours() === lastDay){
+					if (timestamp[i].getDate() === lastDay){
 						emotionCompare.push(emotionProbs[i]);
 					} else {
 						//if new day
-						missingDays = timestamp[i].getHours() - lastDay;
+						missingDays = timestamp[i].getDate() - lastDay;
 						if (missingDays > 0){
 							for (j = 0; j < missingDays; j++){
 								thedata.push(null); //might have to be 'null'?
 							}
 						}
-						
 						//find most prominent emotion, get it's index
-						thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+						if (emotionCompare.length > 0){
+							thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+						}
 						//clear emotionCompare
 						emotionCompare = [];
+						//add the current element to emotionCompare
+						emotionCompare.push(emotionProbs[i]);
 						//set the current hour being looked at
 						lastDay = timestamp[i].getDate();
 						
 					}
+					i++;
 				}
 				
 				//if last day did not fill rest might need to populate data with nulls
@@ -587,6 +604,10 @@ export default class Graph extends React.Component {
 			7: 'Surprise',
 			8: 'Happiness'
 		}
+		
+		console.log("LINE CHART");
+		console.log("Date Time Labels");
+		console.log(datetimeLabels);
 		
 		this.setState({
 			
@@ -702,6 +723,7 @@ export default class Graph extends React.Component {
 	
 	//When clicking Day/Week/Month
 	handleTimeClick(selectedUnit){
+		console.log("TIME CHGANED");
 		//var oldStart = this.state.startDate;
 		//var oldEnd = this.state.endDate;
 		var current = new Date(this.state.currentDate);
@@ -712,9 +734,11 @@ export default class Graph extends React.Component {
 		switch (selectedUnit){
 			case 1: //day
 				start = getDayStart(current);
+				end = getDayStart(changeDate(1,current,1));
 				break;
 			case 2: //week
 				start = getDayStart((changeDate(selectedUnit,current,-1)));
+				end = getDayEnd(current);
 				break;
 			case 3: //month
 				start = getMonthStart(current);
@@ -824,6 +848,9 @@ export default class Graph extends React.Component {
 			startDate: start,
 			endDate: end
 		});
+		console.log("FORWARD");
+		console.log(start + "/n" + end);
+		
 		
 		this.GetPhotos(start, end);
 		//this.testDataTime(this.state.selectedTime, start, end);
@@ -1044,7 +1071,11 @@ function formatDate(adate) {
 
 function getDayEnd(adate){
 	var d = new Date(adate);
+	/*
 	d.setHours(23,59,59,999);
+	*/
+	d = changeDate(1,adate,1);
+	d = getDayStart(d);
 	return new Date(d);
 }
 
@@ -1071,8 +1102,10 @@ function getMonthEnd(adate){
 }
 
 function getModeEmotion(emotionArray){
+	console.log("ARRRRRRR");
+	console.log(emotionArray);
 	let dbEmotions = ['anger','contempt','disgust','fear','happiness','neutral','sadness','surprise'];
-	let emotionCount = new Array(this.dbEmotions.length).fill(0);
+	let emotionCount = new Array(dbEmotions.length).fill(0);
 	let i = 0, j = 0;
 	
 	for (i = 0; i < emotionArray.length; i++){
@@ -1083,20 +1116,26 @@ function getModeEmotion(emotionArray){
 		}
 	}
 	
+	//find the max
 	let max = emotionCount[0];
+	let maxID = 0;
 	for (i = 1; i < emotionCount.length; i++){
 		if (emotionCount[i] > max){
 			max = emotionCount[i];
+			maxID = i;
 		}
 	}
 	
-	return dbEmotions[i];
+	console.log(maxID);
+	console.log("EMOTION: " + dbEmotions[maxID]);
+	return dbEmotions[maxID];
 }
 
 function getEmotionIndex(emo){
 	let displayOrder = ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'];
 	let i = 0;
-	for (i = 0; i < displayOrder.length(); i++){
+	console.log("Emotion:" + emo);
+	for (i = 0; i < displayOrder.length; i++){
 		if (displayOrder[i] === emo){
 			return i;
 		}
