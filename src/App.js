@@ -13,6 +13,8 @@ import Profile from './components/Profile'
 import Register from './components/Register'
 import ChangePassword from './components/ChangePassword'
 import './stylesheet/app.css'
+import TagMenu from './components/TagMenu';
+
 
 export const apiMoodportfolio = 'https://api.moodportfolio.ml'; // API for server
 // export const apiMoodportfolio = 'http://127.0.0.1:5000'; // API for localhost
@@ -91,6 +93,7 @@ export default class App extends Component {
                   <Route exact path={"/"} component={Home} />
                   <Route path={"/capture"} component={Capture} />
                   <Route path={"/stats"} component={Stats} />
+                  <Route exact path={"/tag"} component={TagMenu} />
                   <Route path={"/profile"} component={Profile} />
                   <Route path={"/about-us"} component={AboutUs} />
                   <Route path={"/change-password"} component={ChangePassword} />
