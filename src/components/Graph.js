@@ -14,15 +14,16 @@ export default class Graph extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			startDate: getDayStart(Date.now()),
-			endDate: getDayEnd(Date.now()),
+			startDate: getMonthStart(Date.now()),
+			endDate: getMonthEnd(Date.now()),
 			currentDate: Date.now(),
 			selectedTime: 3, //Day = 1, Week = 2, Month  = 3
 			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected). Have left bar in for now.
 			graphData: {},
 			graphOptions: {},
 			indexClicked: -1, 
-			photos: []
+			photos: [],
+			indexLabels: []
 		}
 		
 		//this.photos = new Array(); //other way to set up the photos array if not meant to be state.
@@ -132,24 +133,18 @@ export default class Graph extends React.Component {
 		for (i = 0; i < emotionProbs.length; i++){
 			for (j = 0; j < this.dbEmotions.length; j++){
 				if (emotionProbs[i].includes(this.dbEmotions[j])){
-					emotionCount[j] ++;
+					emotionCount[getEmotionIndex(getEmotionFromString(emotionProbs[i]))] ++;
 				}	
 			}
 		}
+		
+		let displayEmotions = ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'];
 
 		this.setState({
+			indexLabels: displayEmotions,
 			graphData: {
 				label: 'Emotions Overall',
-				labels: [
-					'Anger',
-					'Contempt',
-					'Disgust',
-					'Fear',
-					'Happy',
-					'Neutral',
-					'Sad',
-					'Surprise'
-				],
+				labels: displayEmotions,
 				datasets: [{
 					data: emotionCount,
 					backgroundColor: [
@@ -312,7 +307,7 @@ getUnitQuantity(adate,dateUnit){
 	*/
 	console.log(datetimeLabels);
 	this.setState({
-		datetimeLabels: datetimeLabels,
+		indexLabels: datetimeLabels,
 		
 		graphData: {
 			label: 'Emotions Over Time',
@@ -379,18 +374,10 @@ getUnitQuantity(adate,dateUnit){
 	
 	//When clicking Day/Week/Month
 	handleTimeClick(selectedUnit){
-		/*
-		console.log("TIME CHGANED");
-		*/
-		//var oldStart = this.state.startDate;
 		var current = new Date(this.state.currentDate);
-		//var oldEnd = this.state.endDate;
 		var start, end;
 		end = current;
-		/*
-		console.log("CURRENT" + current);
-		console.log(current);
-		*/
+
 		switch (selectedUnit){
 			case 1: //day
 				start = getDayStart(current);
@@ -407,30 +394,18 @@ getUnitQuantity(adate,dateUnit){
 			default:
 				console.log("Wrong selected unit in handleTimeClick");
 		}
-		/*
-		if (selectedUnit === 1){
-			start = this.state.endDate;
-		} else {
-			start = changeDate(selectedUnit,this.state.endDate,-1);
-		}
-		*/
 		
 		this.setState({
 			selectedTime: selectedUnit,
 			startDate: start
 		}); //may not need to store this at all but keeping for now in hopes of fixing the buttongroups
 		
-		//if (selectedUnit === 3){
 		this.setState({
 			endDate: end
 		})
-		//}
-		/*
-		console.log("Handle Time Click");
-		console.log("S: " + start + "    E: " + end);
-		*/
+
 		this.GetPhotos(start, end);
-		//this.testDataTime(selectedUnit, start, end);
+
 	}
 	
 	//When clicking Over Time/Overall
@@ -593,13 +568,6 @@ class DateSelector extends React.Component {
 				console.log("Wrong timecode in DataSelector");
 				break;
 		}
-		/*
-		if (this.props.timeCode === 1){
-			dateText = " " + formatDate(this.props.startDate) + " ";
-		} else {
-		dateText = (" " + formatDate(this.props.startDate) + " - " + formatDate(this.props.endDate) + " ");
-		}
-		*/
 		
 		return (
 			<div className='date-selector-container'>
@@ -757,6 +725,10 @@ function getMonthEnd(adate){
 	return new Date(d);
 }
 
+function getEmotionFromString(str){
+	return str.split("\"")[1];
+}
+
 function getModeEmotion(emotionArray){
 	let dbEmotions = ['anger','contempt','disgust','fear','happiness','neutral','sadness','surprise'];
 	let emotionCount = new Array(dbEmotions.length).fill(0);
@@ -779,7 +751,6 @@ function getModeEmotion(emotionArray){
 			maxID = i;
 		}
 	}
-	
 	return dbEmotions[maxID];
 }
 
