@@ -43,14 +43,11 @@ export default class Graph extends React.Component {
 	// Gets Photos from server and then stuff
 	// Uses startDate, endDate
 	GetPhotos(start, end){
-		console.log("DATES");
-		console.log(start + "\n" + end);
 		let authToken = localStorage.getItem("authToken");
 		let basedOn = "all";
 		let formattedStart = formatDate(start);
 		let formattedEnd = formatDate(end);
-		console.log(formattedStart);
-		console.log(formattedEnd);
+		console.log(formattedStart + " - " + formattedEnd);
 		//let strt = formatDate(this.state.startDate);
 		//let end = formatDate(this.state.endDate);
 
@@ -173,8 +170,116 @@ export default class Graph extends React.Component {
 		});
 	}
 	
+getUnitQuantity(adate,dateUnit){
+	switch (dateUnit){
+		case 0:
+			return adate.getHours();
+		case 1:
+			return adate.getDate();
+		case 2:
+			return adate.getMonth();
+		case 3:
+			return adate.getMonth(); //purposefully the same incase I forget.
+		default:
+			console.log("getUnitQuantity failed.");
+			return -1;
+	}
+}
+/*
+getLineData(timeUnit,emotionProbs,timestamp,startdate,enddate){
+	let datetimeLabels = [];
+	datetimeLabels.length = 0;
+	let i = 0, j = 0;
+	let d = startdate;
+	let thedata = [];
+	thedata.length = 0;
+	let stepSize, timeValue, minDate, maxDate, lastUnit, missingUnits, timeFormat, numTicks;
+	
+	let emotionCompare = [];
+	
+	switch(timeUnit){
+		case 1:
+			changeDateUnit = 0;
+			timeFormat = 'hA';
+			stepSize = 'hour'
+			timeValue = 3;
+			minDate = startdate;
+			maxDate = enddate;
+			numTicks = 24;
+			break;
+			
+		case 2:
+			changeDateUnit = 1;
+			timeFormat = 'MMM DD';
+			stepSize = 'day'
+			timeValue = 1;
+			minDate = startdate;
+			maxDate = changeDate(changeDateUnit,enddate,-1);
+			numTicks = 7;
+			break;
+			
+		case 3:
+			changeDateUnit = 1;
+			timeFormat = 'MMM DD';
+			stepSize = 'day';
+			timeValue = 3;
+			minDate = startdate;
+			maxDate = changeDate(1,enddate,-1); //need to check this			
+			break;
+	}
+	
+	if (timeUnit === 3){
+		while (d < enddate){
+			datetimeLabels.push(d);
+			d = changeDate(1,d,1);
+		}
+	} else {
+		for (i = 0; i < numTicks; i++){
+			this.state.datetimeLabels.push(d);
+			d = changeDate(changeDateUnit,d,1);
+		}
+	}
+
+	
+	i = 0;
+	lastUnit = 0;
+	missingUnits = 0;
+	
+	while (i < timestamp.length){
+		//check if part of the current time
+		if (this.getUnitQuantity(timestamp[i],changeDateUnit) === lastUnit){
+			emotionCompare.push(emotionProbs[i]);
+		} else {
+			//if new time
+			missingUnits = this.getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit;
+			if (missingUnits > 0){
+				for (j = 0; j < missingUnits; j++){
+					thedata.push(null);
+				}
+			}
+			//find most prominent emotion, get its number, push it
+			if (emotionCompare.length > 0){
+				thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+			}
+			//clear emotionCompare
+			emotionCompare = [];
+			//add the current element to emotionCompare
+			emotionCompare.push(emotionProbs[i]);
+			//set the current time being looked at
+			lastUnit = getUnitQuantity(timestamp[i],changeDateUnit);
+		}
+		i++;
+	}
+	
+	if (emotionCompare.length > 0){
+		thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+	}
+	
+	return thedata;	
+}
+*/	
 	SetGraphData_OverTime(emotionProbs,timestamp,startdate,enddate){
-		
+		/*
 		let datetimeLabels = [];
 		datetimeLabels.length = 0;
 		let timeFormat = 'MM DDD';
@@ -353,85 +458,188 @@ export default class Graph extends React.Component {
 			default:
 				console.log("Incorrect tiemcode in testDataTime");	
 		}
-		
-		let yLabels = {
-			0: '',
-			1: 'Anger',
-			2: 'Contempt',
-			3: 'Disgust',
-			4: 'Fear',
-			5: 'Sadness',
-			6: 'Neutral',
-			7: 'Surprise',
-			8: 'Happiness'
-		}
-		/*
-		console.log("LINE CHART");
-		console.log("Date Time Labels");
-		console.log(datetimeLabels);
 		*/
-		console.log("THE DATA ");
-		console.log(thedata);
-		this.setState({
+	let timeUnit = this.state.selectedTime;	
+	let datetimeLabels = [];
+	datetimeLabels.length = 0;
+	let i = 0, j = 0;
+	let d = startdate;
+	let thedata = [];
+	thedata.length = 0;
+	let stepSize, timeValue, minDate, maxDate, lastUnit, missingUnits, timeFormat, numTicks, changeDateUnit;
+	
+	let emotionCompare = [];
+	
+	switch(timeUnit){
+		case 1:
+			changeDateUnit = 0;
+			timeFormat = 'hA';
+			stepSize = 'hour'
+			timeValue = 3;
+			minDate = startdate;
+			maxDate = enddate;
+			numTicks = 24;
+			break;
 			
-			graphData: {
-				label: 'Emotions Over Time',
-				labels: datetimeLabels,
-				datasets: [{
-					label: "Emotions",
-					data: thedata,
-					borderColor: '#e24b5a',
-					fill: false
-				}]
-			},
+		case 2:
+			changeDateUnit = 1;
+			timeFormat = 'MMM DD';
+			stepSize = 'day'
+			timeValue = 1;
+			minDate = startdate;
+			maxDate = changeDate(changeDateUnit,enddate,-1);
+			numTicks = 7;
+			break;
 			
-			graphOptions: {
-				
-				legend: {
-					display: false,
-				},
-				
-				tooltips: {
-					enabled: false
-				},
-				
-				scales: {
-					yAxes: [{
-						title: "Emotion",
-						ticks: {
-							beginAtZero: true,
-							callback: function(value,index,values) {
-								return yLabels[value];
-							},
-						max: 8,
-						min: 0,
-						unitStepSize: 1,
-						}
-					}],
-					xAxes: [{
-						type: 'time',
-						time: {
-							unit: stepSize,
-							unitStepSize: timeValue,
-							max: maxDate,
-							min: minDate,
-							displayFormats: {
-								'millisecond': timeFormat,
-								'second': timeFormat,
-								'minute': timeFormat,
-								'hour': timeFormat,
-								'day': timeFormat,
-								'week': timeFormat,
-								'month': timeFormat,
-								'quarter': timeFormat,
-								'year': timeFormat,
-							}
-						}
-					}]
+		case 3:
+			changeDateUnit = 1;
+			timeFormat = 'MMM DD';
+			stepSize = 'day';
+			timeValue = 3;
+			minDate = startdate;
+			maxDate = changeDate(1,enddate,-1); //need to check this			
+			break;
+			default:
+			console.log("broke" + timeUnit);
+	}
+	
+	if (timeUnit === 3){
+		while (d < enddate){
+			datetimeLabels.push(d);
+			d = changeDate(1,d,1);
+		}
+	} else {
+		for (i = 0; i < numTicks; i++){
+			datetimeLabels.push(d);
+			d = changeDate(changeDateUnit,d,1);
+		}
+	}
+
+	console.log("BEGINNING");
+	
+	i = 0;
+	lastUnit = this.getUnitQuantity(startdate,changeDateUnit);
+	missingUnits = 0;
+	
+	while (i < timestamp.length){
+		//check if part of the current time
+		if (this.getUnitQuantity(timestamp[i],changeDateUnit) === lastUnit){
+			console.log("PUSHING" + emotionProbs[i] + " TO COMPARISON.");
+			emotionCompare.push(emotionProbs[i]);
+		} else {
+			//if new time
+			missingUnits = this.getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit;
+			if (missingUnits > 0){
+				console.log("ADDING NULLS * " + missingUnits);
+				for (j = 0; j < missingUnits; j++){
+					thedata.push(null);
 				}
 			}
-		});
+			//find most prominent emotion, get its number, push it
+			if (emotionCompare.length > 0){
+				console.log("PUSHING PROMINENT EMOTION");
+				thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+			}
+			//clear emotionCompare
+			emotionCompare = [];
+			//add the current element to emotionCompare
+			console.log("PUSHING CURRENT ELEMENT TO COMPARISON");
+			emotionCompare.push(emotionProbs[i]);
+			//set the current time being looked at
+			lastUnit = this.getUnitQuantity(timestamp[i],changeDateUnit);
+		}
+		i++;
 	}
+	
+	if (emotionCompare.length > 0){
+		console.log("PUSHING DATA TO thedata");
+		thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+		console.log(thedata);
+	}
+		
+		
+	console.log("END OF NEW CODE");
+		
+	let yLabels = {
+		0: '',
+		1: 'Anger',
+		2: 'Contempt',
+		3: 'Disgust',
+		4: 'Fear',
+		5: 'Sadness',
+		6: 'Neutral',
+		7: 'Surprise',
+		8: 'Happiness'
+	}
+	/*
+	console.log("LINE CHART");
+	console.log("Date Time Labels");
+	console.log(datetimeLabels);
+	*/
+	console.log(datetimeLabels);
+	this.setState({
+		datetimeLabels: datetimeLabels,
+		
+		graphData: {
+			label: 'Emotions Over Time',
+			labels: datetimeLabels,
+			datasets: [{
+				label: "Emotions",
+				data: thedata,
+				borderColor: '#e24b5a',
+				fill: false
+			}]
+		},
+		
+		graphOptions: {
+			
+			legend: {
+				display: false,
+			},
+			
+			tooltips: {
+				enabled: false
+			},
+			
+			scales: {
+				yAxes: [{
+					title: "Emotion",
+					ticks: {
+						beginAtZero: true,
+						callback: function(value,index,values) {
+							return yLabels[value];
+						},
+					max: 8,
+					min: 0,
+					unitStepSize: 1,
+					}
+				}],
+				xAxes: [{
+					type: 'time',
+					time: {
+						unit: stepSize,
+						unitStepSize: timeValue,
+						max: maxDate,
+						min: minDate,
+						displayFormats: {
+							'millisecond': timeFormat,
+							'second': timeFormat,
+							'minute': timeFormat,
+							'hour': timeFormat,
+							'day': timeFormat,
+							'week': timeFormat,
+							'month': timeFormat,
+							'quarter': timeFormat,
+							'year': timeFormat,
+						}
+					}
+				}]
+			}
+		}
+	});
+	
+	console.log("END");
+}
 	
 	//Button handling functions
 	
@@ -567,9 +775,6 @@ export default class Graph extends React.Component {
 			startDate: start,
 			endDate: end
 		});
-		console.log("FORWARD");
-		console.log(start + "/n" + end);
-		
 		
 		this.GetPhotos(start, end);
 		//this.testDataTime(this.state.selectedTime, start, end);
@@ -583,7 +788,7 @@ export default class Graph extends React.Component {
 		if (e.length !== 0){
 			index = e[0]._index;
 		}
-		console.log(index);
+		//console.log(index);
 		//set the index clicked
 		this.setState({indexClicked: index});
 	}
@@ -648,7 +853,6 @@ class DateSelector extends React.Component {
 				dateText = (formatDate(this.props.startDate) + " - " + formatDate(changeDate(1,this.props.endDate,-1)));
 				break;
 			case 3: //month
-			console.log();
 				dateText = GetMonthText(this.props.startDate.getMonth()) + " " + this.props.startDate.getFullYear();
 				break;
 			default:
@@ -674,7 +878,6 @@ class DateSelector extends React.Component {
 }
 
 function GetMonthText(monthIndex){
-	console.log(monthIndex);
 	var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 	return months[monthIndex];
 }
@@ -821,8 +1024,6 @@ function getMonthEnd(adate){
 }
 
 function getModeEmotion(emotionArray){
-	console.log("ARRRRRRR");
-	console.log(emotionArray);
 	let dbEmotions = ['anger','contempt','disgust','fear','happiness','neutral','sadness','surprise'];
 	let emotionCount = new Array(dbEmotions.length).fill(0);
 	let i = 0, j = 0;
@@ -845,21 +1046,17 @@ function getModeEmotion(emotionArray){
 		}
 	}
 	
-	console.log(maxID);
-	console.log("EMOTION: " + dbEmotions[maxID]);
 	return dbEmotions[maxID];
 }
 
 function getEmotionIndex(emo){
 	let displayOrder = ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'];
 	let i = 0;
-	console.log("Emotion:" + emo);
 	for (i = 0; i < displayOrder.length; i++){
 		if (displayOrder[i] === emo){
 			return i;
 		}
 	}
 	
-	console.log("getEmotionIndex error: emotion not found");
 	return -1;
 }
