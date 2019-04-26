@@ -96,13 +96,20 @@ export default class Graph extends React.Component {
 		console.log("PIE CHART");
 		console.log(start + "\n" + end);
 		*/
+		let p = this.state.photos;
 		let emotionProb = [];
 		let timestamp = [];
 		let i;
 		for (i = 0; i < this.state.photos.length; i++){
-			emotionProb.push(JSON.stringify(this.state.photos[i].state.dominantEmotion));
-			timestamp.push(new Date(this.state.photos[i].props.timestamp)); //added new Date here to get datatype right
+			emotionProb.push(JSON.stringify(p[i].state.dominantEmotion));
+			let d = new Date(p[i].props.timestamp);
+			//console.log("D" + d);
+			//d.setTime(d - d.getTimezoneOffset*60*1000);
+			//console.log("D-" + d);
+			timestamp.push(d); //THIS IS WHERE string converted to date. MAKES IT 1 HOUR LATER!!! ERRORCODE101
 		}
+		console.log("TS");
+		console.log(timestamp);
 		//var emotionsString = emotionProb.toString();
 		//turn photo info into graphData
 
@@ -459,6 +466,13 @@ getLineData(timeUnit,emotionProbs,timestamp,startdate,enddate){
 				console.log("Incorrect tiemcode in testDataTime");	
 		}
 		*/
+		
+	
+	//console.log("BEGINNING");
+	//console.log("DATE: " + Date.now() + "	Hours: " + new Date(Date.now()).getUTCHours());
+	//console.log(timestamp);
+	//console.log("DATE: " + timestamp[0] + "		Hours: " + timestamp[0].getHours());
+		
 	let timeUnit = this.state.selectedTime;	
 	let datetimeLabels = [];
 	datetimeLabels.length = 0;
@@ -515,8 +529,6 @@ getLineData(timeUnit,emotionProbs,timestamp,startdate,enddate){
 		}
 	}
 
-	console.log("BEGINNING");
-	
 	i = 0;
 	lastUnit = this.getUnitQuantity(startdate,changeDateUnit);
 	missingUnits = 0;
@@ -530,7 +542,7 @@ getLineData(timeUnit,emotionProbs,timestamp,startdate,enddate){
 			//if new time
 			missingUnits = this.getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit;
 			if (missingUnits > 0){
-				console.log("ADDING NULLS * " + missingUnits);
+				console.log("ADDING NULLS * " + missingUnits + "from: " + timestamp[i]);
 				for (j = 0; j < missingUnits; j++){
 					thedata.push(null);
 				}
