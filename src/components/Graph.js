@@ -762,10 +762,10 @@ export function GetEmotionIndex(emo){
 }
 
 export function convertStringToDate(str){
-	//THIS IS WHERE string converted to date. MAKES IT 1 HOUR LATER!!! ERRORCODE101
-		let d = new Date(str);
-		return d;
-	}
+	let d = new Date(str);
+	// add time zone offset
+    return d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
+}
 	
 export function getUnitQuantity(adate,dateUnit){
 	switch (dateUnit){
