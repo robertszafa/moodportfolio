@@ -260,22 +260,26 @@ export default class Graph extends React.Component {
 		i++;
 	}
 	
-	//if leftover data in emotionCompare then push
-	if (emotionCompare.length > 0){
-		console.log("PUSHING DATA TO thedata");
-		thedata.push(GetEmotionIndex(GetModeEmotion(emotionCompare)));
-		console.log(thedata);
-	}
+	if (timestamp.length > 0){
+		
+		//if leftover data in emotionCompare then push
+		if (emotionCompare.length > 0){
+			console.log("PUSHING DATA TO thedata");
+			thedata.push(GetEmotionIndex(GetModeEmotion(emotionCompare)));
+			console.log(thedata);
+		}
 
-	//add remaining nulls
-	let maxUnit = getUnitQuantity(enddate,changeDateUnit);
-	if (maxUnit === 0){
-		maxUnit = 23;
-	}
-	let remainingNulls = maxUnit - getUnitQuantity(timestamp[timestamp.length - 1],changeDateUnit);
-	console.log("PUSHING " + remainingNulls + " remaining nulls.");
-	for (i = 0; i < remainingNulls; i++){
-		thedata.push(null);
+		//add remaining nulls
+		let maxUnit = getUnitQuantity(enddate,changeDateUnit);
+		if (maxUnit === 0){
+			maxUnit = 23;
+		}
+		
+		let remainingNulls = maxUnit - getUnitQuantity(timestamp[timestamp.length - 1],changeDateUnit);
+		console.log("PUSHING " + remainingNulls + " remaining nulls.");
+		for (i = 0; i < remainingNulls; i++){
+			thedata.push(null);
+		}
 	}
 		
 	console.log("END OF NEW CODE");
