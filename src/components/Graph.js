@@ -59,7 +59,7 @@ export default class Graph extends React.Component {
 		});
 		
 		fetch(apiMoodportfolio + '/EmotionsQuery', {
-					method: "POST",
+					method: "GET",
 					mode: "cors",
 					cache: "no-cache",
 					withCredentials: true,
@@ -67,11 +67,11 @@ export default class Graph extends React.Component {
 					headers: {
 							"Authorization": authToken,
 							"Content-Type": "application/json",
+							"BasedOn": basedOn,
+							"StartDate": formattedStart,
+							"EndDate": formattedEnd,
+							"Limit": '',
 					},
-					body: JSON.stringify({ "basedOn": basedOn,
-											"startDate": formattedStart,
-											"endDate": formattedEnd,
-							})
 			})
 			.then((res) => res.json())
 			.then(json => {
