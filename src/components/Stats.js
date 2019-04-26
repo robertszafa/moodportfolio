@@ -13,7 +13,7 @@ export default class Stats extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			graphOption: -1, //what the graph is based on. 1 = all, 2 = emotion, 3 = tag
+			menuOption: -1, //what the graph is based on. 1 = all, 2 = emotion, 3 = tag
 		}
 		
 		this.handleMenuClick = this.handleMenuClick.bind(this);
@@ -22,7 +22,7 @@ export default class Stats extends React.Component {
 	}
 	
 	handleMenuClick(o){
-		this.setState({graphOption: o});
+		this.setState({menuOption: o});
 	}
 	
 	handleTagClick(t){
@@ -35,27 +35,22 @@ export default class Stats extends React.Component {
 	
 	render () {
 		var j;
-		j = <Graph graphOption={this.state.graphOption}/>;
+		j = <Graph menuOption={this.state.menuOption}/>;
 		
-		switch (this.state.graphOption){
+		switch (this.state.menuOption){
 			case 1:
 				//All, straight into graph
-				j = <Graph graphOption={this.state.graphOption}/>;
+				j = <Graph menuOption={this.state.menuOption}/>;
 				break;
 			case 2:
-				//Emotion, select emotion
-				if (this.state.emotion){
-					j = <Graph graphOption={this.state.graphOption} emotion={this.state.emotion}/>
-				} else {
-					j = <EmotionMenu onClick={this.handleEmotionClick} />
-				}
+				j = <graph menuOption={this.state.menuOption} />;
 				break;
 			case 3:
 				//Tag, select tag
 				//NO CODE YET - wait for thep's to be done
 				//Change this so that doesn't pass these values too
-				j = <Graph graphOption={this.state.graphOption} />;
-				//j = <Graph graphOption={this.state.graphOption}/>;
+				j = <Graph menuOption={this.state.menuOption} />;
+				//j = <Graph menuOption={this.state.menuOption}/>;
 				break;
 			default:
 				//graph option not chosen yet, menu of graph options
@@ -103,7 +98,7 @@ class StatsMenu extends React.Component {
 				<ButtonGroup vertical>
 					{this.renderButton("Everything", 1)}
 					<p/>
-					{this.renderButton("An Emotion", 2)}
+					{this.renderButton("Emotion", 2)}
 					<p/>
 					{this.renderButton("A Tag", 3)}
 					</ButtonGroup>
@@ -125,70 +120,6 @@ function StatsMenuButton(props) {
 			{props.name}
 			</Button>
 		</div>
-	);
-}
-
-class EmotionMenu extends React.Component {
-	
-	constructor(props) {
-		super(props)
-		this.handleClick = this.handleClick.bind(this)
-	}
-	
-	renderButton(n){
-		return (
-			<EmotionMenuButton 
-			name = {n}
-			onClick = {() => this.handleClick(n)}
-			/>
-		);
-	}
-	
-	handleClick(o){
-		this.props.onClick(o);
-	}
-	
-	render () {
-		return (
-			<div className="emotion-menu">
-				<b>View graph based on:</b>
-				<p/>
-				<div className="menu-buttons">
-				<ButtonGroup vertical>
-					{this.renderButton("Anger")}
-
-					{this.renderButton("Contempt")}
-
-					{this.renderButton("Disgust")}
-
-					{this.renderButton("Fear")}
-
-					{this.renderButton("Joy")}
-
-					{this.renderButton("Surprise")}
-
-					{this.renderButton("Sadness")}
-
-					{this.renderButton("Neutral")}
-					</ButtonGroup>
-				</div>
-			</div>
-		);
-	}
-	
-}
-
-function EmotionMenuButton(props) {
-	return (
-		
-			<Button
-			variant = "primary"
-			onClick={props.onClick}
-			block
-			>
-			{props.name}
-			</Button>
-	
 	);
 }
 
