@@ -361,8 +361,10 @@ export default class Graph extends React.Component {
 			}
 		}
 	});
+}
+
+setGraphData_Emotions(){
 	
-	console.log("END");
 }
 	
 	//Button handling functions
