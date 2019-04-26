@@ -327,6 +327,7 @@ export default class Graph extends React.Component {
 			
 			scales: {
 				yAxes: [{
+					interval:0,
 					title: "Emotion",
 					ticks: {
 						beginAtZero: true,
@@ -335,7 +336,6 @@ export default class Graph extends React.Component {
 						},
 					max: 8,
 					min: 0,
-					unitStepSize: 1,
 					}
 				}],
 				xAxes: [{
