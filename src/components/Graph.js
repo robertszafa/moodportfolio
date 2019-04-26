@@ -175,6 +175,7 @@ export default class Graph extends React.Component {
 getUnitQuantity(adate,dateUnit){
 	switch (dateUnit){
 		case 0:
+		console.log(adate.getHours());
 			return adate.getHours();
 		case 1:
 			return adate.getDate();
@@ -258,7 +259,7 @@ getUnitQuantity(adate,dateUnit){
 		} else {
 			//if new time
 			missingUnits = this.getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit;
-			if (missingUnits > 0){
+			if (missingUnits > 1 || (missingUnits > 0 && i === 0)){
 				console.log("ADDING NULLS * " + missingUnits + "from: " + timestamp[i]);
 				for (j = 0; j < missingUnits; j++){
 					thedata.push(null);
@@ -280,12 +281,23 @@ getUnitQuantity(adate,dateUnit){
 		i++;
 	}
 	
+	//if leftover data in emotionCompare then push
 	if (emotionCompare.length > 0){
 		console.log("PUSHING DATA TO thedata");
 		thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
 		console.log(thedata);
 	}
-		
+
+	//add remaining nulls
+	let maxUnit = this.getUnitQuantity(enddate,changeDateUnit);
+	if (maxUnit === 0){
+		maxUnit = 23;
+	}
+	let remainingNulls = maxUnit - this.getUnitQuantity(timestamp[timestamp.length - 1],changeDateUnit);
+	console.log("PUSHING " + remainingNulls + " remaining nulls.");
+	for (i = 0; i < remainingNulls; i++){
+		thedata.push(null);
+	}
 		
 	console.log("END OF NEW CODE");
 		
@@ -327,7 +339,7 @@ getUnitQuantity(adate,dateUnit){
 			},
 			
 			tooltips: {
-				enabled: false
+				enabled: false,
 			},
 			
 			scales: {
