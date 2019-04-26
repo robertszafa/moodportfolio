@@ -28,6 +28,7 @@ export default class Graph extends React.Component {
 		
 		//this.photos = new Array(); //other way to set up the photos array if not meant to be state.
 		
+		this.displayEmotions = ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'];
 		this.dbEmotions = ['anger','contempt','disgust','fear','happiness','neutral','sadness','surprise'];
 		this.handleTimeClick = this.handleTimeClick.bind(this);
 		this.handleTypeClick = this.handleTypeClick.bind(this);
@@ -103,11 +104,7 @@ export default class Graph extends React.Component {
 		let i;
 		for (i = 0; i < this.state.photos.length; i++){
 			emotionProb.push(JSON.stringify(p[i].state.dominantEmotion));
-			let d = new Date(p[i].props.timestamp);
-			//console.log("D" + d);
-			//d.setTime(d - d.getTimezoneOffset*60*1000);
-			//console.log("D-" + d);
-			timestamp.push(d); //THIS IS WHERE string converted to date. MAKES IT 1 HOUR LATER!!! ERRORCODE101
+			timestamp.push(convertStringToDate(p[i].props.timestamp));
 		}
 		console.log("TS");
 		console.log(timestamp);
@@ -133,18 +130,16 @@ export default class Graph extends React.Component {
 		for (i = 0; i < emotionProbs.length; i++){
 			for (j = 0; j < this.dbEmotions.length; j++){
 				if (emotionProbs[i].includes(this.dbEmotions[j])){
-					emotionCount[getEmotionIndex(getEmotionFromString(emotionProbs[i]))] ++;
+					emotionCount[GetEmotionIndex(getEmotionFromString(emotionProbs[i]))] ++;
 				}	
 			}
 		}
-		
-		let displayEmotions = ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'];
 
 		this.setState({
-			indexLabels: displayEmotions,
+			indexLabels: this.displayEmotions,
 			graphData: {
 				label: 'Emotions Overall',
-				labels: displayEmotions,
+				labels: this.displayEmotions,
 				datasets: [{
 					data: emotionCount,
 					backgroundColor: [
@@ -171,23 +166,6 @@ export default class Graph extends React.Component {
 			}
 		});
 	}
-	
-getUnitQuantity(adate,dateUnit){
-	switch (dateUnit){
-		case 0:
-		console.log(adate.getHours());
-			return adate.getHours();
-		case 1:
-			return adate.getDate();
-		case 2:
-			return adate.getMonth();
-		case 3:
-			return adate.getMonth(); //purposefully the same incase I forget.
-		default:
-			console.log("getUnitQuantity failed.");
-			return -1;
-	}
-}
 
 	SetGraphData_OverTime(emotionProbs,timestamp,startdate,enddate){
 		
@@ -248,17 +226,17 @@ getUnitQuantity(adate,dateUnit){
 	}
 
 	i = 0;
-	lastUnit = this.getUnitQuantity(startdate,changeDateUnit);
+	lastUnit = getUnitQuantity(startdate,changeDateUnit);
 	missingUnits = 0;
 	
 	while (i < timestamp.length){
 		//check if part of the current time
-		if (this.getUnitQuantity(timestamp[i],changeDateUnit) === lastUnit){
+		if (getUnitQuantity(timestamp[i],changeDateUnit) === lastUnit){
 			console.log("PUSHING" + emotionProbs[i] + " TO COMPARISON.");
 			emotionCompare.push(emotionProbs[i]);
 		} else {
 			//if new time
-			missingUnits = this.getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit - 1;
+			missingUnits = getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit - 1;
 			if (missingUnits > 1 || (missingUnits > -1 && i === 0)){
 				if (i === 0) {missingUnits++;}
 				console.log("ADDING NULLS * " + missingUnits + "from: " + timestamp[i]);
@@ -269,7 +247,7 @@ getUnitQuantity(adate,dateUnit){
 			//find most prominent emotion, get its number, push it
 			if (emotionCompare.length > 0){
 				console.log("PUSHING PROMINENT EMOTION");
-				thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+				thedata.push(GetEmotionIndex(GetModeEmotion(emotionCompare)));
 			}
 			//clear emotionCompare
 			emotionCompare = [];
@@ -277,7 +255,7 @@ getUnitQuantity(adate,dateUnit){
 			console.log("PUSHING CURRENT ELEMENT TO COMPARISON");
 			emotionCompare.push(emotionProbs[i]);
 			//set the current time being looked at
-			lastUnit = this.getUnitQuantity(timestamp[i],changeDateUnit);
+			lastUnit = getUnitQuantity(timestamp[i],changeDateUnit);
 		}
 		i++;
 	}
@@ -285,16 +263,16 @@ getUnitQuantity(adate,dateUnit){
 	//if leftover data in emotionCompare then push
 	if (emotionCompare.length > 0){
 		console.log("PUSHING DATA TO thedata");
-		thedata.push(getEmotionIndex(getModeEmotion(emotionCompare)));
+		thedata.push(GetEmotionIndex(GetModeEmotion(emotionCompare)));
 		console.log(thedata);
 	}
 
 	//add remaining nulls
-	let maxUnit = this.getUnitQuantity(enddate,changeDateUnit);
+	let maxUnit = getUnitQuantity(enddate,changeDateUnit);
 	if (maxUnit === 0){
 		maxUnit = 23;
 	}
-	let remainingNulls = maxUnit - this.getUnitQuantity(timestamp[timestamp.length - 1],changeDateUnit);
+	let remainingNulls = maxUnit - getUnitQuantity(timestamp[timestamp.length - 1],changeDateUnit);
 	console.log("PUSHING " + remainingNulls + " remaining nulls.");
 	for (i = 0; i < remainingNulls; i++){
 		thedata.push(null);
@@ -520,8 +498,8 @@ getUnitQuantity(adate,dateUnit){
 		
 		let nodeView;
 		if (this.state.indexClicked !== -1){
-			nodeView = <NodeViewer emotion={"Happy"} timestamp={Date.now()}/>;
-			nodeView = <NodeViewer nodeClicked={this.state.indexClicked} xLabels={this.state.datetimeLabels} data={this.state.photos}/> 
+			//nodeView = <NodeViewer emotion={"Happy"} timestamp={Date.now()}/>;
+			nodeView = <NodeViewer nodeClicked={this.state.indexClicked} indexLabels={this.state.datetimeLabels} data={this.state.photos} graphType={this.state.selectedGraph} timeUnit={this.state.selectedTime} startDate={this.state.startDate} endDate={this.state.endDate} emotions={this.displayEmotions}/> 
 		}
 		
 		//Have temporarily added a blank button above the time unit menu as wasn't working for some reason.
@@ -673,7 +651,7 @@ class GraphMenu extends React.Component {
 	}
 }
 
-function changeDate(timecode, adate, modifier) {
+export function changeDate(timecode, adate, modifier) {
 		var d = new Date(adate);
 		var temp;
 		switch (timecode){
@@ -738,11 +716,11 @@ function getMonthEnd(adate){
 	return new Date(d);
 }
 
-function getEmotionFromString(str){
+export function getEmotionFromString(str){
 	return str.split("\"")[1];
 }
 
-function getModeEmotion(emotionArray){
+function GetModeEmotion(emotionArray){
 	let dbEmotions = ['anger','contempt','disgust','fear','happiness','neutral','sadness','surprise'];
 	let emotionCount = new Array(dbEmotions.length).fill(0);
 	let i = 0, j = 0;
@@ -767,7 +745,7 @@ function getModeEmotion(emotionArray){
 	return dbEmotions[maxID];
 }
 
-function getEmotionIndex(emo){
+export function GetEmotionIndex(emo){
 	let displayOrder = ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'];
 	let i = 0;
 	for (i = 0; i < displayOrder.length; i++){
@@ -777,4 +755,26 @@ function getEmotionIndex(emo){
 	}
 	
 	return -1;
+}
+
+export function convertStringToDate(str){
+	//THIS IS WHERE string converted to date. MAKES IT 1 HOUR LATER!!! ERRORCODE101
+		let d = new Date(str);
+		return d;
+	}
+	
+export function getUnitQuantity(adate,dateUnit){
+	switch (dateUnit){
+		case 0:
+			return adate.getHours();
+		case 1:
+			return adate.getDate();
+		case 2:
+			return adate.getMonth();
+		case 3:
+			return adate.getMonth(); //purposefully the same incase I forget.
+		default:
+			console.log("getUnitQuantity failed.");
+			return -1;
+	}
 }
