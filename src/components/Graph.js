@@ -766,7 +766,8 @@ export function GetEmotionIndex(emo){
 export function convertStringToDate(str){
 	let d = new Date(str);
 	// add time zone offset
-    return d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
+	//d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 )
+    return d;
 }
 	
 export function getUnitQuantity(adate,dateUnit){
