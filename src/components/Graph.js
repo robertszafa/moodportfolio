@@ -258,8 +258,9 @@ getUnitQuantity(adate,dateUnit){
 			emotionCompare.push(emotionProbs[i]);
 		} else {
 			//if new time
-			missingUnits = this.getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit;
-			if (missingUnits > 1 || (missingUnits > 0 && i === 0)){
+			missingUnits = this.getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit - 1;
+			if (missingUnits > 1 || (missingUnits > -1 && i === 0)){
+				if (i === 0) {missingUnits++;}
 				console.log("ADDING NULLS * " + missingUnits + "from: " + timestamp[i]);
 				for (j = 0; j < missingUnits; j++){
 					thedata.push(null);
