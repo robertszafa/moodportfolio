@@ -77,6 +77,7 @@ export default class NodeViewer extends React.Component{
 			jsxObj.push(this.renderCard(thedata[i].state.timestamp,thedata[i].state.photoUri,thedata[i].state.dominantEmotion));
 		}
 		*/
+		
 		let cardList = [];
 			for (i = 0; i < thedata.length;i++){
 				cardList.push(<CarouselCard timestamp = {thedata[i].state.timestamp} imgUri = {thedata[i].state.photoUri} emotion = {thedata[i].state.dominantEmotion} key={i}/>);
@@ -94,7 +95,6 @@ export default class NodeViewer extends React.Component{
 
 function CarouselCard(props){
 	
-	render () {
 	return (
 		<Card style={{ width: '5rem' }} className='card'>
 			<Card.Img variant="top" src={this.props.imgUri}/>
@@ -105,5 +105,4 @@ function CarouselCard(props){
 			</Card.Body>
 		</Card>
 	);
-	}
 }
