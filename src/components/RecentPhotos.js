@@ -57,18 +57,18 @@ export default class RecentPhotos extends Component {
 
     render() {
         const {photos, loaded} = this.state;
-        console.log("test", photos[0]);
+        const Photos = photos.map(photo => 
+                                    <Photo
+                                        photoId={photo.photoID}
+                                        timestamp={photo.timestamp}
+                                        emotion={photo.emotion}
+                                        dominantEmotion={photo.dominantEmotion}
+                                    />
+                                )
 
         return (
           <div>
-              {loaded &&
-                <Photo
-                    photoId={photos[0].photoID}
-                    timestamp={photos[0].timestamp}
-                    emotion={photos[0].emotion}
-                    dominantEmotion={photos[0].dominantEmotion}
-                />
-              }
+              {Photos}
           </div>    
         )
     }

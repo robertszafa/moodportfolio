@@ -14,7 +14,7 @@ export default class Home extends React.Component {
     render() {
       return (
           <div>
-            <RecentPhotos limit={3}/>
+            <RecentPhotos limit={5}/>
           </div>
       );
     }

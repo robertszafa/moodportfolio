@@ -47,7 +47,11 @@ export default class Photo extends Component {
         return (
             <div>
                 <p>Taken on {timestamp}</p>
-                <p><img src={photoUri} alt="Your photo"width="100%"/></p>
+                <div>
+                    <p><img src={photoUri} alt="Your photo"width="40%"/></p>
+                </div>
+                <p>Classified emotions {JSON.stringify(emotion)}</p>
+                <p>Dominant emotion {JSON.stringify(dominantEmotion)}</p>
             </div>
         )
     }
