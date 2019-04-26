@@ -59,7 +59,7 @@ export default class Graph extends React.Component {
 		});
 		
 		fetch(apiMoodportfolio + '/EmotionsQuery', {
-					method: "POST",
+					method: "GET",
 					mode: "cors",
 					cache: "no-cache",
 					withCredentials: true,
@@ -67,11 +67,11 @@ export default class Graph extends React.Component {
 					headers: {
 							"Authorization": authToken,
 							"Content-Type": "application/json",
+							"BasedOn": basedOn,
+							"StartDate": formattedStart,
+							"EndDate": formattedEnd,
+							"Limit": '',
 					},
-					body: JSON.stringify({ "basedOn": basedOn,
-											"startDate": formattedStart,
-											"endDate": formattedEnd,
-							})
 			})
 			.then((res) => res.json())
 			.then(json => {
@@ -764,10 +764,10 @@ export function GetEmotionIndex(emo){
 }
 
 export function convertStringToDate(str){
-	//THIS IS WHERE string converted to date. MAKES IT 1 HOUR LATER!!! ERRORCODE101
-		let d = new Date(str);
-		return d;
-	}
+	let d = new Date(str);
+	// add time zone offset
+    return d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
+}
 	
 export function getUnitQuantity(adate,dateUnit){
 	switch (dateUnit){
