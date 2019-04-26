@@ -7,18 +7,19 @@ export default class Photo extends Component {
         super(props);
 		this.state = {
             photoUri: "",
-            photoId: this.props.photoID,
+            photoId: this.props.photoId,
             timestamp: this.props.timestamp,
             emotion: JSON.parse(this.props.emotion),
             dominantEmotion: getDominantEmotion(JSON.parse(this.props.emotion)),
         };
-
-        console.log("Photo state: ", this.state);
+        console.log("photo " + this.state.photoId);
         
     }
     
 
-    componentDidMount() {
+    componentWillMount() {
+        console.log('requesting URi with id ', this.state.photoId);
+        
         let authToken = localStorage.getItem("authToken");
         fetch(apiMoodportfolio + '/PhotoUri', {
             method: "GET",
@@ -41,9 +42,13 @@ export default class Photo extends Component {
     }
 
     render() {
+        const { photoUri, photoId, timestamp, emotion, dominantEmotion } = this.state;
 
         return (
-            <p><img src={this.state.photoUri} alt="Your photo"width="100%"/></p>
+            <div>
+                <p>Taken on {timestamp}</p>
+                <p><img src={photoUri} alt="Your photo"width="100%"/></p>
+            </div>
         )
     }
 }
@@ -63,4 +68,11 @@ function getDominantEmotion(emotions) {
     });
 
     return {[dominantEmotion]: max};
+}
+
+
+function convertStringToDate(str){
+	let d = new Date(str);
+	// add time zone offset
+    return d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
 }
