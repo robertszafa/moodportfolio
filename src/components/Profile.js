@@ -177,7 +177,7 @@ const ProfileForm = props => {
                     <br></br>
                     <br></br>
                     <div class="text-center">
-                    <Button variant="secondary" type="submit">
+                    <Button variant="outline-dark" type="submit">
                         <Link to="/change-password">Change password</Link>
                     </Button>
                     <br></br>

@@ -15,28 +15,28 @@ export default class Stats extends React.Component {
 		this.state = {
 			menuOption: -1, //what the graph is based on. 1 = all, 2 = emotion, 3 = tag
 		}
-		
+
 		this.handleMenuClick = this.handleMenuClick.bind(this);
 		this.handleTagClick = this.handleTagClick.bind(this);
 		this.handleEmotionClick = this.handleEmotionClick.bind(this);
 	}
-	
+
 	handleMenuClick(o){
 		this.setState({menuOption: o});
 	}
-	
+
 	handleTagClick(o){
 		this.setState({menuOption: o});
 	}
-	
+
 	handleEmotionClick(o){
 		this.setState({menuOption: o});
 	}
-	
+
 	render () {
 		var j;
 		j = <Graph menuOption={this.state.menuOption}/>;
-		
+
 		switch (this.state.menuOption){
 			case 1:
 				//All, straight into graph
@@ -56,12 +56,12 @@ export default class Stats extends React.Component {
 				//graph option not chosen yet, menu of graph options
 				j = <StatsMenu onClick = {this.handleMenuClick}/>
 		}
-		
-		
+
+
 		return (
 			<div className='container'>
-				<div className='col-md-8 stats text-center'>
-					{j}					
+				<div className='col-md-8 stats text-center graphComponent'>
+					{j}
 				</div>
 			</div>
 		);
@@ -70,25 +70,25 @@ export default class Stats extends React.Component {
 }
 
 class StatsMenu extends React.Component {
-	
+
 	constructor(props) {
 		super(props)
 		this.handleClick = this.handleClick.bind(this)
 	}
-	
+
 	renderButton(n, v){
 		return (
-			<StatsMenuButton 
+			<StatsMenuButton
 			name = {n}
 			onClick = {() => this.handleClick(v)}
 			/>
 		);
 	}
-	
+
 	handleClick(o){
 		this.props.onClick(o);
 	}
-	
+
 	render () {
 		return (
 			<div className="stats-menu">
@@ -106,7 +106,7 @@ class StatsMenu extends React.Component {
 			</div>
 		);
 	}
-	
+
 }
 
 function StatsMenuButton(props) {

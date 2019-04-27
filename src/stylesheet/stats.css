@@ -23,3 +23,24 @@
 .card {
     flex: 0 0 auto;
 }
+
+.container{
+
+	padding-top: 50px;
+	padding-bottom: 20px;
+	max-width: 95%;
+}
+
+.stats-menu{
+	padding-top: 20px;
+	background-color: white;
+	padding-bottom: 20px;
+	border-radius: 10px;
+}
+.time-menu-container{
+	padding-bottom:
+}
+
+.graphComponent{
+	background-color: white;
+}
