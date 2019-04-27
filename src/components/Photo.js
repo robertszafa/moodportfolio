@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import {apiMoodportfolio} from '../App'
-import { Button, Container, Row, Col } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import TagMenu from './TagMenu'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import '../stylesheet/photo.css'
 
 
 export default class Photo extends Component {
@@ -104,6 +107,10 @@ export default class Photo extends Component {
         this.setState({description: event.target.value});
     }
 
+    firstCharToUpperCase = str => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
 
     render() {
         const { photoLoaded,
@@ -117,33 +124,39 @@ export default class Photo extends Component {
                 changeDescription,
              } = this.state;
 
+
         return (
-            <div>
+            <div className="photoContainer">
+                <h3>{<FontAwesomeIcon icon={faCamera} />} {formatDate(timestamp)}</h3>
                 {photoLoaded &&
-                    <img src={photoUri} alt="Your photo"width="40%"/>
+                    <img src={photoUri} alt="Your photo"/>
                 }
                 <div>
-                    ID: {JSON.stringify(photoId)}
+                    <b>Photo ID:</b> {JSON.stringify(photoId)}
                 </div>
 
                 <div>
-                    Dominant emotion {JSON.stringify(dominantEmotion)}
+                    <b>Dominant Emotion:</b> {""}
+                    {this.firstCharToUpperCase(JSON.stringify(dominantEmotion).match(/"([^']+)"/)[1])} {""}
+                    {JSON.stringify(dominantEmotion).match(/:([^']+)}/)[1]}{"%"} 
+                </div>
+                <div>
+                    <b>Classified Emotions:</b> {JSON.stringify(emotion).split(/[."{}]/).join(' ')}
                 </div>
 
                 <div>
-                    Classified emotions {JSON.stringify(emotion).split(/[."{}]/).join(' ')}
+                    <b>Taken on:</b> {formatDate(timestamp)}
                 </div>
-
+                
                 <div>
-                    Taken on {formatDate(timestamp)}
-                    {city && <p style={{display:'inline'}}> in {city}</p>}
+                    <b>Location:</b> {city && <p style={{display:'inline'}}> in {city}</p>}
                 </div>
 
                 {changeDescription ?
                     <div class = "text-center moodDiary">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text">Your description: </span>
+                                <span class="input-group-text">Your Description: </span>
                             </div>
 
                             <textarea class="form-control"
@@ -182,7 +195,7 @@ export default class Photo extends Component {
                 </div>
 
                 <div>
-                    <Button class="danger"
+                    <Button variant="danger"
                             onClick={this.onDeletePhoto}
                     >
                         Delete photo
