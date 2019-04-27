@@ -12,9 +12,9 @@ export default class Header extends React.Component {
     constructor(props) {
         super(props);
         this.sideMenuClickHandler = props.sideMenuClickHandler;
-        this.handleLogoutClick = this.handleLogoutClick.bind(this);   
+        this.handleLogoutClick = this.handleLogoutClick.bind(this);
     }
-    
+
     handleLogoutClick() {
         localStorage.removeItem("authToken");
         ReactDOM.render(
@@ -23,7 +23,7 @@ export default class Header extends React.Component {
         );
         console.log("token deleted")
     }
-  
+
     render() {
         return (
             <header className="menuBar">
@@ -38,9 +38,10 @@ export default class Header extends React.Component {
                     </div>
 
                     <div className="space"></div>
-                    
+
                     <div className="menuList">
                         <ul>
+                            <li><a componentClass={Link} href="/adminPage" to="/adminPage">Admin</a></li>
                             <li><a componentClass={Link} href="/capture" to="/capture">Capture</a></li>
                             <li><a componentClass={Link} href="/stats" to="/stats">Stats</a></li>
                             <li><a componentClass={Link} href="/tag" to="/tag">Tag</a></li>
