@@ -19,7 +19,7 @@ export default class Photo extends Component {
             changeDescription: false,
             onDeletePhoto: this.props.onDeletePhoto,
         };
-        
+
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.onUploadDescription = this.onUploadDescription.bind(this);
         this.onChangeDescriptionClick = this.onChangeDescriptionClick.bind(this);
@@ -51,7 +51,7 @@ export default class Photo extends Component {
 
     onDeletePhoto() {
         console.log('DELTETING in photo', this.state.photoId);
-        
+
         let authToken = localStorage.getItem("authToken");
         fetch(apiMoodportfolio + '/PhotoUri', {
             method: "DELETE",
@@ -107,16 +107,16 @@ export default class Photo extends Component {
 
     render() {
         const { photoLoaded,
-                photoUri, 
-                photoId, 
-                timestamp, 
-                city, 
-                description, 
-                emotion, 
+                photoUri,
+                photoId,
+                timestamp,
+                city,
+                description,
+                emotion,
                 dominantEmotion,
                 changeDescription,
              } = this.state;
-        
+
         return (
             <div>
                 {photoLoaded &&
@@ -125,15 +125,15 @@ export default class Photo extends Component {
                 <div>
                     ID: {JSON.stringify(photoId)}
                 </div>
-                
+
                 <div>
                     Dominant emotion {JSON.stringify(dominantEmotion)}
                 </div>
-                
+
                 <div>
-                    Classified emotions {JSON.stringify(emotion)}
+                    Classified emotions {JSON.stringify(emotion).split(',').join(', ')}
                 </div>
-                
+
                 <div>
                     Taken on {formatDate(timestamp)}
                     {city && <p style={{display:'inline'}}> in {city}</p>}
@@ -146,7 +146,7 @@ export default class Photo extends Component {
                                 <span class="input-group-text">Your description: </span>
                             </div>
 
-                            <textarea class="form-control" 
+                            <textarea class="form-control"
                                     type="text"
                                     maxLength="280"
                                     aria-label="With textarea"
@@ -155,7 +155,7 @@ export default class Photo extends Component {
                             </textarea>
 
                             <div class="input-group-append">
-                                <Button class="btn btn-dark" 
+                                <Button class="btn btn-dark"
                                         onClick={this.onUploadDescription}>
                                     Save
                                 </Button>
@@ -164,11 +164,11 @@ export default class Photo extends Component {
                     </div>
 
                     :
-                    
+
                     <div>
                         Your description: {description}
 
-                        <Button class="secondary" 
+                        <Button class="secondary"
                                 display="inline"
                                 onClick={this.onChangeDescriptionClick}
                         >
@@ -182,7 +182,7 @@ export default class Photo extends Component {
                 </div>
 
                 <div>
-                    <Button class="danger" 
+                    <Button class="danger"
                             onClick={this.onDeletePhoto}
                     >
                         Delete photo
@@ -215,8 +215,8 @@ function getDominantEmotion(emotions) {
 function formatDate(adate) {
 	var d = new Date(adate);
 	return (
-		('0' + d.getDate()).slice(-2) + '/' + 
-		('0' + (d.getMonth() + 1)).slice(-2) + '/' + 
+		('0' + d.getDate()).slice(-2) + '/' +
+		('0' + (d.getMonth() + 1)).slice(-2) + '/' +
 		d.getFullYear()
 	);
 }
