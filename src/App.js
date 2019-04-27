@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Header from './components/Header'
 import SideMenu from './components/menu/SideMenu'
-import BackDrop from './components/menu/BackDrop' 
+import BackDrop from './components/menu/BackDrop'
 import Home from './components/Home'
 import Capture from './components/Capture'
 import Stats from './components/Stats'
@@ -12,6 +12,7 @@ import Login from './components/Login'
 import Profile from './components/Profile'
 import Register from './components/Register'
 import ChangePassword from './components/ChangePassword'
+import AdminPage from './components/AdminPage'
 import './stylesheet/app.css'
 import TagMenu from './components/TagMenu';
 
@@ -28,7 +29,7 @@ export default class App extends Component {
   componentDidMount() {
         let authToken = localStorage.getItem("authToken");
         fetch(apiMoodportfolio + '/Login', {
-            method: "GET", 
+            method: "GET",
             mode: "cors",
             cache: "no-cache",
             withCredentials: true,
@@ -58,7 +59,7 @@ export default class App extends Component {
               sessionStorage.setItem("latitude", crd.latitude)
               sessionStorage.setItem("longitude", crd.longitude)
           });
-      } 
+      }
     }
 
   sideMenuClickHandler = () => {
@@ -97,6 +98,7 @@ export default class App extends Component {
                   <Route path={"/profile"} component={Profile} />
                   <Route path={"/about-us"} component={AboutUs} />
                   <Route path={"/change-password"} component={ChangePassword} />
+                  <Route path={"/adminPage"} component={AdminPage}/>
               </main>
             </Switch>
           </div>

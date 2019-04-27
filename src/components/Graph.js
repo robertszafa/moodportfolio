@@ -21,13 +21,13 @@ export default class Graph extends React.Component {
 			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected). Have left bar in for now.
 			graphData: {},
 			graphOptions: {},
-			indexClicked: -1, 
+			indexClicked: -1,
 			photos: [],
 			indexLabels: []
 		}
-		
+
 		//this.photos = new Array(); //other way to set up the photos array if not meant to be state.
-		
+
 		this.displayEmotions = ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'];
 		this.dbEmotions = ['anger','contempt','disgust','fear','happiness','neutral','sadness','surprise'];
 		this.handleTimeClick = this.handleTimeClick.bind(this);
@@ -36,12 +36,12 @@ export default class Graph extends React.Component {
 		this.handleForwardClick = this.handleForwardClick.bind(this);
 		this.handleNodeClick = this.handleNodeClick.bind(this);
 	}
-	
+
 	componentWillMount(){
 		this.GetPhotos(this.state.startDate,this.state.endDate);
 		//this.testDataTime(this.state.selectedTime,this.state.startDate,this.state.endDate);
 	}
-	
+
 	// Gets Photos from server and then stuff
 	// Uses startDate, endDate
 	GetPhotos(start, end){
@@ -57,7 +57,7 @@ export default class Graph extends React.Component {
 		this.setState({
 			photos: []
 		});
-		
+
 		fetch(apiMoodportfolio + '/EmotionsQuery', {
 					method: "GET",
 					mode: "cors",
@@ -90,10 +90,10 @@ export default class Graph extends React.Component {
 	}
 
 	SetGraphData(graphCode,start,end){
-		
+
 		//if chart is line then need to average out the data, otherwise don't.
 		//extract data from photos
-		
+
 		/*
 		console.log("PIE CHART");
 		console.log(start + "\n" + end);
@@ -119,19 +119,19 @@ export default class Graph extends React.Component {
 		}
 
 	}
-	
+
 	SetGraphData_Overall(emotionProbs){
 		this.state.graphOptions = {};
 		//var emotionP = emotionProbs;
 		//loop through the emotions and count total of each
 		let emotionCount = new Array(this.dbEmotions.length).fill(0);
-		
+
 		let i, j;
 		for (i = 0; i < emotionProbs.length; i++){
 			for (j = 0; j < this.dbEmotions.length; j++){
 				if (emotionProbs[i].includes(this.dbEmotions[j])){
 					emotionCount[GetEmotionIndex(getEmotionFromString(emotionProbs[i]))] ++;
-				}	
+				}
 			}
 		}
 
@@ -143,14 +143,14 @@ export default class Graph extends React.Component {
 				datasets: [{
 					data: emotionCount,
 					backgroundColor: [
-						'#d270d3',
-						'#fb7821',
-						'#e83e17',
-						'#bfc0ee',
-						'#9f9e26',
-						'#700846',
-						'#771aab',
-						'#e24b5a'
+						'#11ff00',
+						'#ff0011',
+						'#ee00ff',
+						'#80027a',
+						'#1003ff',
+						'#06ffb4',
+						'#ff7206',
+						'#fff700'
 					],
 					hoverBackgroundColor: [
 						'#043d7e',
@@ -168,8 +168,8 @@ export default class Graph extends React.Component {
 	}
 
 	SetGraphData_OverTime(emotionProbs,timestamp,startdate,enddate){
-		
-	let timeUnit = this.state.selectedTime;	
+
+	let timeUnit = this.state.selectedTime;
 	let datetimeLabels = [];
 	datetimeLabels.length = 0;
 	let i = 0, j = 0;
@@ -177,9 +177,9 @@ export default class Graph extends React.Component {
 	let thedata = [];
 	thedata.length = 0;
 	let stepSize, timeValue, minDate, maxDate, lastUnit, missingUnits, timeFormat, numTicks, changeDateUnit;
-	
+
 	let emotionCompare = [];
-	
+
 	switch(timeUnit){
 		case 1:
 			changeDateUnit = 0;
@@ -190,7 +190,7 @@ export default class Graph extends React.Component {
 			maxDate = enddate;
 			numTicks = 24;
 			break;
-			
+
 		case 2:
 			changeDateUnit = 1;
 			timeFormat = 'MMM DD';
@@ -200,19 +200,19 @@ export default class Graph extends React.Component {
 			maxDate = changeDate(changeDateUnit,enddate,-1);
 			numTicks = 7;
 			break;
-			
+
 		case 3:
 			changeDateUnit = 1;
 			timeFormat = 'MMM DD';
 			stepSize = 'day';
 			timeValue = 3;
 			minDate = startdate;
-			maxDate = changeDate(1,enddate,-1); //need to check this			
+			maxDate = changeDate(1,enddate,-1); //need to check this
 			break;
 			default:
 			console.log("broke" + timeUnit);
 	}
-	
+
 	if (timeUnit === 3){
 		while (d < enddate){
 			datetimeLabels.push(d);
@@ -228,7 +228,7 @@ export default class Graph extends React.Component {
 	i = 0;
 	lastUnit = getUnitQuantity(startdate,changeDateUnit);
 	missingUnits = 0;
-	
+
 	while (i < timestamp.length){
 		//check if part of the current time
 		if (getUnitQuantity(timestamp[i],changeDateUnit) === lastUnit){
@@ -259,9 +259,9 @@ export default class Graph extends React.Component {
 		}
 		i++;
 	}
-	
+
 	if (timestamp.length > 0){
-		
+
 		//if leftover data in emotionCompare then push
 		if (emotionCompare.length > 0){
 			console.log("PUSHING DATA TO thedata");
@@ -274,16 +274,16 @@ export default class Graph extends React.Component {
 		if (maxUnit === 0){
 			maxUnit = 23;
 		}
-		
+
 		let remainingNulls = maxUnit - getUnitQuantity(timestamp[timestamp.length - 1],changeDateUnit);
 		console.log("PUSHING " + remainingNulls + " remaining nulls.");
 		for (i = 0; i < remainingNulls; i++){
 			thedata.push(null);
 		}
 	}
-		
+
 	console.log("END OF NEW CODE");
-		
+
 	let yLabels = {
 		0: '',
 		1: 'Anger',
@@ -303,7 +303,7 @@ export default class Graph extends React.Component {
 	console.log(datetimeLabels);
 	this.setState({
 		indexLabels: datetimeLabels,
-		
+
 		graphData: {
 			label: 'Emotions Over Time',
 			labels: datetimeLabels,
@@ -314,17 +314,17 @@ export default class Graph extends React.Component {
 				fill: false
 			}]
 		},
-		
+
 		graphOptions: {
-			
+
 			legend: {
 				display: false,
 			},
-			
+
 			tooltips: {
 				enabled: false,
 			},
-			
+
 			scales: {
 				yAxes: [{
 					interval:0,
@@ -364,11 +364,11 @@ export default class Graph extends React.Component {
 }
 
 setGraphData_Emotions(){
-	
+
 }
-	
+
 	//Button handling functions
-	
+
 	//When clicking Day/Week/Month
 	handleTimeClick(selectedUnit){
 		var current = new Date(this.state.currentDate);
@@ -391,12 +391,12 @@ setGraphData_Emotions(){
 			default:
 				console.log("Wrong selected unit in handleTimeClick");
 		}
-		
+
 		this.setState({
 			selectedTime: selectedUnit,
 			startDate: start
 		}); //may not need to store this at all but keeping for now in hopes of fixing the buttongroups
-		
+
 		this.setState({
 			endDate: end
 		})
@@ -404,21 +404,21 @@ setGraphData_Emotions(){
 		this.GetPhotos(start, end);
 
 	}
-	
+
 	//When clicking Over Time/Overall
 	handleTypeClick(o){
 		this.setState({selectedGraph: o});
 		this.GetPhotos(this.state.startDate, this.state.endDate);
 		//this.testDataTime(this.state.startDate,this.state.endDate);
 	}
-	
+
 	//When clicking < in date selector
 	handleBackClick(){
 		let selectedUnit = this.state.selectedTime;
 		let current = this.state.currentDate;
 		let start = this.state.startDate;
 		let end = this.state.endDate;
-		
+
 		switch (selectedUnit){
 			case 1: //day
 				current = changeDate(1,current,-1);
@@ -438,7 +438,7 @@ setGraphData_Emotions(){
 			default:
 				console.log("Wrong SelectedUnit in back click");
 		}
-		
+
 		this.setState({
 			currentDate: current,
 			startDate: start,
@@ -448,14 +448,14 @@ setGraphData_Emotions(){
 		this.GetPhotos(start, end);
 		//this.testDataTime(selectedUnit, start, end);
 	}
-	
+
 	//When clicking > in date selector
 	handleForwardClick(){
 		let selectedUnit = this.state.selectedTime;
 		let current = this.state.currentDate;
 		let start = this.state.startDate;
 		let end = this.state.endDate;
-		
+
 		switch (selectedUnit){
 			case 1: //day
 				current = changeDate(1,current,1);
@@ -475,21 +475,21 @@ setGraphData_Emotions(){
 			default:
 				console.log();
 		}
-		
+
 		this.setState({
 			currentDate: current,
 			startDate: start,
 			endDate: end
 		});
-		
+
 		this.GetPhotos(start, end);
 		//this.testDataTime(this.state.selectedTime, start, end);
 	}
-	
+
 	//When clicking a node of the graph
 	handleNodeClick(e){
 		var index = -1;
-		
+
 		//if event fires and something is selected.
 		if (e.length !== 0){
 			index = e[0]._index;
@@ -498,21 +498,21 @@ setGraphData_Emotions(){
 		//set the index clicked
 		this.setState({indexClicked: index});
 	}
-	
+
 	render () {
 		//do different stuff based on if data is ready or not
-		
+
 		let nodeView;
 		if (this.state.indexClicked !== -1){
 			//nodeView = <NodeViewer emotion={"Happy"} timestamp={Date.now()}/>;
-			nodeView = <NodeViewer nodeClicked={this.state.indexClicked} indexLabels={this.state.datetimeLabels} data={this.state.photos} graphType={this.state.selectedGraph} timeUnit={this.state.selectedTime} startDate={this.state.startDate} endDate={this.state.endDate} emotions={this.displayEmotions}/> 
+			nodeView = <NodeViewer nodeClicked={this.state.indexClicked} indexLabels={this.state.datetimeLabels} data={this.state.photos} graphType={this.state.selectedGraph} timeUnit={this.state.selectedTime} startDate={this.state.startDate} endDate={this.state.endDate} emotions={this.displayEmotions}/>
 		}
-		
+
 		//Have temporarily added a blank button above the time unit menu as wasn't working for some reason.
 		//Also added paragraph as otherwise top half of buttons won't click.
-		
+
 		return (
-		
+
 		<div className='text-center'>
 			<br/><br/>
 			{/* Time unit menu */}
@@ -536,19 +536,19 @@ class DateSelector extends React.Component {
 		this.handleBackClick = this.handleBackClick.bind(this);
 		this.handleForwardClick = this.handleForwardClick.bind(this);
 	}
-	
+
 	handleBackClick(o) {
 		this.props.onBackClick(o);
 	}
-	
+
 	handleForwardClick(o) {
 		this.props.onForwardClick(o);
 	}
-	
+
 	render () {
 		//compare future date with current and decide whether to render end button.
-		//if (changeDate(this.props.timeCode,this.props.endDate,1) > 
-		
+		//if (changeDate(this.props.timeCode,this.props.endDate,1) >
+
 		var dateText;
 
 		switch (this.props.timeCode){
@@ -565,7 +565,7 @@ class DateSelector extends React.Component {
 				console.log("Wrong timecode in DataSelector");
 				break;
 		}
-		
+
 		return (
 			<div className='date-selector-container'>
 				<Button variant="primary" onClick={this.handleBackClick}>{"<"}</Button>
@@ -582,16 +582,16 @@ function GetMonthText(monthIndex){
 }
 
 class TimeMenu extends React.Component {
-	
+
 	constructor(props){
 		super(props)
 		this.handleClick = this.handleClick.bind(this)
 	}
-	
+
 	handleClick(o) {
 		this.props.onClick(o);
 	}
-	
+
 	renderButton(n, v){
 		return (
 			<MenuButton
@@ -600,7 +600,7 @@ class TimeMenu extends React.Component {
 			/>
 		);
 	}
-	
+
 	render () {
 		return (
 			<div className='time-menu-container'>
@@ -626,16 +626,16 @@ function MenuButton(props) {
 }
 
 class GraphMenu extends React.Component {
-	
+
 	constructor(props){
 		super(props)
 		this.handleClick = this.handleClick.bind(this)
 	}
-	
+
 	handleClick(o) {
 		this.props.onClick(o);
 	}
-	
+
 	renderButton(n, v){
 		return (
 			<MenuButton
@@ -644,7 +644,7 @@ class GraphMenu extends React.Component {
 			/>
 		);
 	}
-	
+
 	render () {
 		return (
 			<div className='graph-menu-container'>
@@ -674,7 +674,7 @@ export function changeDate(timecode, adate, modifier) {
 				/* Month */
 				return new Date(d.setMonth(d.getMonth() + (1 * modifier)));
 				//return new Date(d.setMonth(d.getMonth() + (1 * modifier)));
-			default: 
+			default:
 				/* wrong */
 				console.log("WRONG TIMECODE");
 				return d;
@@ -684,8 +684,8 @@ export function changeDate(timecode, adate, modifier) {
 function formatDate(adate) {
 	var d = new Date(adate);
 	return (
-		('0' + d.getDate()).slice(-2) + '/' + 
-		('0' + (d.getMonth() + 1)).slice(-2) + '/' + 
+		('0' + d.getDate()).slice(-2) + '/' +
+		('0' + (d.getMonth() + 1)).slice(-2) + '/' +
 		d.getFullYear()
 	);
 }
@@ -730,7 +730,7 @@ function GetModeEmotion(emotionArray){
 	let dbEmotions = ['anger','contempt','disgust','fear','happiness','neutral','sadness','surprise'];
 	let emotionCount = new Array(dbEmotions.length).fill(0);
 	let i = 0, j = 0;
-	
+
 	for (i = 0; i < emotionArray.length; i++){
 		for (j = 0; j < dbEmotions.length; j++){
 			if (emotionArray[i].includes(dbEmotions[j])){
@@ -738,7 +738,7 @@ function GetModeEmotion(emotionArray){
 			}
 		}
 	}
-	
+
 	//find the max
 	let max = emotionCount[0];
 	let maxID = 0;
@@ -759,7 +759,7 @@ export function GetEmotionIndex(emo){
 			return i;
 		}
 	}
-	
+
 	return -1;
 }
 
@@ -769,7 +769,7 @@ export function convertStringToDate(str){
 	//d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 )
     return d;
 }
-	
+
 export function getUnitQuantity(adate,dateUnit){
 	switch (dateUnit){
 		case 0:
