@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { Button} from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
-import Tag from '../components/Tag';
 import '../stylesheet/tagMenu.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
@@ -12,14 +11,17 @@ export default class TagMenu extends Component {
         super(props);
         this.state = {
             newTag: "",
-            tags: ["Football", "Study", "Breakfast", "Work", "Gym", 
-                    "Family", "Party", "Friends", "Books", "Tidying"]
+            tags: [],
+            photoId: this.props.photoId,
         };
+
+        console.log('TAG state ', this.state);
+        
     }
 
     componentDidMount() {
         let authToken = localStorage.getItem("authToken");
-        fetch(apiMoodportfolio + '/Tags', {
+        fetch(apiMoodportfolio + '/PhotoTag', {
             method: "GET",
             mode: "cors",
             cache: "no-cache",
@@ -27,13 +29,15 @@ export default class TagMenu extends Component {
             headers: {
                 "Authorization": authToken,
                 "Content-Type": "application/json",
+                "PhotoId": this.state.photoId,
             },
         })
         .then((res) => res.json())
         .then(json => {
-            console.log("json\n ", json);
-            const tags = json.success ? json.data : null;
-            this.setState({tags: tags});
+            console.log('TAGS ', json);
+            
+            // const tags = json.success ? JSON.parse(json.photoTags) : null;
+            // this.setState({tags: tags});
         })
     }
 
@@ -42,6 +46,27 @@ export default class TagMenu extends Component {
     }
 
     onAddTag = () => {
+        let authToken = localStorage.getItem("authToken");
+        fetch(apiMoodportfolio + '/PhotoTag', {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Authorization": authToken,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                'photoId': this.state.photoId,
+                'tagName': this.state.newTag,
+            }),
+        })
+        .then((res) => res.json())
+        .then((json) => {
+            console.log(json);
+        })
+
+
         if (this.state.newTag > 0) {
             this.setState({
                 tags: [...this.state.tags, this.state.newTag],
@@ -57,7 +82,8 @@ export default class TagMenu extends Component {
     }
 
     render() {
-        const TagList = this.state.tags.map(tag => <div><li key={tag}>{tag}<FontAwesomeIcon className="binIcon" onClick={() => this.deleteTag(tag)} icon={faTrashAlt} /></li></div>)
+        const {tags} = this.state;
+        const TagList = tags ? this.state.tags.map(tag => <div><li key={tag}>{tag}<FontAwesomeIcon className="binIcon" onClick={() => this.deleteTag(tag)} icon={faTrashAlt} /></li></div>) : null;
 
         return(
             <div className="tagMenuComponent">

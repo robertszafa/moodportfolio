@@ -4,7 +4,7 @@ import 'react-html5-camera-photo/build/css/index.css'
 import ImageUploader from 'react-images-upload';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
-import Tag from './Tag'
+import TagMenu from './TagMenu'
 
 
 export default class Capture extends Component {
@@ -132,7 +132,7 @@ export default class Capture extends Component {
     }
 
     render() {
-        const { isUploading, dataUri } = this.state;
+        const { isUploading, dataUri, photoId } = this.state;
 
         const EnableCaptureAndUpload = (
             <div>
@@ -232,9 +232,7 @@ export default class Capture extends Component {
                 }
 
                 {this.state.emotion &&
-                    <div>
-                        <Tag photoId={this.state.photoId}></Tag>                    
-                    </div>
+                    <TagMenu photoId={photoId}/>
                 }
 
             </div>

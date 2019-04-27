@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {apiMoodportfolio} from '../App'
 import { Button, Container, Row, Col } from 'react-bootstrap';
+import TagMenu from './TagMenu'
 
 
 export default class Photo extends Component {
@@ -175,6 +176,10 @@ export default class Photo extends Component {
                         </Button>
                     </div>
                 }
+
+                <div>
+                    <TagMenu photoId={this.state.photoId}/>
+                </div>
 
                 <div>
                     <Button class="danger" 
