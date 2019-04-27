@@ -105,16 +105,25 @@
 }
 
 .profileLeft{
+  margin:auto;
   display:block;
   float:left;
-  border-radius:10px;
   margin-bottom: 25px;
+  border-right: 1px solid #f5f3f1;
+}
+
+@media (max-width: 719px){
+  profileLeft{
+    margin:auto;
+    display:block;
+    float:left;
+    margin-bottom: 25px;
+  }
 }
 
 .profileRight{
  width: 50%;
  float:right;
- border-radius:10px;
  margin-bottom: 25px;
 }
 
@@ -140,16 +149,15 @@
 height:250px;
 }
 
-#profilePicture{
-  border-radius: 50%;
-  border: solid #3399ff 5px;
-
-  width:150px;
-  height: 150px;
-}
 
 .diaryEntry {
   /* box-shadow: 5px 5px 5px grey; */
   background-image: linear-gradient(white, #efefef) ;
   border-radius: 10px;
+}
+
+.ProfileContainer{
+  background-color: white;
+  width:auto;
+  margin:auto;
 }

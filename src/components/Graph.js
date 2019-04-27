@@ -28,6 +28,8 @@ export default class Graph extends React.Component {
 
 		//this.photos = new Array(); //other way to set up the photos array if not meant to be state.
 
+		this.baseColours = ['#11ff00','#ff0011','#ee00ff','#80027a','#1003ff','#06ffb4','#ff7206','#fff700'];
+		this.hoverColours = ['#043d7e','#beafa9','#4fc690','#667559','#d29e81','#46bbe9','#13744c','#9125d5'];
 		this.displayEmotions = ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'];
 		this.dbEmotions = ['anger','contempt','disgust','fear','happiness','neutral','sadness','surprise'];
 		this.handleTimeClick = this.handleTimeClick.bind(this);
@@ -113,7 +115,11 @@ export default class Graph extends React.Component {
 
 		//if graph is over time
 		if (graphCode === 2){
-			this.SetGraphData_OverTime(emotionProb,timestamp,start,end);
+			if (this.props.menuOption === 1){
+				this.SetGraphData_OverTime(emotionProb,timestamp,start,end);
+			} else {
+				this.setGraphData_Emotions(emotionProb,timestamp,start,end);
+			}
 		} else {
 			this.SetGraphData_Overall(emotionProb);
 		}
@@ -142,6 +148,7 @@ export default class Graph extends React.Component {
 				labels: this.displayEmotions,
 				datasets: [{
 					data: emotionCount,
+
 					backgroundColor: [
 						'#28b501',
 						'#ff0011',
@@ -162,6 +169,7 @@ export default class Graph extends React.Component {
 						'#13744c',
 						'#9125d5'
 					]
+
 				}]
 			}
 		});
@@ -247,7 +255,7 @@ export default class Graph extends React.Component {
 			//find most prominent emotion, get its number, push it
 			if (emotionCompare.length > 0){
 				console.log("PUSHING PROMINENT EMOTION");
-				thedata.push(GetEmotionIndex(GetModeEmotion(emotionCompare)));
+				thedata.push(GetEmotionIndex(GetModeEmotion(emotionCompare)) + 1);
 			}
 			//clear emotionCompare
 			emotionCompare = [];
@@ -265,7 +273,7 @@ export default class Graph extends React.Component {
 		//if leftover data in emotionCompare then push
 		if (emotionCompare.length > 0){
 			console.log("PUSHING DATA TO thedata");
-			thedata.push(GetEmotionIndex(GetModeEmotion(emotionCompare)));
+			thedata.push(GetEmotionIndex(GetModeEmotion(emotionCompare)) + 1);
 			console.log(thedata);
 		}
 
@@ -311,7 +319,10 @@ export default class Graph extends React.Component {
 				label: "Emotions",
 				data: thedata,
 				borderColor: '#e24b5a',
-				fill: false
+				backgroundColor: this.baseColours,
+				hoverBackgroundColor: this.hoverColours,
+				fill: false,
+				spanGaps: true //dunno whether to use this.
 			}]
 		},
 
@@ -363,8 +374,221 @@ export default class Graph extends React.Component {
 	});
 }
 
-setGraphData_Emotions(){
+setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 
+	let timeUnit = this.state.selectedTime;
+	let datetimeLabels = [];
+	datetimeLabels.length = 0;
+	let i = 0, j = 0;
+	let d = startdate;
+	let thedata = [];
+	thedata.length = 0;
+	let tempdata = [];
+	let stepSize, timeValue, minDate, maxDate, lastUnit, missingUnits, timeFormat, numTicks, changeDateUnit;
+
+	let emotionCompare = [];
+
+	switch(timeUnit){
+		case 1:
+			changeDateUnit = 0;
+			timeFormat = 'hA';
+			stepSize = 'hour'
+			timeValue = 3;
+			minDate = startdate;
+			maxDate = enddate;
+			numTicks = 24;
+			break;
+
+		case 2:
+			changeDateUnit = 1;
+			timeFormat = 'MMM DD';
+			stepSize = 'day'
+			timeValue = 1;
+			minDate = startdate;
+			maxDate = changeDate(changeDateUnit,enddate,-1);
+			numTicks = 7;
+			break;
+
+		case 3:
+			changeDateUnit = 1;
+			timeFormat = 'MMM DD';
+			stepSize = 'day';
+			timeValue = 3;
+			minDate = startdate;
+			maxDate = changeDate(1,enddate,-1); //need to check this
+			break;
+			default:
+			console.log("broke" + timeUnit);
+	}
+
+	if (timeUnit === 3){
+		while (d < enddate){
+			datetimeLabels.push(d);
+			d = changeDate(1,d,1);
+		}
+	} else {
+		for (i = 0; i < numTicks; i++){
+			datetimeLabels.push(d);
+			d = changeDate(changeDateUnit,d,1);
+		}
+	}
+
+
+	let emote;
+	for (emote = 0; emote < this.displayEmotions.length; emote++){
+		i = 0;
+		lastUnit = getUnitQuantity(startdate,changeDateUnit);
+		missingUnits = 0;
+		tempdata = [];
+		while (i < timestamp.length){
+			//check if part of the current time
+			if (getUnitQuantity(timestamp[i],changeDateUnit) === lastUnit){
+				console.log("PUSHING" + emotionProbs[i] + " TO COMPARISON.");
+				emotionCompare.push(emotionProbs[i]);
+			} else {
+				//if new time
+				missingUnits = getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit - 1;
+				console.log(missingUnits + " missing units found. " + timestamp[i] + "	" + changeDateUnit);
+				if (missingUnits > 1 || (missingUnits > -1 && i === 0)){
+					if (i === 0) {missingUnits++;}
+					console.log("ADDING NULLS * " + missingUnits + "from: " + timestamp[i]);
+					for (j = 0; j < missingUnits; j++){
+						tempdata.push(null);
+					}
+				}
+				//push count of emotion
+				if (emotionCompare.length > 0){
+					console.log("PUSHING PROMINENT EMOTION");
+					tempdata.push(emotionCompare.length);
+				}
+				//clear emotionCompare
+				emotionCompare = [];
+				//add the current element to emotionCompare
+				console.log("PUSHING CURRENT ELEMENT TO COMPARISON");
+				emotionCompare.push(emotionProbs[i]);
+				//set the current time being looked at
+				lastUnit = getUnitQuantity(timestamp[i],changeDateUnit);
+			}
+			i++;
+		}
+
+		if (timestamp.length > 0){
+
+			//if leftover data in emotionCompare then push
+			if (emotionCompare.length > 0){
+				console.log("PUSHING DATA TO thedata");
+				tempdata.push(emotionCompare.length);
+			}
+
+			//add remaining nulls
+			let maxUnit = getUnitQuantity(enddate,changeDateUnit);
+			if (maxUnit === 0){
+				maxUnit = 23;
+			} else if (maxUnit === 1){
+				maxUnit = getUnitQuantity(changeDate(1,enddate,-1),changeDateUnit);
+			}
+
+			let remainingNulls = maxUnit - getUnitQuantity(timestamp[timestamp.length - 1],changeDateUnit);
+			console.log("PUSHING " + remainingNulls + " remaining nulls. " + maxUnit + " - " + timestamp[timestamp.length-1]);
+			for (i = 0; i < remainingNulls; i++){
+				tempdata.push(null);
+			}
+		}
+
+		thedata.push(tempdata);
+	}
+
+	let yLabels = {
+		0: '',
+		1: 'Anger',
+		2: 'Contempt',
+		3: 'Disgust',
+		4: 'Fear',
+		5: 'Sadness',
+		6: 'Neutral',
+		7: 'Surprise',
+		8: 'Happiness'
+	}
+	/*
+	console.log("LINE CHART");
+	console.log("Date Time Labels");
+	console.log(datetimeLabels);
+	*/
+	console.log(datetimeLabels);
+	this.setState({
+		indexLabels: datetimeLabels,
+
+		graphData: {
+			label: 'Emotions Over Time',
+			labels: datetimeLabels,
+			datasets: [{
+				label: yLabels[1],
+				data: thedata[0],
+				borderColor: this.baseColours[0],
+				backgroundColor: this.baseColours[0],
+				hoverBackgroundColor: this.hoverColours[0],
+				fill: false,
+				spanGaps: true,
+			},
+
+			{
+				label: yLabels[2],
+				data: thedata[1],
+				borderColor: this.baseColours[1],
+				backgroundColor: this.baseColours[1],
+				hoverBackgroundColor: this.hoverColours[1],
+				fill: false,
+				spanGaps: true,
+			},
+
+
+
+			]
+		},
+
+		graphOptions: {
+
+			legend: {
+				display: true,
+			},
+
+			tooltips: {
+				enabled: false,
+			},
+
+			scales: {
+				yAxes: [{
+					interval:0,
+					unitStepSize: 1,
+					title: "Emotion",
+					ticks: {
+						beginAtZero: true,
+					},
+					min: 0,
+				}],
+				xAxes: [{
+					type: 'time',
+					time: {
+						unit: stepSize,
+						unitStepSize: timeValue,
+						max: maxDate,
+						min: minDate,
+						displayFormats: {
+							'millisecond': timeFormat,
+							'second': timeFormat,
+							'minute': timeFormat,
+							'hour': timeFormat,
+							'day': timeFormat,
+							'week': timeFormat,
+							'month': timeFormat,
+							'quarter': timeFormat,
+							'year': timeFormat,
+						}
+					}
+				}]
+			}
+		}
+	});
 }
 
 	//Button handling functions

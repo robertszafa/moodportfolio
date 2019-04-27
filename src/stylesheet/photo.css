@@ -1,9 +1,11 @@
 .photoContainer {
     padding: 5px;
     margin:0;
+    border-bottom: 1px solid #f5f3f1;
 }
 
 .photoContainer img {
     border-radius: 5px;
     width: 100%;
+
 }

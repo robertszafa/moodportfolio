@@ -13,7 +13,7 @@ export default class Home extends React.Component {
 
     render() {
       return (
-          <div className = "text-center homePageContainer">
+          <div className = "text-center ProfileContainer">
             <RecentPhotos limit={5}/>
           </div>
       );

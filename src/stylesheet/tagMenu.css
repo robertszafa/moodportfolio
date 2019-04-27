@@ -16,16 +16,18 @@
     visibility: hidden;
 }
 
-.tagMenuComponent input { 
+.tagMenuComponent input {
     width: 70%;
-    height: 40px;
-    border-radius:10px; 
+    height: 35px;
+    border-radius:10px;
 }
 
 .tagMenuComponent Button {
     width: 29%;
     color: #F6D55C;
     background-color: #20639B;
+    height: 35px;
+    font-size: 12px;
 }
 
 .tagMenuComponent li {

@@ -64,139 +64,125 @@ const ProfileForm = props => {
   return (
     <div class= "profile">
         <div class="page-header">
-            <h1 class="text-center">
-                Personal Profile
-            </h1>
+            <h1 class="text-center"> Personal Profile </h1>
             <br></br>
         </div>
+        <div class = "ProfileContainer row">
+            <div class = "col-sm-6  text-center profileLeft">
+                <h3>Diary entries</h3>
+                    <RecentPhotos limit={5}/>
+            </div>
+            <div class = "col-sm-6 profileRight">
+                <h5 id="name">{props.userData.name}</h5>
+                <Form onSubmit={handleSubmit}>
+                    <div>
+                        <p>Email address</p>
+                        <Field className="field"
+                            type="email"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name="email"
+                            disabled={true}
+                            value={props.userData.email}/>
+                            {touched.email && errors.email && <p>{errors.email}</p>}
+                    </div>
+                    <br></br>
+                    <div>
+                        <p>Contact Email address</p>
+                        <Field className="field"
+                            type="email"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.nominatedContact}
+                            name="nominatedContact"
+                            placeholder={props.userData.nominatedContact}/>
+                            {touched.nominatedContact && errors.nominatedContact && <p>{errors.nominatedContact}</p>}
+                    </div>
+                    <br></br>
 
-        <div class = "profile">
-          <div class = "col-sm-6  text-center profileLeft">
-            <h3>Diary entries</h3>
-                <RecentPhotos limit={5}/>
-          </div>
-          <div class = "col-sm-6 profileRight">
-              <h5 id="name">{props.userData.name}</h5>
-              <div className = "text-center">
-
-              </div>
-              <Form onSubmit={handleSubmit}>
-                  <div>
-                  <p>Email address</p>
-                  <Field className="field"
-                      type="email"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      name="email"
-                      disabled={true}
-                      value={props.userData.email}/>
-                      {touched.email && errors.email && <p>{errors.email}</p>}
-
-                  </div>
-                  <br></br>
-                  <div>
-                  <p>Contact Email address</p>
-                  <Field className="field"
-                      type="email"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.nominatedContact}
-                      name="nominatedContact"
-                      placeholder={props.userData.nominatedContact}/>
-                      {touched.nominatedContact && errors.nominatedContact && <p>{errors.nominatedContact}</p>}
-                  </div>
-                  <br></br>
-                  <div>
-                  <p>Country</p>
-                  <Field className="field"
-                      type="text"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.country}
-                      name="country"
-                      placeholder={props.userData.country}/>
-                      {touched.country && errors.country && <p>{errors.country}</p>}
-                  </div>
-                  <br></br>
-                  <div>
-                  <p>City</p>
-                  <Field className="field"
-                      type="text"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.townCity}
-                      name="townCity"
-                      placeholder={props.userData.townCity}/>
-                      {touched.townCity && errors.townCity && <p>{errors.townCity}</p>}
-                  </div>
-                  <br></br>
-                  <div>
-                  <p>Date of birth</p>
-                  <Datepicker className="field"
-                      yearDropdownItemNumber={100}
-                      showYearDropdown
-                      showMonthDropdown
-                      scrollableYearDropdown
-                      dateFormat="dd/MM/yyyy"
-                      type="text"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={props.userData.dob || values.dob}
-                      name="dob"
-                      maxDate={(new Date())}
-                      disabled={props.userData.dob}
-                      placeholder={!props.userData.dob && "Click to select"}/>
-                      {touched.dob && errors.dob && <p>{errors.dob}</p>}
-                  </div>
-                  <br></br>
-                  <div>
-                  <p>Gender</p>
-                  <select
-                      id = "genderSelect"
-                      name="gender"
-                      value={values.gender}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      style={{ display: 'block' }}
-                  >
-                      {/* ISO/IEC 5218 standard */}
-                      <option selected> {props.userData.gender} </option>
-                      {/* <option value="0" label="Not known"/> */}
-                      <option value="1" label="Male"/>
-                      <option value="2" label="Female"/>
-                      <option value="9" label="Other"/>
-                  </select>
-                  <br></br>
-                  <p>Member since</p>
-                  <Field className="field"
-                      type="text"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={props.userData.signupDate}
-                      name="signupDate"
-                      disabled={true}/>
-                      {touched.signupDate && errors.signupDate && <p>{errors.signupDate}</p>}
-                  </div>
-                  <Button variant="primary" type="submit">
+                    <div>
+                        <p>Country</p>
+                        <Field className="field"
+                            type="text"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.country}
+                            name="country"
+                            placeholder={props.userData.country}/>
+                            {touched.country && errors.country && <p>{errors.country}</p>}
+                    </div>
+                    <br></br>
+                    <div>
+                        <p>City</p>
+                        <Field className="field"
+                            type="text"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.townCity}
+                            name="townCity"
+                            placeholder={props.userData.townCity}/>
+                            {touched.townCity && errors.townCity && <p>{errors.townCity}</p>}
+                    </div>
+                    <br></br>
+                    <div>
+                        <p>Date of birth</p>
+                        <Datepicker className="field"
+                            yearDropdownItemNumber={100}
+                            showYearDropdown
+                            showMonthDropdown
+                            scrollableYearDropdown
+                            dateFormat="dd/MM/yyyy"
+                            type="text"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={props.userData.dob || values.dob}
+                            name="dob"
+                            maxDate={(new Date())}
+                            disabled={props.userData.dob}
+                            placeholder={!props.userData.dob && "Click to select"}/>
+                            {touched.dob && errors.dob && <p>{errors.dob}</p>}
+                    </div>
+                    <br></br>
+                    <div>
+                        <p>Gender</p>
+                        <select
+                            id = "genderSelect"
+                            name="gender"
+                            value={values.gender}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            style={{ display: 'block' }}
+                        >
+                            {/* ISO/IEC 5218 standard */}
+                            <option selected> {props.userData.gender} </option>
+                            {/* <option value="0" label="Not known"/> */}
+                            <option value="1" label="Male"/>
+                            <option value="2" label="Female"/>
+                            <option value="9" label="Other"/>
+                        </select>
+                        <br></br>
+                        <p>Member since</p>
+                        <Field className="field"
+                            type="text"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={props.userData.signupDate}
+                            name="signupDate"
+                            disabled={true}/>
+                            {touched.signupDate && errors.signupDate && <p>{errors.signupDate}</p>}
+                    </div>
+                    <Button variant="primary" type="submit">
                       Save
-                  </Button>
-
-
-
-                  <br></br>
-                  <br></br>
-                  <div class="text-center">
-                  <Button
-                      variant="secondary"
-                      type="submit"
-                  >
-                      <Link to="/change-password">Change password</Link>
-                  </Button>
-                  <br></br>
-              </div>
-
-
-            </Form>
+                    </Button>
+                    <br></br>
+                    <br></br>
+                    <div class="text-center">
+                    <Button variant="secondary" type="submit">
+                        <Link to="/change-password">Change password</Link>
+                    </Button>
+                    <br></br>
+                    </div>
+                  </Form>
             </div>
         </div>
     </div>
