@@ -31,7 +31,6 @@ export default class AboutUs extends Component
                     />
                   <Carousel.Caption>
                     <h2>Matt Harding</h2>
-                    <p>Working hard on styling and other bits</p>
                   </Carousel.Caption>
                 </Carousel.Item>
 
@@ -42,8 +41,8 @@ export default class AboutUs extends Component
                     alt="Second slide"
                   />
                   <Carousel.Caption>
-                    <h2>Rahul Khotari</h2>
-                    <p>Breaking the server.</p>
+                    <h2>Rahul Kothari</h2>
+
                   </Carousel.Caption>
                 </Carousel.Item>
 
@@ -54,8 +53,7 @@ export default class AboutUs extends Component
                     alt="Third slide"
                   />
                   <Carousel.Caption>
-                    <h2>Thep</h2>
-                    <p>Working on the capture component</p>
+                    <h2>Thepnathi Chindalaksanaloet</h2>
                   </Carousel.Caption>
                 </Carousel.Item>
 
@@ -66,8 +64,7 @@ export default class AboutUs extends Component
                     alt="fourth slide"
                   />
                   <Carousel.Caption>
-                    <h2>Rob</h2>
-                    <p>Putting fires out</p>
+                    <h2>Robert Szafarczyk</h2>
                   </Carousel.Caption>
                 </Carousel.Item>
 
@@ -78,8 +75,7 @@ export default class AboutUs extends Component
                     alt="Fifth slide"
                   />
                   <Carousel.Caption>
-                    <h3>Gareth</h3>
-                    <p>Working quietly on graphs</p>
+                    <h3>Gareth Liles</h3>
                   </Carousel.Caption>
                 </Carousel.Item>
 
@@ -90,20 +86,23 @@ export default class AboutUs extends Component
                   alt="Sixth slide"
                 />
                 <Carousel.Caption>
-                  <h2>Phil</h2>
-                  <p>All about the React </p>
+                  <h2>Phill Beattie</h2>
                 </Carousel.Caption>
               </Carousel.Item>
             </Carousel>
             <div id="about us">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                 nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                  sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
+              <p>
+                We are team 40 for the 2019 group project cohort. Each of us
+                has had some experience with Artificial Intelligence through
+                university coursework, and thought we could put our experience
+                to good use on an interesting problem!
+
+                Thus we would like to present MoodPorfolio, a website that allows
+                users to easily and automatically track, and collect information
+                about their emotional states, with simple data representation
+                which allows them to make decisions and find out how to live their
+                best life.
+              </p>
             </div>
             </div>
 
