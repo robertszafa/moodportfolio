@@ -7,6 +7,7 @@ export default class Photo extends Component {
     constructor(props) {
         super(props);
 		this.state = {
+            photoLoaded: false,
             photoUri: "",
             photoId: this.props.photoId,
             timestamp: this.props.timestamp,
@@ -15,11 +16,13 @@ export default class Photo extends Component {
             emotion: JSON.parse(this.props.emotion),
             dominantEmotion: getDominantEmotion(JSON.parse(this.props.emotion)),
             changeDescription: false,
+            onDeletePhoto: this.props.onDeletePhoto,
         };
         
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.onUploadDescription = this.onUploadDescription.bind(this);
         this.onChangeDescriptionClick = this.onChangeDescriptionClick.bind(this);
+        this.onDeletePhoto = this.onDeletePhoto.bind(this);
     }
 
     componentWillMount() {
@@ -40,13 +43,37 @@ export default class Photo extends Component {
         .then(json => {
             this.setState({
                 photoUri: json.photoUri,
+                photoLoaded: true,
             })
         })
     }
 
+    onDeletePhoto() {
+        console.log('DELTETING in photo', this.state.photoId);
+        
+        let authToken = localStorage.getItem("authToken");
+        fetch(apiMoodportfolio + '/PhotoUri', {
+            method: "DELETE",
+            mode: "cors",
+            cache: "no-cache",
+            withCredentials: true,
+            credentials: "same-origin",
+            headers: {
+                "Authorization": authToken,
+                "Content-Type": "application/json",
+                "PhotoId": this.state.photoId,
+            },
+        })
+        .then((res) => res.json())
+        .then((res) => {
+            console.log(res);
+        })
+
+        this.props.unmountPhoto(this.state.photoId);
+    }
+
     onUploadDescription() {
         let authToken = localStorage.getItem("authToken");
-
         fetch(apiMoodportfolio + '/PhotoDescription', {
             method: "POST",
             mode: "cors",
@@ -76,8 +103,10 @@ export default class Photo extends Component {
         this.setState({description: event.target.value});
     }
 
+
     render() {
-        const { photoUri, 
+        const { photoLoaded,
+                photoUri, 
                 photoId, 
                 timestamp, 
                 city, 
@@ -89,7 +118,12 @@ export default class Photo extends Component {
         
         return (
             <div>
-                <img src={photoUri} alt="Your photo"width="40%"/>
+                {photoLoaded &&
+                    <img src={photoUri} alt="Your photo"width="40%"/>
+                }
+                <div>
+                    ID: {JSON.stringify(photoId)}
+                </div>
                 
                 <div>
                     Dominant emotion {JSON.stringify(dominantEmotion)}
@@ -121,8 +155,6 @@ export default class Photo extends Component {
 
                             <div class="input-group-append">
                                 <Button class="btn btn-dark" 
-                                        type="submit" 
-                                        value="submit"
                                         onClick={this.onUploadDescription}>
                                     Save
                                 </Button>
@@ -136,8 +168,6 @@ export default class Photo extends Component {
                         Your description: {description}
 
                         <Button class="secondary" 
-                                type="submit" 
-                                value="submit"
                                 display="inline"
                                 onClick={this.onChangeDescriptionClick}
                         >
@@ -145,6 +175,14 @@ export default class Photo extends Component {
                         </Button>
                     </div>
                 }
+
+                <div>
+                    <Button class="danger" 
+                            onClick={this.onDeletePhoto}
+                    >
+                        Delete photo
+                    </Button>
+                </div>
 
                 <br></br>
                 <br></br>
