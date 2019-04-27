@@ -143,7 +143,7 @@ export default class Graph extends React.Component {
 				datasets: [{
 					data: emotionCount,
 					backgroundColor: [
-						'#11ff00',
+						'#28b501',
 						'#ff0011',
 						'#ee00ff',
 						'#80027a',

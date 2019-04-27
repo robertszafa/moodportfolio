@@ -107,18 +107,14 @@
 .profileLeft{
   display:block;
   float:left;
-  background-color: white;
   border-radius:10px;
-  box-shadow: 5px 5px 5px grey;
   margin-bottom: 25px;
 }
 
 .profileRight{
  width: 50%;
- background-color: white;
  float:right;
  border-radius:10px;
- box-shadow: 5px 5px 5px grey;
  margin-bottom: 25px;
 }
 

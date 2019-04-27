@@ -20,7 +20,7 @@ export default class Home extends React.Component {
               <p>Number of users registered : </p>
             </div>
             <div className = "userList">
-
+              
             </div>
           </div>
       );
