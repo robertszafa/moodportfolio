@@ -25,12 +25,12 @@ export default class Stats extends React.Component {
 		this.setState({menuOption: o});
 	}
 	
-	handleTagClick(t){
-		this.setState({tag: t});
+	handleTagClick(o){
+		this.setState({menuOption: o});
 	}
 	
-	handleEmotionClick(e){
-		this.setState({emotion: e});
+	handleEmotionClick(o){
+		this.setState({menuOption: o});
 	}
 	
 	render () {
@@ -43,7 +43,7 @@ export default class Stats extends React.Component {
 				j = <Graph menuOption={this.state.menuOption}/>;
 				break;
 			case 2:
-				j = <graph menuOption={this.state.menuOption} />;
+				j = <Graph menuOption={this.state.menuOption} />;
 				break;
 			case 3:
 				//Tag, select tag
