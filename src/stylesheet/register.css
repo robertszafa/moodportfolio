@@ -147,8 +147,8 @@ height:250px;
 #profilePicture{
   border-radius: 50%;
   border: solid #3399ff 5px;
-  max-width: 90%;
-  width:auto;
+
+  width:150px;
   height: 150px;
 }
 

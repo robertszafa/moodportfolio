@@ -70,7 +70,7 @@ const ProfileForm = props => {
         </div>
 
 
-        <div class = "col-md-8 profileRight text-center">
+        <div class = "col-sm-6 profileRight text-center">
         <h3>Diary entries</h3>
         <h5>Recent diary entry</h5>
         <p class= "diaryEntry">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
@@ -92,7 +92,7 @@ const ProfileForm = props => {
                 sunt in culpa qui officia deserunt mollit anim id est laborum.
               </p>
         </div>
-        <div class = "col-sm-4 profileLeft">
+        <div class = "col-sm-6 profileLeft">
             <h5 id="name">{props.userData.name}</h5>
             <div className = "text-center">
             <img
