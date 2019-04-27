@@ -12,7 +12,6 @@ export default class RecentPhotos extends Component {
         this.state = {
             limit: this.props.limit,
             photos: new Array(),
-            loaded: false,
         };
     }
 
@@ -35,8 +34,6 @@ export default class RecentPhotos extends Component {
         })
         .then((res) => res.json())
         .then(json => {
-            console.log(json);
-            
             const result = json.result;
             let photos = new Array();
             result.forEach(jsonData => {
@@ -45,22 +42,20 @@ export default class RecentPhotos extends Component {
 
             this.setState({
                 photos: photos,
-                loaded: true,
             })
         })
         .catch(err => console.log(err))
     }
-    
 
-    handleChange(e) {
-    }
 
     render() {
-        const {photos, loaded} = this.state;
+        const {photos, } = this.state;
         const Photos = photos.map(photo => 
                                     <Photo
                                         photoId={photo.photoID}
                                         timestamp={photo.timestamp}
+                                        city={photo.city}
+                                        description={photo.description}
                                         emotion={photo.emotion}
                                         dominantEmotion={photo.dominantEmotion}
                                     />
@@ -68,6 +63,8 @@ export default class RecentPhotos extends Component {
 
         return (
           <div>
+              <p>Your recent emotions</p>
+              
               {Photos}
           </div>    
         )
