@@ -9,11 +9,11 @@ export default class Home extends React.Component {
     constructor(props) {
       super(props);
     }
-    
+
 
     render() {
       return (
-          <div>
+          <div className = "text-center homePageContainer">
             <RecentPhotos limit={5}/>
           </div>
       );

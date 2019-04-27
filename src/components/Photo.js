@@ -131,7 +131,7 @@ export default class Photo extends Component {
                 </div>
 
                 <div>
-                    Classified emotions {JSON.stringify(emotion).split(',').join(', ')}
+                    Classified emotions {JSON.stringify(emotion).split(/[."{}]/).join(' ')}
                 </div>
 
                 <div>
