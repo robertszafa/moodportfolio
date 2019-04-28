@@ -288,14 +288,14 @@ export default class Graph extends React.Component {
 
 	let yLabels = {
 		0: '',
-		1: 'Anger',
-		2: 'Contempt',
-		3: 'Disgust',
-		4: 'Fear',
-		5: 'Sadness',
-		6: 'Neutral',
-		7: 'Surprise',
-		8: 'Happiness'
+		1: this.displayEmotions[0],
+		2: this.displayEmotions[1],
+		3: this.displayEmotions[2],
+		4: this.displayEmotions[3],
+		5: this.displayEmotions[4],
+		6: this.displayEmotions[5],
+		7: this.displayEmotions[6],
+		8: this.displayEmotions[7]
 	}
 	/*
 	console.log("LINE CHART");
@@ -498,14 +498,14 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 
 	let yLabels = {
 		0: '',
-		1: 'Anger',
-		2: 'Contempt',
-		3: 'Disgust',
-		4: 'Fear',
-		5: 'Sadness',
-		6: 'Neutral',
-		7: 'Surprise',
-		8: 'Happiness'
+		1: this.displayEmotions[0],
+		2: this.displayEmotions[1],
+		3: this.displayEmotions[2],
+		4: this.displayEmotions[3],
+		5: this.displayEmotions[4],
+		6: this.displayEmotions[5],
+		7: this.displayEmotions[6],
+		8: this.displayEmotions[7]
 	}
 	/*
 	console.log("LINE CHART");
