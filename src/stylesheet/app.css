@@ -63,3 +63,9 @@ html body {
   max-width: 80%;
   margin:auto;
 }
+
+.home{
+  max-width: 80%;
+  margin:auto;
+  margin-top:30px;
+}
