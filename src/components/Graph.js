@@ -421,6 +421,7 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 			console.log("broke" + timeUnit);
 	}
 
+	//create the datetime labels
 	if (timeUnit === 3){
 		while (d < enddate){
 			datetimeLabels.push(d);
@@ -433,6 +434,7 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 		}
 	}
 
+	
 
 	let emote;
 	for (emote = 0; emote < this.displayEmotions.length; emote++){
@@ -478,6 +480,7 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 			if (emotionCompare.length > 0){
 				console.log("PUSHING DATA TO thedata");
 				tempdata.push(emotionCompare.length);
+				emotionCompare = [];
 			}
 
 			//add remaining nulls
@@ -530,13 +533,73 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 				fill: false,
 				spanGaps: true,
 			},
-
+			
 			{
 				label: yLabels[2],
 				data: thedata[1],
 				borderColor: this.baseColours[1],
 				backgroundColor: this.baseColours[1],
 				hoverBackgroundColor: this.hoverColours[1],
+				fill: false,
+				spanGaps: true,
+			},
+			
+			{
+				label: yLabels[3],
+				data: thedata[2],
+				borderColor: this.baseColours[2],
+				backgroundColor: this.baseColours[2],
+				hoverBackgroundColor: this.hoverColours[2],
+				fill: false,
+				spanGaps: true,
+			},
+
+			{
+				label: yLabels[4],
+				data: thedata[3],
+				borderColor: this.baseColours[3],
+				backgroundColor: this.baseColours[3],
+				hoverBackgroundColor: this.hoverColours[3],
+				fill: false,
+				spanGaps: true,
+			},
+
+			{
+				label: yLabels[5],
+				data: thedata[4],
+				borderColor: this.baseColours[4],
+				backgroundColor: this.baseColours[4],
+				hoverBackgroundColor: this.hoverColours[4],
+				fill: false,
+				spanGaps: true,
+			},
+
+			{
+				label: yLabels[6],
+				data: thedata[5],
+				borderColor: this.baseColours[5],
+				backgroundColor: this.baseColours[5],
+				hoverBackgroundColor: this.hoverColours[5],
+				fill: false,
+				spanGaps: true,
+			},
+
+			{
+				label: yLabels[7],
+				data: thedata[6],
+				borderColor: this.baseColours[6],
+				backgroundColor: this.baseColours[6],
+				hoverBackgroundColor: this.hoverColours[6],
+				fill: false,
+				spanGaps: true,
+			},
+
+			{
+				label: yLabels[8],
+				data: thedata[7],
+				borderColor: this.baseColours[7],
+				backgroundColor: this.baseColours[7],
+				hoverBackgroundColor: this.hoverColours[7],
 				fill: false,
 				spanGaps: true,
 			},
