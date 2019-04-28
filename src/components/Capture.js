@@ -161,7 +161,8 @@ export default class Capture extends Component {
                         onChange={this.onDrop}
                         imgExtension={['.jpg', '.gif', '.png', '.gif']}
                         maxFileSize={5242880}
-                        singleImage={true} />
+                        singleImage={true} 
+                    />
                 </div>
 
 
