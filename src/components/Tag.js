@@ -49,7 +49,7 @@ export default class Tag extends Component {
         const {tagId, name, photoID} = this.state;
         return (
             <div>
-                <li key={tagId}>
+                <li>
                     <FontAwesomeIcon 
                         className="binIcon" 
                         onClick={this.onDelete} 

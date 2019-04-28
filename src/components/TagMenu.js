@@ -88,6 +88,7 @@ export default class TagMenu extends Component {
                     this.setState({
                         Tags: [...this.state.Tags, 
                                 <Tag
+                                    key={tagId}
                                     tagId={tagId}
                                     name={this.state.newTag}
                                     photoId={this.state.photoId}
