@@ -2,7 +2,7 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import '../stylesheet/stats.css';
-import { changeDate, convertStringToDate, getUnitQuantity, getEmotionFromString } from './Graph';
+import { changeDate, convertStringToDate, getUnitQuantity, getEmotionFromString, getDateDifference } from './Graph';
 
 //nodeView = <NodeViewer nodeClicked={this.state.indexClicked} xLabels={this.state.datetimeLabels} data={this.state.photos} graphType={this.state.selectedGraph} timeUnit={this.state.selectedTime} /> 
 
@@ -21,7 +21,13 @@ export default class NodeViewer extends React.Component{
 		);
 	}
 	
-	getRelevantData(index,labels,graphType,timeUnit, startDate, endDate, photos){
+	getRelevantData(index,labels,graphType,selectedTime, startDate, endDate, photos){
+		
+		let timeUnit = 1;
+		if (selectedTime === 1){
+			timeUnit = 0
+		}
+		
 		console.log("PH");
 		console.log(photos);
 		let relevantData = [];
@@ -30,15 +36,17 @@ export default class NodeViewer extends React.Component{
 				let i;
 				let d = startDate;
 				for (i = 0; i < index; i++){
-					changeDate(1,d,1);
+					changeDate(timeUnit,d,1);
 				}
 				
 				//now have the criteria. Search in the data.
 				let finished = 0;
 				i = 0;
 				while (finished < 2 && i < photos.length){
-					console.log("COMPARISON OF : " + (getUnitQuantity(convertStringToDate(photos[i].state.timestamp),timeUnit-1) - getUnitQuantity(startDate,timeUnit-1)) + "	AND	" + index);
-					if ((getUnitQuantity(convertStringToDate(photos[i].state.timestamp),timeUnit-1) - getUnitQuantity(startDate,timeUnit-1)) === index){ //we also convert time from photos here so may need to update later
+					console.log(timeUnit);
+					console.log("COMPARISON OF : " + getDateDifference(photos[i].state.timestamp,startDate,timeUnit) + "	AND	" + index);
+					//(getUnitQuantity(convertStringToDate(photos[i].state.timestamp),timeUnit-1) - getUnitQuantity(startDate,timeUnit-1))
+					if (getDateDifference(photos[i].state.timestamp,startDate,timeUnit) === index){ //we also convert time from photos here so may need to update later
 						relevantData.push(photos[i]);
 						finished = 1;
 					} else {
@@ -63,13 +71,14 @@ export default class NodeViewer extends React.Component{
 			default:
 				console.log("Incorrect graphType in getRelevantData");
 		}
+		console.log("relevant Data");
 		console.log(relevantData);
 		return relevantData;
 	}
 	
 	render () {
 		let thedata = this.getRelevantData(this.props.nodeClicked,this.props.indexLabels,this.props.graphType,this.props.timeUnit,this.props.startDate,this.props.endDate,this.props.data);
-		let jsxObj = [];
+		//let jsxObj = [];
 		let i;
 		/*
 		for (i = 0; i < thedata.length; i++){

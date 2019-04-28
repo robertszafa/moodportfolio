@@ -800,14 +800,15 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 		//set the index clicked
 		this.setState({indexClicked: index});
 	}
-
+	
+	
 	render () {
 		//do different stuff based on if data is ready or not
 
 		let nodeView;
 		if (this.state.indexClicked !== -1){
 			//nodeView = <NodeViewer emotion={"Happy"} timestamp={Date.now()}/>;
-			nodeView = <NodeViewer nodeClicked={this.state.indexClicked} indexLabels={this.state.datetimeLabels} data={this.state.photos} graphType={this.state.selectedGraph} timeUnit={this.state.selectedTime} startDate={this.state.startDate} endDate={this.state.endDate} emotions={this.displayEmotions}/>
+			nodeView = <NodeViewer nodeClicked={this.state.indexClicked} indexLabels={this.state.datetimeLabels} data={this.state.photos} graphType={this.state.selectedGraph} selectedTime={this.state.selectedTime} startDate={this.state.startDate} endDate={this.state.endDate} emotions={this.displayEmotions}/>
 		}
 
 		//Have temporarily added a blank button above the time unit menu as wasn't working for some reason.
@@ -1108,21 +1109,23 @@ function getEmotionData(emotionProbs,timestamp,emotionIndex){
 	return result;
 }
 
-function getDateDifference(date1, date2, timeUnit){
+export function getDateDifference(date1, date2, timeUnit){
 	let ms;
 	
 	switch(timeUnit) {
 		case 0: //hours
+		console.log("DD HOURS");
 			ms = 1000 * 60 * 60;
 			break;
 		case 1: //days
-			ms*= 1000 * 60 * 60 * 24;
+		console.log("DD DAYS");
+			ms = 1000 * 60 * 60 * 24;
 			break;
 		default:
 			console.log("getDateDifference failed.");
 			return -1;
 	}
 	
-	let diff = Math.abs(date1.getTime() - date2.getTime());
+	let diff = Math.abs(new Date(date1).getTime() - new Date(date2).getTime());
 	return Math.floor(diff / ms);
 }
