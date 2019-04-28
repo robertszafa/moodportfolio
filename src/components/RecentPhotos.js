@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
-import TextField from '@material-ui/core/TextField';
 import Photo from './Photo'
 
 
@@ -12,7 +11,7 @@ export default class RecentPhotos extends Component {
         super(props);
         this.state = {
             limit: this.props.limit,
-            photos: new Array(),
+            Photos: new Array(),
         };
 
         this.unmountPhoto = this.unmountPhoto.bind(this);
@@ -36,58 +35,52 @@ export default class RecentPhotos extends Component {
             },
         })
         .then((res) => res.json())
-        .then(json => {
+        .then((json) => {
             const result = json.result;
-            let photos = new Array();
-            result.forEach(jsonData => {
-                photos.push(jsonData);
+            console.log(result);
+            
+            let newPhotos = new Array();
+            result.forEach(photo => {
+                newPhotos.push(
+                    <Photo
+                        key={photo.photoId}
+                        photoId={photo.photoID}
+                        timestamp={photo.timestamp}
+                        city={photo.city}
+                        description={photo.description}
+                        emotion={photo.emotion}
+                        dominantEmotion={photo.dominantEmotion}
+                        unmountPhoto={this.unmountPhoto}
+                    />
+                );
             });
 
             this.setState({
-                photos: photos,
+                Photos: newPhotos
             })
         })
         .catch(err => console.log(err))
     }
 
     unmountPhoto(photoId) {
-        let newPhotos = this.state.photos
-        for (let i = 0; i < newPhotos.length; i++){ 
-            if ( newPhotos[i].photoID === photoId) {
-              newPhotos.splice(i, 1);
-              break;
-            }
-        }
-
-        this.setState({
-            photos: newPhotos,
-        }); 
-
-        // TODO: remove this photo from render
+        console.log('unmounting in recents ', photoId);
+        
+        this.setState({Photos: this.state.Photos.filter(function(Photo) {
+            console.log(Photo.props.photoId !== photoId);
+            console.log(Photo.props.photoId, photoId);
+            
+            
+            return Photo.props.photoId !== photoId;
+        })})
     }
 
 
     render() {
-        
-        const {photos, } = this.state;
-        console.log('RENDER ', JSON.stringify(photos))  ;
-        const Photos = photos.map(photo => 
-                                    <Photo
-                                        photoId={photo.photoID}
-                                        timestamp={photo.timestamp}
-                                        city={photo.city}
-                                        description={photo.description}
-                                        emotion={photo.emotion}
-                                        dominantEmotion={photo.dominantEmotion}
-                                        unmountPhoto={this.unmountPhoto}
-                                    />
-                                )
-
         return (
           <div>
               <p>Your recent emotions</p>
               
-              {Photos}
+              {this.state.Photos}
           </div>    
         )
     }

@@ -20,7 +20,6 @@ export default class Photo extends Component {
             emotion: JSON.parse(this.props.emotion),
             dominantEmotion: getDominantEmotion(JSON.parse(this.props.emotion)),
             changeDescription: false,
-            onDeletePhoto: this.props.onDeletePhoto,
         };
 
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
@@ -30,6 +29,8 @@ export default class Photo extends Component {
     }
 
     componentWillMount() {
+        console.log('photo uri fetch ', this.state);
+        
         let authToken = localStorage.getItem("authToken");
         fetch(apiMoodportfolio + '/PhotoUri', {
             method: "GET",
@@ -39,8 +40,8 @@ export default class Photo extends Component {
             credentials: "same-origin",
             headers: {
                 "Authorization": authToken,
-                "PhotoId": this.state.photoId,
                 "Content-Type": "application/json",
+                "PhotoId": this.props.photoId,
             },
         })
         .then(res => res.json())
@@ -69,11 +70,26 @@ export default class Photo extends Component {
             },
         })
         .then((res) => res.json())
-        .then((res) => {
-            console.log(res);
+        .then((json) => {
+            console.log(json);
+            
+            if (json.success) {
+                let photoId = this.state.photoId;
+                this.setState = {
+                    photoLoaded: false,
+                    photoUri: null,
+                    photoId: null,
+                    timestamp: null,
+                    city: null,
+                    description: null,
+                    emotion: null,
+                    dominantEmotion: null,
+                    changeDescription: false,
+                };
+                this.props.unmountPhoto(photoId);
+                
+            }
         })
-
-        this.props.unmountPhoto(this.state.photoId);
     }
 
     onUploadDescription() {
@@ -131,10 +147,6 @@ export default class Photo extends Component {
                 {photoLoaded &&
                     <img src={photoUri} alt="Your photo"/>
                 }
-                <div>
-                    <b>Photo ID:</b> {JSON.stringify(photoId)}
-                </div>
-
                 <div>
                     <b>Dominant Emotion:</b> {""}
                     {this.firstCharToUpperCase(JSON.stringify(dominantEmotion).match(/"([^']+)"/)[1])} {""}
