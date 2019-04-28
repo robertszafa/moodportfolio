@@ -111,19 +111,19 @@ class CarouselCard extends React.Component{
 	
 	render () {
 		return (
-			<Card style={{ width: '5rem' }} className='card'>
-				<Card.Img variant="top">
-				<Photo
-				key={this.props.photo.photoId}
-				photoId={this.props.photo.photoID}
-				timestamp={this.props.photo.timestamp}
-				city={this.props.photo.city}
-				description={this.props.photo.description}
-				emotion={this.props.photo.emotion}
-				dominantEmotion={this.props.photo.dominantEmotion}
-                />
-				</Card.Img>
+			<Card style={{ width: '30rem' }} className='card'>
 				<Card.Body>
+				<Photo
+				key={this.props.photo.props.photoId}
+				photoId={this.props.photo.props.photoID}
+				timestamp={this.props.photo.props.timestamp}
+				city={this.props.photo.props.city}
+				description={this.props.photo.props.description}
+				emotion={this.props.photo.props.emotion}
+				dominantEmotion={this.props.photo.props.dominantEmotion}
+                />
+
+
 					<Card.Text>{JSON.stringify(this.props.photo.state.dominantEmotion)}<br/>{this.props.photo.state.timestamp}</Card.Text>
 					<Button variant="primary">Enlarge</Button>
 				</Card.Body>

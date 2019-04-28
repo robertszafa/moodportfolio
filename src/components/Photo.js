@@ -20,6 +20,7 @@ export default class Photo extends Component {
             emotion: JSON.parse(this.props.emotion),
             dominantEmotion: getDominantEmotion(JSON.parse(this.props.emotion)),
             changeDescription: false,
+            onlyImage: this.props.onlyImage,
         };
 
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
@@ -138,11 +139,17 @@ export default class Photo extends Component {
                 emotion,
                 dominantEmotion,
                 changeDescription,
+                onlyImage
              } = this.state;
 
 
         return (
+            (onlyImage && photoLoaded) ? <img src={photoUri} alt="Your photo"/>
+                                       : // if onlyImage is false display tagMenu, description, info
+
             <div className="photoContainer">
+            
+
                 <h3>{<FontAwesomeIcon icon={faCamera} />} {formatDate(timestamp)}</h3>
                 {photoLoaded &&
                     <img src={photoUri} alt="Your photo"/>
