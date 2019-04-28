@@ -111,8 +111,8 @@ class CarouselCard extends React.Component{
 	
 	render () {
 		return (
-			<Card style={{ width: '5rem' }} className='card'>
-				<Card.Img variant="top">
+			<Card style={{ width: '30rem' }} className='card'>
+				<Card.Body>
 				<Photo
 				key={this.props.photo.props.photoId}
 				photoId={this.props.photo.props.photoID}
@@ -122,8 +122,8 @@ class CarouselCard extends React.Component{
 				emotion={this.props.photo.props.emotion}
 				dominantEmotion={this.props.photo.props.dominantEmotion}
                 />
-				</Card.Img>
-				<Card.Body>
+
+
 					<Card.Text>{JSON.stringify(this.props.photo.state.dominantEmotion)}<br/>{this.props.photo.state.timestamp}</Card.Text>
 					<Button variant="primary">Enlarge</Button>
 				</Card.Body>
