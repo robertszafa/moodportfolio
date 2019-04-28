@@ -3,6 +3,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import '../stylesheet/stats.css';
 import { changeDate, convertStringToDate, getUnitQuantity, getEmotionFromString, getDateDifference } from './Graph';
+import Photo from './Photo'
 
 //nodeView = <NodeViewer nodeClicked={this.state.indexClicked} xLabels={this.state.datetimeLabels} data={this.state.photos} graphType={this.state.selectedGraph} timeUnit={this.state.selectedTime} /> 
 
@@ -89,13 +90,14 @@ export default class NodeViewer extends React.Component{
 		console.log("THE DATA");
 		console.log(thedata);
 		
-		
+						//timestamp = {thedata[i].state.timestamp} imgUri = {thedata[i].state.photoUri} emotion = {JSON.stringify(thedata[i].state.dominantEmotion)}
 		var cardList = [];
 
 		for (i = 0; i < thedata.length; i++) {
 			cardList.push(
 				<div key={i} className="card">
-					<CarouselCard timestamp = {thedata[i].state.timestamp} imgUri = {thedata[i].state.photoUri} emotion = {thedata[i].state.dominantEmotion} key={i}/>
+
+					<CarouselCard photo={thedata[i]} key={i}/>
 				</div>
 			)
 		}
@@ -110,9 +112,19 @@ class CarouselCard extends React.Component{
 	render () {
 		return (
 			<Card style={{ width: '5rem' }} className='card'>
-				<Card.Img variant="top" src={this.props.imgUri}/>
+				<Card.Img variant="top">
+				<Photo
+				key={this.props.photo.photoId}
+				photoId={this.props.photo.photoID}
+				timestamp={this.props.photo.timestamp}
+				city={this.props.photo.city}
+				description={this.props.photo.description}
+				emotion={this.props.photo.emotion}
+				dominantEmotion={this.props.photo.dominantEmotion}
+                />
+				</Card.Img>
 				<Card.Body>
-					<Card.Text>{this.props.emotion}<br/>{this.props.timestamp}</Card.Text>
+					<Card.Text>{JSON.stringify(this.props.photo.state.dominantEmotion)}<br/>{this.props.photo.state.timestamp}</Card.Text>
 					<Button variant="primary">Enlarge</Button>
 				</Card.Body>
 			</Card>
