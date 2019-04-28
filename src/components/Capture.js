@@ -144,12 +144,13 @@ export default class Capture extends Component {
                                             dataUri: dataUri })
                         } }
                         idealFacingMode = {FACING_MODES.USER}
-                        // idealResolution = {{width: 480, height: 480}}
+                        idealResolution = {{width: 64, height: 64}}
                         imageType = {IMAGE_TYPES.JPG}
                         imageCompression = {0.97}
                         isMaxResolution = {false}
                         isDisplayStartCameraError = {true}
-                        sizeFactor = {1}/>
+                        siz eFactor = {1}
+                    />
                 </div>
 
                 <div className="file-photo">
