@@ -184,7 +184,7 @@ export default class Graph extends React.Component {
 	let d = startdate;
 	let thedata = [];
 	thedata.length = 0;
-	let stepSize, timeValue, minDate, maxDate, lastUnit, missingUnits, timeFormat, numTicks, changeDateUnit;
+	let stepSize, timeValue, minDate, maxDate, lastUnit, missingUnits, timeFormat, numTicks, changeDateUnit, yAxisLabel;
 
 	let emotionCompare = [];
 
@@ -197,6 +197,7 @@ export default class Graph extends React.Component {
 			minDate = startdate;
 			maxDate = enddate;
 			numTicks = 24;
+			yAxisLabel = "Hour Taken";
 			break;
 
 		case 2:
@@ -207,6 +208,7 @@ export default class Graph extends React.Component {
 			minDate = startdate;
 			maxDate = changeDate(changeDateUnit,enddate,-1);
 			numTicks = 7;
+			yAxisLabel = "Day Taken";
 			break;
 
 		case 3:
@@ -216,6 +218,7 @@ export default class Graph extends React.Component {
 			timeValue = 3;
 			minDate = startdate;
 			maxDate = changeDate(1,enddate,-1); //need to check this
+			yAxisLabel = "Day Taken";
 			break;
 			default:
 			console.log("broke" + timeUnit);
@@ -349,6 +352,10 @@ export default class Graph extends React.Component {
 				}],
 				xAxes: [{
 					type: 'time',
+					scaleLabel: {
+						display: true,
+						labelString: yAxisLabel,
+					},
 					time: {
 						unit: stepSize,
 						unitStepSize: timeValue,
@@ -385,6 +392,8 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 	let stepSize, timeValue, minDate, maxDate, lastUnit, missingUnits, timeFormat, numTicks, changeDateUnit;
 
 	let emotionCompare = [];
+	
+	let yAxisLabel;
 
 	switch(timeUnit){
 		case 1:
@@ -395,6 +404,7 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 			minDate = startdate;
 			maxDate = enddate;
 			numTicks = 24;
+			yAxisLabel = "Hour Taken";
 			break;
 
 		case 2:
@@ -405,6 +415,7 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 			minDate = startdate;
 			maxDate = changeDate(changeDateUnit,enddate,-1);
 			numTicks = 7;
+			yAxisLabel = "Day Taken";
 			break;
 
 		case 3:
@@ -414,6 +425,7 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 			timeValue = 3;
 			minDate = startdate;
 			maxDate = changeDate(1,enddate,-1); //need to check this
+			yAxisLabel = "Day Taken";
 			break;
 			default:
 			console.log("broke" + timeUnit);
@@ -630,6 +642,10 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 				}],
 				xAxes: [{
 					type: 'time',
+					scaleLabel: {
+						display: true,
+						labelString: yAxisLabel,
+					},
 					time: {
 						unit: stepSize,
 						unitStepSize: timeValue,
