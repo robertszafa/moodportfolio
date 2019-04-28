@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import {Link} from 'react-router-dom';
 import { Button } from 'react-bootstrap'
-import Jumbotron from 'react-bootstrap/Jumbotron'
 import {withFormik, Form, Field} from 'formik'
 import {Datepicker} from 'react-formik-ui'
-import matt from '../images/Gareth.jpg'
 import * as Yup from 'yup'
 import {passwordRegex} from './Register'
 import {apiMoodportfolio} from '../App'
 import RecentPhotos from './RecentPhotos'
+import Login from './Login'
 
 
 export default class Profile extends Component {
@@ -17,7 +17,6 @@ export default class Profile extends Component {
 		this.state = {
             userData: '',
         };
-        // this.onChangePassword = this.onChangePassword.bind(this);
 	}
 
     componentDidMount() {
@@ -42,12 +41,15 @@ export default class Profile extends Component {
 
     render () {
         return(
-    <div id="inputForm">
-            <ProfileApp userData={this.state.userData}/>
-    </div>
+            <div id="inputForm">
+                    <ProfileApp 
+                        userData={this.state.userData}
+                    />
+            </div>
         )
   }
 }
+
 
 
 
@@ -177,12 +179,18 @@ const ProfileForm = props => {
                     <br></br>
                     <br></br>
                     <div class="text-center">
-                    <Button variant="outline-danger" type="submit">
-                        <Link to="">Delete Account</Link>
-                    </Button>
-                    <Button variant="outline-dark" type="submit">
-                        <Link to="/change-password">Change password</Link>
-                    </Button>
+                        <Button variant="outline-danger" 
+                                onClick={() => { 
+                                    if (window.confirm('All your data will be deleted.\n\nAre you sure?')) 
+                                        onDeleteAccount() 
+                                }}
+                        >
+                            Delete Account
+                        </Button>
+
+                        <Button variant="outline-dark" type="submit">
+                            <Link to="/change-password">Change password</Link>
+                        </Button>
                     <br></br>
                     </div>
                   </Form>
@@ -234,3 +242,33 @@ const ProfileApp = withFormik({
 
   displayName: 'BasicForm',
 })(ProfileForm);
+
+
+
+
+function onDeleteAccount() {
+    let authToken = localStorage.getItem("authToken");
+    fetch(apiMoodportfolio + '/Register', {
+        method: "DELETE",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+            "Authorization": authToken,
+            "Content-Type": "application/json",
+        },
+    })
+    .then((res) => res.json())
+    .then(json => {
+        if (json.success) {
+            localStorage.setItem("authToken", "");
+            ReactDOM.render(
+                <Login />, 
+                document.getElementById('root')
+            );
+        }
+        else {
+            alert("An error occured, please try again later.");
+        }
+    })
+}
