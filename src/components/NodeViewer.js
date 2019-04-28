@@ -114,13 +114,13 @@ class CarouselCard extends React.Component{
 			<Card style={{ width: '5rem' }} className='card'>
 				<Card.Img variant="top">
 				<Photo
-				key={this.props.photo.photoId}
-				photoId={this.props.photo.photoID}
-				timestamp={this.props.photo.timestamp}
-				city={this.props.photo.city}
-				description={this.props.photo.description}
-				emotion={this.props.photo.emotion}
-				dominantEmotion={this.props.photo.dominantEmotion}
+				key={this.props.photo.props.photoId}
+				photoId={this.props.photo.props.photoID}
+				timestamp={this.props.photo.props.timestamp}
+				city={this.props.photo.props.city}
+				description={this.props.photo.props.description}
+				emotion={this.props.photo.props.emotion}
+				dominantEmotion={this.props.photo.props.dominantEmotion}
                 />
 				</Card.Img>
 				<Card.Body>
