@@ -4,6 +4,7 @@ import {apiMoodportfolio} from '../App';
 import '../stylesheet/tagMenu.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import Tag from './Tag'
 
 
 export default class TagMenu extends Component {
@@ -11,12 +12,12 @@ export default class TagMenu extends Component {
         super(props);
         this.state = {
             newTag: "",
-            tags: [],
+            Tags: new Array(),
             photoId: this.props.photoId,
         };
-
-        console.log('TAG state ', this.state);
-        
+        this.unmountTag = this.unmountTag.bind(this);
+        this.onAddTag = this.onAddTag.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
 
     componentDidMount() {
@@ -34,68 +35,97 @@ export default class TagMenu extends Component {
         })
         .then((res) => res.json())
         .then(json => {
-            console.log('TAGS ', json);
-            
-            // const tags = json.success ? JSON.parse(json.photoTags) : null;
-            // this.setState({tags: tags});
+            const photoTags = json.photoTags;
+            let newTags = new Array();
+            if (photoTags) {
+                photoTags.forEach(tag => {
+                    newTags.push(<Tag
+                                    tagId={tag.tagID}
+                                    name={tag.name}
+                                    photoId={this.state.photoId}
+                                    unmountTag={this.unmountTag}
+                                />
+                                )
+                });
+            }
+            this.setState({
+                Tags: newTags,
+            })
         })
+        .catch(err => console.log(err))
     }
 
-    onChange = event => {
+    onChange(event) {
         this.setState({newTag: event.target.value})
     }
 
-    onAddTag = () => {
-        let authToken = localStorage.getItem("authToken");
-        fetch(apiMoodportfolio + '/PhotoTag', {
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "same-origin",
-            headers: {
-                "Authorization": authToken,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                'photoId': this.state.photoId,
-                'tagName': this.state.newTag,
-            }),
-        })
-        .then((res) => res.json())
-        .then((json) => {
-            console.log(json);
-        })
-
-
-        if (this.state.newTag > 0) {
-            this.setState({
-                tags: [...this.state.tags, this.state.newTag],
-                newTag: ""
+    onAddTag() {
+        console.log('Addding ', this.state.newTag);
+        
+        if (this.state.newTag.length > 0) {
+            console.log('Addding 2');
+            let authToken = localStorage.getItem("authToken");
+            fetch(apiMoodportfolio + '/PhotoTag', {
+                method: "POST",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "same-origin",
+                headers: {
+                    "Authorization": authToken,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    'photoId': this.state.photoId,
+                    'tagName': this.state.newTag,
+                }),
+            })
+            .then((res) => res.json())
+            .then((json) => {
+                console.log(json);
+                
+                let tagId = json.tagId;
+                if (tagId) {
+                    this.setState({
+                        Tags: [...this.state.Tags, 
+                                <Tag
+                                    tagId={tagId}
+                                    name={this.state.newTag}
+                                    photoId={this.state.photoId}
+                                    unmountTag={this.unmountTag}
+                                />
+                            ],
+                        newTag: ""
+                    })
+                }
             })
         }
     }
 
-    deleteTag = event => {
-        this.setState({tags: this.state.tags.filter(function(tag) {
-            return tag !== event;
+    unmountTag(tagId) {
+        this.setState({Tags: this.state.Tags.filter(function(Tag) {
+            return Tag.props.tagId !== tagId;
         })})
     }
 
     render() {
-        const {tags} = this.state;
-        const TagList = tags ? this.state.tags.map(tag => <div><li key={tag}>{tag}<FontAwesomeIcon className="binIcon" onClick={() => this.deleteTag(tag)} icon={faTrashAlt} /></li></div>) : null;
 
         return(
             <div className="tagMenuComponent">
                 <ul className="single-tag">
-                <form>
-                    <input className="fakeInput"></input>
-                    <input type="text" value={this.state.newTag} onChange={this.onChange}></input>
-                    <Button onClick={this.onAddTag}>Add Tag</Button>
-                </form>
-                    {TagList}
+                    <form>
+                        <input className="fakeInput"></input>
+                        <input type="text" 
+                            value={this.state.newTag} 
+                            onChange={this.onChange}>
+                        </input>
+                        
+                        <Button onClick={this.onAddTag}>
+                            Add Tag
+                        </Button>
+                    </form>
+
+                    {this.state.Tags}
                 </ul>
-                {/* For testing */}
             </div>
         );
     }
