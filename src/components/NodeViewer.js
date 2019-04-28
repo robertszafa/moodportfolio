@@ -11,9 +11,15 @@ import Photo from './Photo'
 //should take an array of data. Need to receive click event too
 export default class NodeViewer extends React.Component{
 
+	constructor(props){
+		super(props);
+		this.handleEnlargeClick = this.handleEnlargeClick.bind(this);
+	}
 	
-	handleClick(){
-		
+	handleEnlargeClick(o){
+		console.log("TEST");
+		console.log(o);
+		this.props.handleEnlargeClick(o);
 	}
 	
 	renderCard(stamp, imgUri, emo) {
@@ -79,25 +85,18 @@ export default class NodeViewer extends React.Component{
 	
 	render () {
 		let thedata = this.getRelevantData(this.props.nodeClicked,this.props.indexLabels,this.props.graphType,this.props.timeUnit,this.props.startDate,this.props.endDate,this.props.data);
-		//let jsxObj = [];
-		let i;
-		/*
-		for (i = 0; i < thedata.length; i++){
-			//turn data into cards
-			jsxObj.push(this.renderCard(thedata[i].state.timestamp,thedata[i].state.photoUri,thedata[i].state.dominantEmotion));
-		}
-		*/
+
 		console.log("THE DATA");
 		console.log(thedata);
 		
-						//timestamp = {thedata[i].state.timestamp} imgUri = {thedata[i].state.photoUri} emotion = {JSON.stringify(thedata[i].state.dominantEmotion)}
+		//timestamp = {thedata[i].state.timestamp} imgUri = {thedata[i].state.photoUri} emotion = {JSON.stringify(thedata[i].state.dominantEmotion)}
 		var cardList = [];
 
-		for (i = 0; i < thedata.length; i++) {
+		for (let i = 0; i < thedata.length; i++) {
 			cardList.push(
 				<div key={i} className="card">
 
-					<CarouselCard photo={thedata[i]} key={i}/>
+					<CarouselCard photo={thedata[i]} onClick={() => this.handleEnlargeClick(i)} key={i}/>
 				</div>
 			)
 		}
@@ -109,10 +108,14 @@ export default class NodeViewer extends React.Component{
 
 class CarouselCard extends React.Component{
 	
+	constructor(props){
+		super(props);
+	}
+	
 	render () {
 		return (
-			<Card style={{ width: '30rem' }} className='card'>
-				<Card.Body>
+			<Card style={{ width: '20rem' }} className='card'>
+				<Card.Title>
 				<Photo
 				key={this.props.photo.props.photoId}
 				photoId={this.props.photo.props.photoID}
@@ -121,11 +124,14 @@ class CarouselCard extends React.Component{
 				description={this.props.photo.props.description}
 				emotion={this.props.photo.props.emotion}
 				dominantEmotion={this.props.photo.props.dominantEmotion}
+				onlyImage={true}
                 />
-
+				</Card.Title>
+				
+				<Card.Body>
 
 					<Card.Text>{JSON.stringify(this.props.photo.state.dominantEmotion)}<br/>{this.props.photo.state.timestamp}</Card.Text>
-					<Button variant="primary">Enlarge</Button>
+					<Button variant="primary" onClick={this.props.handleEnlargeClick}>Enlarge</Button>
 				</Card.Body>
 			</Card>
 		);

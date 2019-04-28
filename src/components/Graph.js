@@ -19,6 +19,7 @@ export default class Graph extends React.Component {
 			currentDate: Date.now(),
 			selectedTime: 3, //Day = 1, Week = 2, Month  = 3
 			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected). Have left bar in for now.
+			selectedPhoto: -1,
 			graphData: {},
 			graphOptions: {},
 			indexClicked: -1,
@@ -32,6 +33,7 @@ export default class Graph extends React.Component {
 		this.hoverColours = ['#043d7e','#beafa9','#4fc690','#667559','#d29e81','#46bbe9','#13744c','#9125d5'];
 		this.displayEmotions = ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'];
 		this.dbEmotions = ['anger','contempt','disgust','fear','happiness','neutral','sadness','surprise'];
+		this.handleEnlargeClick = this.handleEnlargeClick.bind(this);
 		this.handleTimeClick = this.handleTimeClick.bind(this);
 		this.handleTypeClick = this.handleTypeClick.bind(this);
 		this.handleBackClick = this.handleBackClick.bind(this);
@@ -128,11 +130,11 @@ export default class Graph extends React.Component {
 
 	SetGraphData_Overall(emotionProbs){
 		this.state.graphOptions = {};
-		//var emotionP = emotionProbs;
-		//loop through the emotions and count total of each
+
 		let emotionCount = new Array(this.dbEmotions.length).fill(0);
 
 		let i, j;
+		//loop through the emotions and count total of each
 		for (i = 0; i < emotionProbs.length; i++){
 			for (j = 0; j < this.dbEmotions.length; j++){
 				if (emotionProbs[i].includes(this.dbEmotions[j])){
@@ -141,6 +143,7 @@ export default class Graph extends React.Component {
 			}
 		}
 
+		//setup the data
 		this.setState({
 			indexLabels: this.displayEmotions,
 			graphData: {
@@ -149,26 +152,8 @@ export default class Graph extends React.Component {
 				datasets: [{
 					data: emotionCount,
 
-					backgroundColor: [
-						'#28b501',
-						'#ff0011',
-						'#ee00ff',
-						'#80027a',
-						'#1003ff',
-						'#06ffb4',
-						'#ff7206',
-						'#fff700'
-					],
-					hoverBackgroundColor: [
-						'#043d7e',
-						'#beafa9',
-						'#4fc690',
-						'#667559',
-						'#d29e81',
-						'#46bbe9',
-						'#13744c',
-						'#9125d5'
-					]
+					backgroundColor: this.baseColours,
+					hoverBackgroundColor: this.hoverColours,
 
 				}]
 			}
@@ -801,6 +786,11 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 		this.setState({indexClicked: index});
 	}
 	
+	//Handles clicks on enlarge button of CarouselCard from NodeViewer.js
+	handleEnlargeClick(index){
+		console.log("FIRED." + index);
+		this.setState({selectedPhoto: index});
+	}
 	
 	render () {
 		//do different stuff based on if data is ready or not
@@ -808,28 +798,40 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 		let nodeView;
 		if (this.state.indexClicked !== -1){
 			//nodeView = <NodeViewer emotion={"Happy"} timestamp={Date.now()}/>;
-			nodeView = <NodeViewer nodeClicked={this.state.indexClicked} indexLabels={this.state.datetimeLabels} data={this.state.photos} graphType={this.state.selectedGraph} selectedTime={this.state.selectedTime} startDate={this.state.startDate} endDate={this.state.endDate} emotions={this.displayEmotions}/>
+			nodeView = <NodeViewer handleEnlargeClick={this.handleEnlargeClick} nodeClicked={this.state.indexClicked} indexLabels={this.state.datetimeLabels} data={this.state.photos} graphType={this.state.selectedGraph} selectedTime={this.state.selectedTime} startDate={this.state.startDate} endDate={this.state.endDate} emotions={this.displayEmotions}/>
 		}
 
 		//Have temporarily added a blank button above the time unit menu as wasn't working for some reason.
 		//Also added paragraph as otherwise top half of buttons won't click.
-
+		console.log("Selected: " + this.state.selectedPhoto);
+		console.log(this.state.photos);
+		if (this.state.selectedPhoto !== -1){
+			return (<Photo
+			key={this.state.photos[this.state.selectedPhoto].props.photoId}
+			photoId={this.state.photos[this.state.selectedPhoto].props.photoID}
+			timestamp={this.state.photos[this.state.selectedPhoto].props.timestamp}
+			city={this.state.photos[this.state.selectedPhoto].props.city}
+			description={this.state.photos[this.state.selectedPhoto].props.description}
+			emotion={this.state.photos[this.state.selectedPhoto].props.emotion}
+			dominantEmotion={this.state.photos[this.state.selectedPhoto].props.dominantEmotion}
+			/>);
+		} else {
 		return (
-
-		<div className='text-center'>
-			<br/><br/>
-			{/* Time unit menu */}
-			<TimeMenu onClick = {this.handleTimeClick}/>
-			{/* Date menu */}
-			<DateSelector startDate={this.state.startDate} endDate={this.state.endDate} timeCode={this.state.selectedTime} onBackClick={this.handleBackClick} onForwardClick={this.handleForwardClick}/>
-			{/* Graph Component */}
-			<GraphPlotter type = {this.state.selectedGraph} options = {this.state.graphOptions} data = {this.state.graphData} onClick={this.handleNodeClick}/>
-			{/* Graph type menu */}
-			<GraphMenu onClick = {this.handleTypeClick}/>
-			{/* Node Viewer */}
-			{nodeView}
-		</div>
-		);
+			<div className='text-center'>
+				<br/><br/>
+				{/* Time unit menu */}
+				<TimeMenu onClick = {this.handleTimeClick}/>
+				{/* Date menu */}
+				<DateSelector startDate={this.state.startDate} endDate={this.state.endDate} timeCode={this.state.selectedTime} onBackClick={this.handleBackClick} onForwardClick={this.handleForwardClick}/>
+				{/* Graph Component */}
+				<GraphPlotter type = {this.state.selectedGraph} options = {this.state.graphOptions} data = {this.state.graphData} onClick={this.handleNodeClick}/>
+				{/* Graph type menu */}
+				<GraphMenu onClick = {this.handleTypeClick}/>
+				{/* Node Viewer */}
+				{nodeView}
+			</div>
+			);
+		}
 	}
 }
 
@@ -995,9 +997,6 @@ function formatDate(adate) {
 
 function getDayEnd(adate){
 	var d = new Date(adate);
-	/*
-	d.setHours(23,59,59,999);
-	*/
 	d = changeDate(1,adate,1);
 	d = getDayStart(d);
 	return new Date(d);
