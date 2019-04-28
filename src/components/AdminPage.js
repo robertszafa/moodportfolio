@@ -10,6 +10,11 @@ export default class Home extends React.Component {
       super(props);
     }
 
+    // componentWillMount(){
+    //   getNumberOfUsers();
+    //   getMostPopularTag();
+    //   getMostPopularLoc();
+    // }
 
     getNumberOfUsers() {
         let authToken = localStorage.getItem("authToken");
@@ -72,7 +77,7 @@ export default class Home extends React.Component {
         })
     }
 
-    //return the most popular tag from the TAG table
+    //return the most popular location users are from
     getMostPopularLoc() {
         let authToken = localStorage.getItem("authToken");
 
@@ -88,7 +93,40 @@ export default class Home extends React.Component {
             },
             body: JSON.stringify({
                                   'basedOn': "any",
-                                  'splSQLQuery' : " SELECT name, MAX(count) from Tag",
+                                  'splSQLQuery' : " SELECT country, MAX(country) from User",
+                                })
+        })
+        .then((res) => res.json())
+        .then(json => {
+            console.log(json)
+            if(json.success){
+                //result is the answer.
+                this.setState({mostPopularLoc: json.result})
+            } else {
+                this.setState({error: json.error})
+            }
+        })
+    }
+
+
+
+    //return the photos uploaded per day
+    getPhotocountOverLastWeek() {
+        let authToken = localStorage.getItem("authToken");
+
+        fetch(apiMoodportfolio + '/AdminQuery', {
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+            withCredentials: true,
+            credentials: "same-origin",
+            headers: {
+                "Authorization": authToken,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                                  'basedOn': "any",
+                                  'splSQLQuery' : " SELECT Date(), count(photoID) FROM Photo GROUP BY DATE();",
                                 })
         })
         .then((res) => res.json())
@@ -103,6 +141,8 @@ export default class Home extends React.Component {
         })
     }
 
+
+    //Render web page
     render() {
       return (
           <div className = "text-center homePageContainer">
