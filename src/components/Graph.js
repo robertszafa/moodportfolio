@@ -136,7 +136,7 @@ export default class Graph extends React.Component {
 		for (i = 0; i < emotionProbs.length; i++){
 			for (j = 0; j < this.dbEmotions.length; j++){
 				if (emotionProbs[i].includes(this.dbEmotions[j])){
-					emotionCount[GetEmotionIndex(getEmotionFromString(emotionProbs[i]))] ++;
+					emotionCount[getEmotionIndex(getEmotionFromString(emotionProbs[i]))] ++;
 				}
 			}
 		}
@@ -255,7 +255,7 @@ export default class Graph extends React.Component {
 			//find most prominent emotion, get its number, push it
 			if (emotionCompare.length > 0){
 				console.log("PUSHING PROMINENT EMOTION");
-				thedata.push(GetEmotionIndex(GetModeEmotion(emotionCompare)) + 1);
+				thedata.push(getEmotionIndex(GetModeEmotion(emotionCompare)) + 1);
 			}
 			//clear emotionCompare
 			emotionCompare = [];
@@ -273,7 +273,7 @@ export default class Graph extends React.Component {
 		//if leftover data in emotionCompare then push
 		if (emotionCompare.length > 0){
 			console.log("PUSHING DATA TO thedata");
-			thedata.push(GetEmotionIndex(GetModeEmotion(emotionCompare)) + 1);
+			thedata.push(getEmotionIndex(GetModeEmotion(emotionCompare)) + 1);
 			console.log(thedata);
 		}
 
@@ -441,19 +441,24 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 		i = 0;
 		lastUnit = getUnitQuantity(startdate,changeDateUnit);
 		missingUnits = 0;
+		
+		//need to get emotion specific data
+		let emotionData = getEmotionData(emotionProbs,timestamp,emote);
+		console.log("DATA");
+		console.log(emotionData);
 		tempdata = [];
-		while (i < timestamp.length){
+		while (i < emotionData.timestamp.length){
 			//check if part of the current time
-			if (getUnitQuantity(timestamp[i],changeDateUnit) === lastUnit){
-				console.log("PUSHING" + emotionProbs[i] + " TO COMPARISON.");
-				emotionCompare.push(emotionProbs[i]);
+			if (getUnitQuantity(emotionData.timestamp[i],changeDateUnit) === lastUnit){
+				console.log("PUSHING" + emotionData.emotion[i] + " TO COMPARISON.");
+				emotionCompare.push(emotionData.emotion[i]);
 			} else {
 				//if new time
-				missingUnits = getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit - 1;
-				console.log(missingUnits + " missing units found. " + timestamp[i] + "	" + changeDateUnit);
+				missingUnits = getUnitQuantity(emotionData.timestamp[i],changeDateUnit) - lastUnit - 1;
+				console.log(missingUnits + " missing units found. " + emotionData.timestamp[i] + "	" + changeDateUnit);
 				if (missingUnits > 1 || (missingUnits > -1 && i === 0)){
 					if (i === 0) {missingUnits++;}
-					console.log("ADDING NULLS * " + missingUnits + "from: " + timestamp[i]);
+					console.log("ADDING NULLS * " + missingUnits + "from: " + emotionData.timestamp[i]);
 					for (j = 0; j < missingUnits; j++){
 						tempdata.push(null);
 					}
@@ -467,14 +472,14 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 				emotionCompare = [];
 				//add the current element to emotionCompare
 				console.log("PUSHING CURRENT ELEMENT TO COMPARISON");
-				emotionCompare.push(emotionProbs[i]);
+				emotionCompare.push(emotionData.emotion[i]);
 				//set the current time being looked at
-				lastUnit = getUnitQuantity(timestamp[i],changeDateUnit);
+				lastUnit = getUnitQuantity(emotionData.timestamp[i],changeDateUnit);
 			}
 			i++;
 		}
 
-		if (timestamp.length > 0){
+		if (emotionData.timestamp.length > 0){
 
 			//if leftover data in emotionCompare then push
 			if (emotionCompare.length > 0){
@@ -491,8 +496,8 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 				maxUnit = getUnitQuantity(changeDate(1,enddate,-1),changeDateUnit);
 			}
 
-			let remainingNulls = maxUnit - getUnitQuantity(timestamp[timestamp.length - 1],changeDateUnit);
-			console.log("PUSHING " + remainingNulls + " remaining nulls. " + maxUnit + " - " + timestamp[timestamp.length-1]);
+			let remainingNulls = maxUnit - getUnitQuantity(emotionData.timestamp[emotionData.timestamp.length - 1],changeDateUnit);
+			console.log("PUSHING " + remainingNulls + " remaining nulls. " + maxUnit + " - " + emotionData.timestamp[emotionData.timestamp.length-1]);
 			for (i = 0; i < remainingNulls; i++){
 				tempdata.push(null);
 			}
@@ -1038,7 +1043,7 @@ function GetModeEmotion(emotionArray){
 	return dbEmotions[maxID];
 }
 
-export function GetEmotionIndex(emo){
+export function getEmotionIndex(emo){
 	let displayOrder = ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'];
 	let i = 0;
 	for (i = 0; i < displayOrder.length; i++){
@@ -1071,4 +1076,24 @@ export function getUnitQuantity(adate,dateUnit){
 			console.log("getUnitQuantity failed.");
 			return -1;
 	}
+}
+
+function getEmotionData(emotionProbs,timestamp,emotionIndex){
+	let emotionData = [];
+	let timeData = [];
+	let i;
+	//loop through all of the data
+	for (i = 0; i < emotionProbs.length; i++){
+		if (getEmotionIndex(getEmotionFromString(emotionProbs[i])) === emotionIndex){
+			emotionData.push(emotionProbs[i]);
+			timeData.push(timestamp[i]);
+		}
+	}
+	//return obj composed of emotions and timestamps
+	var result = {
+		emotion: emotionData,
+		timestamp: timeData,
+	}
+	
+	return result;
 }
