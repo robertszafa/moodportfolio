@@ -277,13 +277,7 @@ export default class Graph extends React.Component {
 			console.log(thedata);
 		}
 
-		//add remaining nulls
-		let maxUnit = getUnitQuantity(enddate,changeDateUnit);
-		if (maxUnit === 0){
-			maxUnit = 23;
-		}
-
-		let remainingNulls = maxUnit - getUnitQuantity(timestamp[timestamp.length - 1],changeDateUnit);
+		let remainingNulls = getDateDifference(enddate, timestamp[timestamp.length-1],changeDateUnit);
 		console.log("PUSHING " + remainingNulls + " remaining nulls.");
 		for (i = 0; i < remainingNulls; i++){
 			thedata.push(null);
@@ -328,6 +322,11 @@ export default class Graph extends React.Component {
 
 		graphOptions: {
 
+		    title: {
+				display: false,
+				text: 'Emotions over Time'
+			},
+		
 			legend: {
 				display: false,
 			},
@@ -339,7 +338,6 @@ export default class Graph extends React.Component {
 			scales: {
 				yAxes: [{
 					interval:0,
-					title: "Emotion",
 					ticks: {
 						beginAtZero: true,
 						callback: function(value,index,values) {
@@ -487,17 +485,9 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 				tempdata.push(emotionCompare.length);
 				emotionCompare = [];
 			}
+			
+			let remainingNulls = getDateDifference(enddate, timestamp[timestamp.length-1],changeDateUnit);
 
-			//add remaining nulls
-			let maxUnit = getUnitQuantity(enddate,changeDateUnit);
-			if (maxUnit === 0){
-				maxUnit = 23;
-			} else if (maxUnit === 1){
-				maxUnit = getUnitQuantity(changeDate(1,enddate,-1),changeDateUnit);
-			}
-
-			let remainingNulls = maxUnit - getUnitQuantity(emotionData.timestamp[emotionData.timestamp.length - 1],changeDateUnit);
-			console.log("PUSHING " + remainingNulls + " remaining nulls. " + maxUnit + " - " + emotionData.timestamp[emotionData.timestamp.length-1]);
 			for (i = 0; i < remainingNulls; i++){
 				tempdata.push(null);
 			}
@@ -626,6 +616,10 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 
 			scales: {
 				yAxes: [{
+					scaleLabel: {
+						display: true,
+						labelString: 'Quantity'
+					},
 					interval:0,
 					unitStepSize: 1,
 					title: "Emotion",
@@ -1096,4 +1090,23 @@ function getEmotionData(emotionProbs,timestamp,emotionIndex){
 	}
 	
 	return result;
+}
+
+function getDateDifference(date1, date2, timeUnit){
+	let ms;
+	
+	switch(timeUnit) {
+		case 0: //hours
+			ms = 1000 * 60 * 60;
+			break;
+		case 1: //days
+			ms*= 1000 * 60 * 60 * 24;
+			break;
+		default:
+			console.log("getDateDifference failed.");
+			return -1;
+	}
+	
+	let diff = Math.abs(date1.getTime() - date2.getTime());
+	return Math.floor(diff / ms);
 }
