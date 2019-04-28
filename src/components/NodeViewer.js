@@ -105,16 +105,17 @@ export default class NodeViewer extends React.Component{
 
 }
 
-function CarouselCard(props){
+class CarouselCard extends React.Component{
 	
-	return (
-		<Card style={{ width: '5rem' }} className='card'>
-			<Card.Img variant="top" src={this.props.imgUri}/>
-			<Card.Body>
-				
-				<Card.Text>{this.props.emotion}<br/>{this.props.timestamp}</Card.Text>
-				<Button variant="primary">Enlarge</Button>
-			</Card.Body>
-		</Card>
-	);
+	render () {
+		return (
+			<Card style={{ width: '5rem' }} className='card'>
+				<Card.Img variant="top" src={this.props.imgUri}/>
+				<Card.Body>
+					<Card.Text>{this.props.emotion}<br/>{this.props.timestamp}</Card.Text>
+					<Button variant="primary">Enlarge</Button>
+				</Card.Body>
+			</Card>
+		);
+	}
 }
