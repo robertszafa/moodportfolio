@@ -68,6 +68,7 @@ export default class TagMenu extends Component {
         let tagExist = false;
         let notOneWord = false;
         let noSpecialChar = false;
+        let maxThirtyChar = false;
         const specialCharacters = /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+$/g;
 
         for (let i = 0; i < this.state.Tags.length; i++) {
@@ -86,8 +87,14 @@ export default class TagMenu extends Component {
             this.setState({errorMessage: "The tag must be one word only"})
             notOneWord = true;
         }
+
+        if (this.state.newTag.length > 30) {
+            this.setState({errorMessage: "Tag must be 30 or less characters"})
+            maxThirtyChar = true;
+        }
         
-        if (this.state.newTag.length > 0 && tagExist == false && notOneWord == false && noSpecialChar == false) {
+        if (this.state.newTag.length > 0 && tagExist == false && notOneWord == false 
+            && noSpecialChar == false && maxThirtyChar == false) {
             console.log('Addding 2');
             let authToken = localStorage.getItem("authToken");
             fetch(apiMoodportfolio + '/PhotoTag', {
