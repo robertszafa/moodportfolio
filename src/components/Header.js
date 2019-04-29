@@ -41,7 +41,7 @@ export default class Header extends React.Component {
 
                     <div className="menuList">
                         <ul>
-                            <li><a componentClass={Link} href="/adminPage" to="/adminPage">Admin</a></li>
+                            {this.props.isAdmin ? <li><a componentClass={Link} href="/adminPage" to="/adminPage">Admin</a></li> : null}
                             <li><a componentClass={Link} href="/capture" to="/capture">Capture</a></li>
                             <li><a componentClass={Link} href="/stats" to="/stats">Stats</a></li>
                             <li><a componentClass={Link} href="/tag" to="/tag">Tag</a></li>

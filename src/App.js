@@ -106,7 +106,8 @@ export default class App extends Component {
         // {/* All of this is activated once user logs in */}
         <Router>
           <div>
-            <Header sideMenuClickHandler={this.sideMenuClickHandler}/>
+            <Header sideMenuClickHandler={this.sideMenuClickHandler} 
+              isAdmin= {this.state.isAdmin }/>
             {sideMenu}
             {backDrop}
 

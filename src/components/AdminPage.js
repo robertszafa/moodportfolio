@@ -6,12 +6,7 @@ import { Button } from 'react-bootstrap'
 import {Link} from 'react-router-dom';
 import {apiMoodportfolio} from '../App'
 
-/*fetch("/api/users/delete/" + userId, requestOptions).then((response) => {
-	return response.json();
-}).then((result) => {
-	// do what you want with the response here
-});
-*/
+//DELETE QUERY!
 
 export default class AdminPage extends React.Component {
 	constructor(props) {
@@ -64,7 +59,7 @@ export default class AdminPage extends React.Component {
 		.then(json => {
 			//console.log(json)
 			if(json.success){
-				console.log(json.result[0])								
+				console.log("#users",json.result[0])							
 				this.setState({numOfUsers: json.result[0]["number"]});
 			} else {
 				this.setState({error: json.error});
@@ -93,15 +88,13 @@ export default class AdminPage extends React.Component {
 		})
 		.then((res) => res.json())
 		.then(json => {
-			//console.log(json)
 			if(json.success){
-				console.log(json.result[0])
+				console.log("popTag",json.result[0])
 				//result is the answer.
 				var tagKeys = Object.keys(json.result[0])
 				var tagValues = tagKeys.map(function(key) {
 					return ["\n"+key+ ": ", json.result[0][key]]
-				})
-				console.log(tagValues)				
+				})				
 				this.setState({mostPopularTag: tagValues});
 			} else {
 				this.setState({error: json.error});
@@ -125,15 +118,14 @@ export default class AdminPage extends React.Component {
 			},
 			body: JSON.stringify({
 								  'basedOn': "any",
-								  'splSQLQuery' : " SELECT MAX(city) as country from User",
+								  'splSQLQuery' : " SELECT MAX(townCity) as city from User",
 								})
 		})
 		.then((res) => res.json())
 		.then(json => {
-			//console.log(json)
 			if(json.success){
-				console.log(json.result[0])			
-				this.setState({mostPopularLoc: json.result[0]["country"]});
+				console.log("popLoc",json.result[0])			
+				this.setState({mostPopularLoc: json.result[0]["city"]});
 			} else {
 				this.setState({error: json.error});
 			}
@@ -185,12 +177,14 @@ export default class AdminPage extends React.Component {
 		let _city = document.querySelector('input[name=city]').value;
 		let _country = document.querySelector('input[name=country]').value;
 		let _tagName = document.querySelector('input[name=tagName]').value;
+		let _tagID = document.querySelector('input[name=tagID]').value;
+		let _startDate = document.querySelector('input[name=startDate]').value;
+		let _endDate = document.querySelector('input[name=endDate]').value;
 		let _sqlQ = document.querySelector('input[name=sqlQ]').value;
+		let authToken = localStorage.getItem("authToken");
 
 		if (_sqlQ!="") {
 			//call SplAdminQuery API
-			let authToken = localStorage.getItem("authToken");
-
 			fetch(apiMoodportfolio + '/SplAdminQuery', {
 				method: "POST",
 				mode: "cors",
@@ -208,7 +202,46 @@ export default class AdminPage extends React.Component {
 			})
 			.then((res) => res.json())
 			.then(json => {
-				console.log(json)
+				console.log("Spl SQL Q response", json)
+				if(json.success){
+					console.log(json.result[0])
+					//ITERATE OVER EACH ELEMENT IN JSON.RESULT
+//THIS WAY GIVES ONLY FIRST RESULT !!!!!
+					var _keys = Object.keys(json.result[0])
+					var _values = _keys.map(function(key) {
+						return ["\n"+key+ ": ", json.result[0][key]]
+					})
+					console.log(_values)				
+					this.setState({sqlQRes: _values});
+				} else {
+					this.setState({error: json.error});
+				}
+			})
+		} else {
+			//call AdminQuery API
+			fetch(apiMoodportfolio + '/AdminQuery', {
+				method: "POST",
+				mode: "cors",
+				cache: "no-cache",
+				withCredentials: true,
+				credentials: "same-origin",
+				headers: {
+					"Authorization": authToken,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					'startDate': _startDate,
+					'endDate' : _endDate,
+					'city': _city,
+					'country' : _country,
+					'userID' : _userID,
+					'tagName' : _tagName,
+					'tagID' : _tagID
+				})
+			})
+			.then((res) => res.json())
+			.then(json => {
+				console.log("Form response: ", json)
 				if(json.success){
 					console.log(json.result[0])
 					//result is the answer.
@@ -222,12 +255,6 @@ export default class AdminPage extends React.Component {
 					this.setState({error: json.error});
 				}
 			})
-
-
-
-
-		} else {
-			//call AdminQuery API
 		}
 	}
 
@@ -264,7 +291,19 @@ export default class AdminPage extends React.Component {
           <input type = "text" name = "tagName" placeholder = "Tag Name" />
           <br/>
           <br/>
-   				<br/>
+		  Enter a tag id:
+          <input type = "text" name = "tagID" placeholder = "Tag Name" />
+          <br/>
+          <br/>
+		  Enter a start date (dd-mm-yyyy):
+          <input type = "text" name = "startDate" placeholder = "Tag Name" />
+          <br/>
+          <br/>
+		  Enter a end date (dd-mm-yyyy):
+          <input type = "text" name = "endDate" placeholder = "Tag Name" />
+          <br/>
+          <br/>
+   		  <br/>
           <br/>
    	    	OR
 					<br/>
