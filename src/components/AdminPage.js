@@ -6,7 +6,12 @@ import { Button } from 'react-bootstrap'
 import {Link} from 'react-router-dom';
 import {apiMoodportfolio} from '../App'
 
-
+/*fetch("/api/users/delete/" + userId, requestOptions).then((response) => {
+	return response.json();
+}).then((result) => {
+	// do what you want with the response here
+});
+*/
 
 export default class AdminPage extends React.Component {
 	constructor(props) {
@@ -14,7 +19,7 @@ export default class AdminPage extends React.Component {
 
 		this.state = {
 			numOfUsers: null,
-			mostPopularTag: null,
+			mostPopularTag: "",
 			mostPopularLoc: null,
 			numOfPhotos: null,
 			error: null
@@ -33,12 +38,17 @@ export default class AdminPage extends React.Component {
 		this.getPhotocountOverLastWeek();
 	}
 
-	getNumberOfUsers() {
+	async getNumberOfUsers() {
 
 		let authToken = localStorage.getItem("authToken");
 
+		let jsonBody = {
+			'basedOn': "#users",
+			'splSQLQuery' : ""
+		}
+
 		fetch(apiMoodportfolio + '/SplAdminQuery', {
-			method: "GET",
+			method: "POST",
 			mode: "cors",
 			cache: "no-cache",
 			withCredentials: true,
@@ -54,9 +64,10 @@ export default class AdminPage extends React.Component {
 		})
 		.then((res) => res.json())
 		.then(json => {
-			console.log(json)
+			//console.log(json)
 			if(json.success){
-				this.setState({numOfUsers: json.result});
+				console.log(json.result[0])								
+				this.setState({numOfUsers: json.result[0]["number"]});
 			} else {
 				this.setState({error: json.error});
 			}
@@ -68,7 +79,7 @@ export default class AdminPage extends React.Component {
 		let authToken = localStorage.getItem("authToken");
 
 		fetch(apiMoodportfolio + '/SplAdminQuery', {
-			method: "GET",
+			method: "POST",
 			mode: "cors",
 			cache: "no-cache",
 			withCredentials: true,
@@ -84,10 +95,16 @@ export default class AdminPage extends React.Component {
 		})
 		.then((res) => res.json())
 		.then(json => {
-			console.log(json)
+			//console.log(json)
 			if(json.success){
+				console.log(json.result[0])
 				//result is the answer.
-				this.setState({mostPopularTag: json.result});
+				var tagKeys = Object.keys(json.result[0])
+				var tagValues = tagKeys.map(function(key) {
+					return ["\n"+key+ ": ", json.result[0][key]]
+				})
+				console.log(tagValues)				
+				this.setState({mostPopularTag: tagValues});
 			} else {
 				this.setState({error: json.error});
 			}
@@ -99,7 +116,7 @@ export default class AdminPage extends React.Component {
 		let authToken = localStorage.getItem("authToken");
 
 		fetch(apiMoodportfolio + '/SplAdminQuery', {
-			method: "GET",
+			method: "POST",
 			mode: "cors",
 			cache: "no-cache",
 			withCredentials: true,
@@ -110,15 +127,15 @@ export default class AdminPage extends React.Component {
 			},
 			body: JSON.stringify({
 								  'basedOn': "any",
-								  'splSQLQuery' : "SELECT country, MAX(country) from User",
+								  'splSQLQuery' : " SELECT MAX(country) as country from User",
 								})
 		})
 		.then((res) => res.json())
 		.then(json => {
-			console.log(json)
+			//console.log(json)
 			if(json.success){
-				//result is the answer.
-				this.setState({mostPopularLoc: json.result});
+				console.log(json.result[0])			
+				this.setState({mostPopularLoc: json.result[0]["country"]});
 			} else {
 				this.setState({error: json.error});
 			}
@@ -128,9 +145,15 @@ export default class AdminPage extends React.Component {
 	//return the photos uploaded per day
 	getPhotocountOverLastWeek() {
 		let authToken = localStorage.getItem("authToken");
-
+		
+		var todaySQL = new Date().toISOString().slice(0, 19).replace('T', ' ');
+		var oneWeekAgo = new Date();
+		oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+		var oneWeekAgoSQL = oneWeekAgo.toISOString().slice(0, 19).replace('T', ' ');
+		console.log("select count(photoID) as number from Photo where timestamp between \"" + oneWeekAgoSQL + "\" and \"" + todaySQL + "\"")
+		
 		fetch(apiMoodportfolio + '/AdminQuery', {
-			method: "GET",
+			method: "POST",
 			mode: "cors",
 			cache: "no-cache",
 			withCredentials: true,
@@ -141,24 +164,24 @@ export default class AdminPage extends React.Component {
 			},
 			body: JSON.stringify({
 								  'basedOn': "any",
-								  'splSQLQuery' : "SELECT Date(timestamp), count(photoID) FROM Photo GROUP BY DATE(timestamp)",
+								  'splSQLQuery' : "select count(photoID) as number from Photo where timestamp between \"" + oneWeekAgoSQL + "\" and \"" + todaySQL + "\""
 								})
 		})
 		.then((res) => res.json())
 		.then(json => {
 			console.log(json)
 			if(json.success){
-				//result is the answer.
-				this.setState({numOfPhotos: json.result})
+				console.log(json.result[0])			
+				this.setState({numOfPhotos: json.result[0]["number"]});
 			} else {
-				this.setState({error: json.error})
+				this.setState({error: json.error});
 			}
 		})
 	}
 
-
 	//Render web page
 	render() {
+
 	  return (
 		  <div className = "text-center homePageContainer">
 			<br></br>
