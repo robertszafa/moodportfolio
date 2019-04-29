@@ -64,15 +64,30 @@ export default class TagMenu extends Component {
     onAddTag() {
         console.log('Addding ', this.state.newTag);
         this.state.newTag = this.state.newTag.toLowerCase();
+
         let tagExist = false;
+        let notOneWord = false;
+        let noSpecialChar = false;
+        const specialCharacters = /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+$/g;
+
         for (let i = 0; i < this.state.Tags.length; i++) {
             if (this.state.Tags[i].props.name == this.state.newTag) {
                 tagExist = true;
                 this.setState({errorMessage: "This tag already exists"})
             }
         }
+
+        if (this.state.newTag.trim().indexOf(' ') != -1) {
+            this.setState({errorMessage: "The tag must be one word only"})
+            notOneWord = true;
+        }
+
+        if (!this.state.newTag.match(specialCharacters)) {
+            this.setState({errorMessage: "No special characters allowed"});
+            noSpecialChar = true;
+        }
         
-        if (this.state.newTag.length > 0 && tagExist == false) {
+        if (this.state.newTag.length > 0 && tagExist == false && notOneWord == false && noSpecialChar == false) {
             console.log('Addding 2');
             let authToken = localStorage.getItem("authToken");
             fetch(apiMoodportfolio + '/PhotoTag', {
