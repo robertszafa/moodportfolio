@@ -2,21 +2,24 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import RecentPhotos from './RecentPhotos'
 import Login from './Login'
+import { Button } from 'react-bootstrap'
+import {Link} from 'react-router-dom';
 import {apiMoodportfolio} from '../App'
+
 
 
 export default class AdminPage extends React.Component {
 	constructor(props) {
 		super(props);
-	  
+
 		this.state = {
 			numOfUsers: null,
 			mostPopularTag: null,
 			mostPopularLoc: null,
 			numOfPhotos: null,
-			error: null			
+			error: null
         }
-		
+
 		this.getNumberOfUsers = this.getNumberOfUsers.bind(this);
 		this.getMostPopularTag = this.getMostPopularTag.bind(this);
 		this.getMostPopularLoc = this.getMostPopularLoc.bind(this);
@@ -31,7 +34,7 @@ export default class AdminPage extends React.Component {
 	}
 
 	getNumberOfUsers() {
-		
+
 		let authToken = localStorage.getItem("authToken");
 
 		fetch(apiMoodportfolio + '/SplAdminQuery', {
@@ -161,7 +164,7 @@ export default class AdminPage extends React.Component {
 			<br></br>
 			<br></br>
 			<p>Number of users registered : {this.state.numOfUsers}</p>
-			<p>Most popular tag: {this.state.mostPopularTag}</p>			
+			<p>Most popular tag: {this.state.mostPopularTag}</p>
 			<p>Most popular location : {this.state.mostPopularLoc}</p>
 			<p>How many photos have been uploaded over the last week : {this.state.numOfPhotos}</p>
 		  </div>
