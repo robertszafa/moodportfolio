@@ -18,9 +18,9 @@ export default class AdminPage extends React.Component {
         }
 		
 		this.getNumberOfUsers = this.getNumberOfUsers.bind(this);
-        this.getMostPopularTag = this.getMostPopularTag.bind(this);
-        this.getMostPopularLoc = this.getMostPopularLoc.bind(this);
-        this.onUploadDescription = this.onUploadDescription.bind(this);
+		this.getMostPopularTag = this.getMostPopularTag.bind(this);
+		this.getMostPopularLoc = this.getMostPopularLoc.bind(this);
+		this.getPhotocountOverLastWeek = this.getPhotocountOverLastWeek.bind(this);
 	}
 
 	componentWillMount(){
