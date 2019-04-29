@@ -42,9 +42,9 @@
 
 .binIcon {
     height: 30px;
-    float: right;
+    float: right; 
 }
 
 .errorMessage {
-    color: red;
+    color: #DC143C;
 }

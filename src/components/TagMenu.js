@@ -86,7 +86,7 @@ export default class TagMenu extends Component {
             this.setState({errorMessage: "The tag must be one word only"})
             notOneWord = true;
         }
-        
+
         if (this.state.newTag.length > 0 && tagExist == false && notOneWord == false && noSpecialChar == false) {
             console.log('Addding 2');
             let authToken = localStorage.getItem("authToken");
@@ -140,7 +140,8 @@ export default class TagMenu extends Component {
                 <ul className="single-tag">
                     <form>
                         <input className="fakeInput"></input>
-                        <input type="text" 
+                        <input type="text"
+                            maxLength = "30"
                             value={this.state.newTag} 
                             onChange={this.onChange}>
                         </input>
