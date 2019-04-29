@@ -24,43 +24,64 @@ export default class App extends Component {
   state = {
     sideMenuOpen: false,
     loggedIn: false,
+    isAdmin: false
   }
 
   componentDidMount() {
-        let authToken = localStorage.getItem("authToken");
-        fetch(apiMoodportfolio + '/Login', {
-            method: "GET",
-            mode: "cors",
-            cache: "no-cache",
-            withCredentials: true,
-            credentials: "same-origin",
-            headers: {
-                "Authorization": authToken,
-                "Content-Type": "application/json",
-            },
-        })
-        .then((res) => res.json())
-        .then(json => {
-            console.log(json)
-            if (!json.success) {
-                ReactDOM.render(
-                    <Login href="/login"/>,
-                    document.getElementById('root')
-                );
-            }
-            else {
-                this.loggedIn = true
-            }
-        })
+    let authToken = localStorage.getItem("authToken");
+    fetch(apiMoodportfolio + '/Login', {
+        method: "GET",
+        mode: "cors",
+        cache: "no-cache",
+        withCredentials: true,
+        credentials: "same-origin",
+        headers: {
+            "Authorization": authToken,
+            "Content-Type": "application/json",
+        },
+    })
+    .then((res) => res.json())
+    .then(json => {
+        console.log(json)
+        if (!json.success) {
+            ReactDOM.render(
+                <Login href="/login"/>,
+                document.getElementById('root')
+            );
+        }
+        else {
+            this.loggedIn = true
+        }
+    })
 
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((pos) => {
-              let crd = pos.coords;
-              sessionStorage.setItem("latitude", crd.latitude)
-              sessionStorage.setItem("longitude", crd.longitude)
-          });
-      }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+          let crd = pos.coords;
+          sessionStorage.setItem("latitude", crd.latitude)
+          sessionStorage.setItem("longitude", crd.longitude)
+      });
     }
+
+    
+
+    fetch(apiMoodportfolio + '/IsAdmin', {
+      method: "GET",
+      mode: "cors",
+      cache: "no-cache",
+      withCredentials: true,
+      credentials: "same-origin",
+      headers: {
+          "Authorization": authToken,
+          "Content-Type": "application/json",
+      },
+    })
+    .then(data => data.json())
+    .then(json => {
+      console.log(json)
+      if(json.success) //is admin      
+        this.setState({isAdmin: true})
+    })
+  }
 
   sideMenuClickHandler = () => {
     this.setState((prevState) => {
@@ -77,7 +98,7 @@ export default class App extends Component {
     let backDrop;
 
     if (this.state.sideMenuOpen) {
-      sideMenu = <SideMenu />;
+      sideMenu = <SideMenu isAdmin= {this.state.isAdmin} />;
       backDrop = <BackDrop click={this.backDropClickHandler}/>;
     }
 
@@ -98,7 +119,8 @@ export default class App extends Component {
                   <Route path={"/profile"} component={Profile} />
                   <Route path={"/about-us"} component={AboutUs} />
                   <Route path={"/change-password"} component={ChangePassword} />
-                  <Route path={"/adminPage"} component={AdminPage}/>
+                  {this.state.isAdmin ? <Route path={"/adminPage"} component={AdminPage}/> : null}
+                  
               </main>
             </Switch>
           </div>
@@ -106,3 +128,4 @@ export default class App extends Component {
     )
   }
 }
+//<Route path={"/adminPage"} component={AdminPage}/>

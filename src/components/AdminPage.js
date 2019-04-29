@@ -22,13 +22,16 @@ export default class AdminPage extends React.Component {
 			mostPopularTag: "",
 			mostPopularLoc: null,
 			numOfPhotos: null,
+			sqlQRes: null,
+			formRes: null,
 			error: null
-        }
+    }
 
 		this.getNumberOfUsers = this.getNumberOfUsers.bind(this);
 		this.getMostPopularTag = this.getMostPopularTag.bind(this);
 		this.getMostPopularLoc = this.getMostPopularLoc.bind(this);
 		this.getPhotocountOverLastWeek = this.getPhotocountOverLastWeek.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	componentWillMount(){
@@ -38,14 +41,9 @@ export default class AdminPage extends React.Component {
 		this.getPhotocountOverLastWeek();
 	}
 
-	async getNumberOfUsers() {
+	getNumberOfUsers() {
 
 		let authToken = localStorage.getItem("authToken");
-
-		let jsonBody = {
-			'basedOn': "#users",
-			'splSQLQuery' : ""
-		}
 
 		fetch(apiMoodportfolio + '/SplAdminQuery', {
 			method: "POST",
@@ -127,7 +125,7 @@ export default class AdminPage extends React.Component {
 			},
 			body: JSON.stringify({
 								  'basedOn': "any",
-								  'splSQLQuery' : " SELECT MAX(country) as country from User",
+								  'splSQLQuery' : " SELECT MAX(city) as country from User",
 								})
 		})
 		.then((res) => res.json())
@@ -179,18 +177,109 @@ export default class AdminPage extends React.Component {
 		})
 	}
 
+	handleSubmit(e) {
+		e.preventDefault();        
+
+		//get task description, deadline, reward
+		let _userID = document.querySelector('input[name=userID]').value;
+		let _city = document.querySelector('input[name=city]').value;
+		let _country = document.querySelector('input[name=country]').value;
+		let _tagName = document.querySelector('input[name=tagName]').value;
+		let _sqlQ = document.querySelector('input[name=sqlQ]').value;
+
+		if (_sqlQ!="") {
+			//call SplAdminQuery API
+			let authToken = localStorage.getItem("authToken");
+
+			fetch(apiMoodportfolio + '/SplAdminQuery', {
+				method: "POST",
+				mode: "cors",
+				cache: "no-cache",
+				withCredentials: true,
+				credentials: "same-origin",
+				headers: {
+					"Authorization": authToken,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+										'basedOn': "any",
+										'splSQLQuery' : _sqlQ
+									})
+			})
+			.then((res) => res.json())
+			.then(json => {
+				console.log(json)
+				if(json.success){
+					console.log(json.result[0])
+					//result is the answer.
+					var _keys = Object.keys(json.result[0])
+					var _values = _keys.map(function(key) {
+						return ["\n"+key+ ": ", json.result[0][key]]
+					})
+					console.log(_values)				
+					this.setState({sqlQRes: _values});
+				} else {
+					this.setState({error: json.error});
+				}
+			})
+
+
+
+
+		} else {
+			//call AdminQuery API
+		}
+	}
+
 	//Render web page
 	render() {
 
 	  return (
 		  <div className = "text-center homePageContainer">
-			<br></br>
-			<br></br>
-			<p>Number of users registered : {this.state.numOfUsers}</p>
-			<p>Most popular tag: {this.state.mostPopularTag}</p>
-			<p>Most popular location : {this.state.mostPopularLoc}</p>
-			<p>How many photos have been uploaded over the last week : {this.state.numOfPhotos}</p>
+				<br></br>
+				<br></br>
+				<p>Number of users registered : {this.state.numOfUsers}</p>
+				<p>Most popular tag: {this.state.mostPopularTag}</p>
+				<p>Most popular location : {this.state.mostPopularLoc}</p>
+				<p>How many photos have been uploaded over the last week : {this.state.numOfPhotos}</p>
+
+				<hr />
+				<br />
+				<p>Fill in 1 or several of the following boxes to run queries with specific conditions (e.g. query for emotions where the city is Liverpool and time interval is today's date etc!)</p>
+
+				<form onSubmit = { this.handleSubmit }>
+          Enter a userID:   
+          <input type = "text" name = "userID" placeholder = "UserID" />
+          <br />
+          <br />
+          Enter a city:
+          <input type = "text" name = "city" placeholder = "City" />
+          <br />
+          <br />
+          Enter a country: 
+          <input type = "text" name = "country" placeholder = "Country" />
+          <br/>
+          <br/>          
+          Enter a tag name:
+          <input type = "text" name = "tagName" placeholder = "Tag Name" />
+          <br/>
+          <br/>
+   				<br/>
+          <br/>
+   	    	OR
+					<br/>
+					<br/>
+					Write your own SQL query (without the semicolon at the end)
+          <input type = "text" name = "sqlQ" placeholder = "SQL Query" />
+          <br/>
+          <br/>
+          <button type="submit" > Submit </button> 
+        </form>
+
+				{this.state.sqlQRes}
+
 		  </div>
 	  );
 	}
 }
+//select * from User where userID=5
