@@ -44,3 +44,7 @@
     height: 30px;
     float: right;
 }
+
+.errorMessage {
+    color: red;
+}
