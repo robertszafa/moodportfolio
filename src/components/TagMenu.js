@@ -4,6 +4,7 @@ import {apiMoodportfolio} from '../App';
 import '../stylesheet/tagMenu.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import {firstCharToUpperCase} from './Function';
 import Tag from './Tag'
 
 
@@ -14,6 +15,7 @@ export default class TagMenu extends Component {
             newTag: "",
             Tags: new Array(),
             photoId: this.props.photoId,
+            errorMessage: "",
         };
         this.unmountTag = this.unmountTag.bind(this);
         this.onAddTag = this.onAddTag.bind(this);
@@ -56,13 +58,21 @@ export default class TagMenu extends Component {
     }
 
     onChange(event) {
-        this.setState({newTag: event.target.value})
+        this.setState({newTag: event.target.value, errorMessage: ""})
     }
 
     onAddTag() {
         console.log('Addding ', this.state.newTag);
+        this.state.newTag = this.state.newTag.toLowerCase();
+        let tagExist = false;
+        for (let i = 0; i < this.state.Tags.length; i++) {
+            if (this.state.Tags[i].props.name == this.state.newTag) {
+                tagExist = true;
+                this.setState({errorMessage: "This tag already exists"})
+            }
+        }
         
-        if (this.state.newTag.length > 0) {
+        if (this.state.newTag.length > 0 && tagExist == false) {
             console.log('Addding 2');
             let authToken = localStorage.getItem("authToken");
             fetch(apiMoodportfolio + '/PhotoTag', {
@@ -119,12 +129,11 @@ export default class TagMenu extends Component {
                             value={this.state.newTag} 
                             onChange={this.onChange}>
                         </input>
-                        
                         <Button onClick={this.onAddTag}>
                             Add Tag
                         </Button>
                     </form>
-
+                    <div className="errorMessage">{this.state.errorMessage}</div>
                     {this.state.Tags}
                 </ul>
             </div>
