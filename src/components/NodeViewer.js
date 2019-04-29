@@ -13,10 +13,10 @@ export default class NodeViewer extends React.Component{
 
 	constructor(props){
 		super(props);
-		this.handleEnlargeClick = this.handleEnlargeClick.bind(this);
+		this.handleClick = this.handleClick.bind(this);
 	}
 	
-	handleEnlargeClick(o){
+	handleClick(o){
 		console.log("TEST");
 		console.log(o);
 		this.props.handleEnlargeClick(o);
@@ -96,7 +96,7 @@ export default class NodeViewer extends React.Component{
 			cardList.push(
 				<div key={i} className="card">
 
-					<CarouselCard photo={thedata[i]} onClick={() => this.handleEnlargeClick(i)} key={i}/>
+					<CarouselCard photo={thedata[i]} onClick={() => this.handleClick(i)} key={i}/>
 				</div>
 			)
 		}
@@ -131,7 +131,7 @@ class CarouselCard extends React.Component{
 				<Card.Body>
 
 					<Card.Text>{JSON.stringify(this.props.photo.state.dominantEmotion)}<br/>{this.props.photo.state.timestamp}</Card.Text>
-					<Button variant="primary" onClick={this.props.handleEnlargeClick}>Enlarge</Button>
+					<Button variant="primary" onClick={this.props.onClick}>Enlarge</Button>
 				</Card.Body>
 			</Card>
 		);

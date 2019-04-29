@@ -93,6 +93,38 @@ export default class Graph extends React.Component {
 			.catch(err => console.log(err))
 	}
 
+	GetPhotosBasedOnTag(start, end, tag){
+		let basedOn = "tag";
+		let tagName = tag;
+		let startDate = start;
+		let endDate = end; // exclusive
+		let authToken = localStorage.getItem("authToken");
+		fetch(apiMoodportfolio + '/EmotionsQuery', {
+			method: "GET",
+			mode: "cors",
+			cache: "no-cache",
+			credentials: "same-origin",
+			headers: {
+				"Authorization": authToken,
+				"Content-Type": "application/json",
+				"BasedOn": basedOn,
+				"StartDate": startDate,
+				"EndDate": endDate,
+				"TagName": tagName,
+			},
+		})
+		.then((res) => res.json())
+		.then(json => {
+			const result = json.result;
+			result.forEach(jsonData => {
+				this.state.photos.push(new Photo(jsonData));
+			});
+			this.SetGraphData(this.state.selectedGraph,start,end);
+			//console.log('tag ', json)
+		})
+		.catch(err => console.log(err))
+	}
+	
 	SetGraphData(graphCode,start,end){
 
 		//if chart is line then need to average out the data, otherwise don't.
