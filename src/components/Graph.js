@@ -20,6 +20,7 @@ export default class Graph extends React.Component {
 			selectedTime: 3, //Day = 1, Week = 2, Month  = 3
 			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected). Have left bar in for now.
 			selectedPhoto: -1,
+			selectedTag: 'test',
 			graphData: {},
 			graphOptions: {},
 			indexClicked: -1,
@@ -42,7 +43,11 @@ export default class Graph extends React.Component {
 	}
 
 	componentWillMount(){
-		this.GetPhotos(this.state.startDate,this.state.endDate);
+		if (this.props.menuOption === 3){
+			this.GetPhotosBasedOnTag(this.state.startDate,this.state.endDate,this.state.selectedTag);
+		} else {
+			this.GetPhotos(this.state.startDate,this.state.endDate);
+		}
 		//this.testDataTime(this.state.selectedTime,this.state.startDate,this.state.endDate);
 	}
 
@@ -94,35 +99,30 @@ export default class Graph extends React.Component {
 	}
 
 	GetPhotosBasedOnTag(start, end, tag){
-		let basedOn = "tag";
-		let tagName = tag;
-		let startDate = start;
-		let endDate = end; // exclusive
-		let authToken = localStorage.getItem("authToken");
-		fetch(apiMoodportfolio + '/EmotionsQuery', {
-			method: "GET",
-			mode: "cors",
-			cache: "no-cache",
-			credentials: "same-origin",
-			headers: {
-				"Authorization": authToken,
-				"Content-Type": "application/json",
-				"BasedOn": basedOn,
-				"StartDate": startDate,
-				"EndDate": endDate,
-				"TagName": tagName,
-			},
-		})
-		.then((res) => res.json())
-		.then(json => {
-			const result = json.result;
-			result.forEach(jsonData => {
-				this.state.photos.push(new Photo(jsonData));
-			});
-			this.SetGraphData(this.state.selectedGraph,start,end);
-			//console.log('tag ', json)
-		})
-		.catch(err => console.log(err))
+    let basedOn = "tag";
+    let tagName = tag;
+    let startDate = start;
+    let endDate = end; // exclusive
+    let authToken = localStorage.getItem("authToken");
+    fetch(apiMoodportfolio + '/EmotionsQuery', {
+        method: "GET",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+            "Authorization": authToken,
+            "Content-Type": "application/json",
+            "BasedOn": basedOn,
+            "StartDate": startDate,
+            "EndDate": endDate,
+            "TagName": tagName,
+        },
+    })
+    .then((res) => res.json())
+    .then(json => {
+        console.log('tag ', json)
+    })
+    .catch(err => console.log(err))
 	}
 	
 	SetGraphData(graphCode,start,end){
@@ -720,14 +720,22 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 			endDate: end
 		})
 
-		this.GetPhotos(start, end);
+		if (this.props.menuOption === 3){
+			this.GetPhotosBasedOnTag(start,end,this.selectedTag);
+		} else {
+			this.GetPhotos(start,end);
+		}
 
 	}
 
 	//When clicking Over Time/Overall
 	handleTypeClick(o){
 		this.setState({selectedGraph: o});
-		this.GetPhotos(this.state.startDate, this.state.endDate);
+		if (this.props.menuOption === 3){
+			this.GetPhotosBasedOnTag(this.state.startDate,this.state.endDate,this.state.selectedTag);
+		} else {
+			this.GetPhotos(this.state.startDate,this.state.endDate);
+		}
 		//this.testDataTime(this.state.startDate,this.state.endDate);
 	}
 
@@ -764,7 +772,11 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 			endDate: end
 		});
 
-		this.GetPhotos(start, end);
+		if (this.props.menuOption === 3){
+			this.GetPhotosBasedOnTag(start,end,this.state.selectedTag);
+		} else {
+			this.GetPhotos(start,end);
+		}
 		//this.testDataTime(selectedUnit, start, end);
 	}
 
@@ -801,7 +813,11 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 			endDate: end
 		});
 
-		this.GetPhotos(start, end);
+		if (this.props.menuOption === 3){
+			this.GetPhotosBasedOnTag(start,end,this.state.selectedTag);
+		} else {
+			this.GetPhotos(start,end);
+		}
 		//this.testDataTime(this.state.selectedTime, start, end);
 	}
 
@@ -822,6 +838,10 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 	handleEnlargeClick(index){
 		console.log("FIRED." + index);
 		this.setState({selectedPhoto: index});
+	}
+	
+	unmountPhoto(){
+		
 	}
 	
 	render () {
@@ -846,6 +866,7 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 			description={this.state.photos[this.state.selectedPhoto].props.description}
 			emotion={this.state.photos[this.state.selectedPhoto].props.emotion}
 			dominantEmotion={this.state.photos[this.state.selectedPhoto].props.dominantEmotion}
+			unmountPhoto={this.unmountPhoto}
 			/>);
 		} else {
 		return (

@@ -17,8 +17,6 @@ export default class NodeViewer extends React.Component{
 	}
 	
 	handleClick(o){
-		console.log("TEST");
-		console.log(o);
 		this.props.handleEnlargeClick(o);
 	}
 	
@@ -80,16 +78,17 @@ export default class NodeViewer extends React.Component{
 		}
 		console.log("relevant Data");
 		console.log(relevantData);
+
 		return relevantData;
 	}
 	
 	render () {
-		let thedata = this.getRelevantData(this.props.nodeClicked,this.props.indexLabels,this.props.graphType,this.props.timeUnit,this.props.startDate,this.props.endDate,this.props.data);
+		let thedata = [];
+		thedata = this.getRelevantData(this.props.nodeClicked,this.props.indexLabels,this.props.graphType,this.props.timeUnit,this.props.startDate,this.props.endDate,this.props.data);
 
 		console.log("THE DATA");
 		console.log(thedata);
 		
-		//timestamp = {thedata[i].state.timestamp} imgUri = {thedata[i].state.photoUri} emotion = {JSON.stringify(thedata[i].state.dominantEmotion)}
 		var cardList = [];
 
 		for (let i = 0; i < thedata.length; i++) {
