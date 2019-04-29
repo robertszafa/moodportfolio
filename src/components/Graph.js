@@ -101,8 +101,8 @@ export default class Graph extends React.Component {
 	GetPhotosBasedOnTag(start, end, tag){
     let basedOn = "tag";
     let tagName = tag;
-    let startDate = start;
-    let endDate = end; // exclusive
+    let startDate = formatDate(start);
+    let endDate = formatDate(end); // exclusive
     let authToken = localStorage.getItem("authToken");
     fetch(apiMoodportfolio + '/EmotionsQuery', {
         method: "GET",
