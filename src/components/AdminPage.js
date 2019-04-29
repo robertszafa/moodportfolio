@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import RecentPhotos from './RecentPhotos'
 import Login from './Login'
+import { Button } from 'react-bootstrap'
+import {Link} from 'react-router-dom';
 import {apiMoodportfolio} from '../App'
 
 
@@ -11,9 +13,9 @@ export default class Home extends React.Component {
     }
 
     // componentWillMount(){
-    //   getNumberOfUsers();
-    //   getMostPopularTag();
-    //   getMostPopularLoc();
+    //   this.getNumberOfUsers();
+    //   this.getMostPopularTag();
+    //   this.getMostPopularLoc();
     // }
 
     getNumberOfUsers() {
@@ -148,18 +150,33 @@ export default class Home extends React.Component {
           <div className = "text-center homePageContainer">
             <br></br>
             <br></br>
-            <div>
-              <p>Number of users registered : </p>
+            <div className = "basicData">
+                <div>
+                  <p>Number of users registered : 4</p>
 
+                </div>
+                <div>
+                    <p>Most popular tag: football</p>
+                </div>
+                <div>
+                    <p>Most popular location : GB</p>
+                </div>
             </div>
-            <div>
-                <p>Most popular tag: </p>
-            </div>
-            <div>
-                <p>Most popular location : </p>
-            </div>
-            <div className = "userList">
+            <div className = "basicData text-center">
                 <p>List of users</p>
+                <ul className = "userList text-center">
+                    <li className = "userInList"> Rahul K. </li>
+                    <li className = "userInList"> Phill B.</li>
+                    <li className = "userInList"> Thepnathi C.</li>
+                    <li className = "userInList"> Matt H.</li>
+                </ul>
+                <Button variant="outline-danger" >
+                    Delete Account
+                </Button>
+
+                <Button variant="outline-dark" type="submit">
+                    <Link to="">Promote User</Link>
+                </Button>
             </div>
             <div className = "photosOverTime">
                 <p>How many photos have been uploaded over the last week</p>

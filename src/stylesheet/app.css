@@ -69,3 +69,22 @@ html body {
   margin:auto;
   margin-top:30px;
 }
+
+.basicData{
+  max-width: 80%;
+  margin:auto;
+  margin-top:30px;
+  background-color: white;
+  border-radius:10px;
+
+}
+
+.userList{
+    list-style:none;
+    margin:auto;
+    text-align: center;
+    display:inline-block;
+}
+.userInList{
+    border-bottom: 1px solid #f5f3f1;
+}
