@@ -77,14 +77,14 @@ export default class TagMenu extends Component {
             }
         }
 
-        if (this.state.newTag.trim().indexOf(' ') != -1) {
-            this.setState({errorMessage: "The tag must be one word only"})
-            notOneWord = true;
-        }
-
         if (!this.state.newTag.match(specialCharacters)) {
             this.setState({errorMessage: "No special characters allowed"});
             noSpecialChar = true;
+        }
+
+        if (this.state.newTag.trim().indexOf(' ') != -1) {
+            this.setState({errorMessage: "The tag must be one word only"})
+            notOneWord = true;
         }
         
         if (this.state.newTag.length > 0 && tagExist == false && notOneWord == false && noSpecialChar == false) {
