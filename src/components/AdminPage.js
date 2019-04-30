@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom';
 import {apiMoodportfolio} from '../App'
 
 //DELETE QUERY!
+//display result from splSQLQuery in table format.
 
 export default class AdminPage extends React.Component {
 	constructor(props) {
@@ -18,7 +19,6 @@ export default class AdminPage extends React.Component {
 			mostPopularLoc: null,
 			numOfPhotos: null,
 			sqlQRes: null,
-			formRes: null,
 			error: null
     }
 
@@ -33,28 +33,12 @@ export default class AdminPage extends React.Component {
 		this.getNumberOfUsers();
 		this.getMostPopularTag();
 		this.getMostPopularLoc();
-		this.getPhotocountOverLastWeek();
+		//this.getPhotocountOverLastWeek();
 	}
 
 	getNumberOfUsers() {
 
-		let authToken = localStorage.getItem("authToken");
-
-		fetch(apiMoodportfolio + '/SplAdminQuery', {
-			method: "POST",
-			mode: "cors",
-			cache: "no-cache",
-			withCredentials: true,
-			credentials: "same-origin",
-			headers: {
-				"Authorization": authToken,
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-								  'basedOn': "#users",
-								  'splSQLQuery' : ""
-								})
-		})
+		this.postToSplAdminQueryAPI("SELECT count(*) as number from User")
 		.then((res) => res.json())
 		.then(json => {
 			//console.log(json)
@@ -69,23 +53,7 @@ export default class AdminPage extends React.Component {
 
 	//return the most popular tag from the TAG table
 	getMostPopularTag() {
-		let authToken = localStorage.getItem("authToken");
-
-		fetch(apiMoodportfolio + '/SplAdminQuery', {
-			method: "POST",
-			mode: "cors",
-			cache: "no-cache",
-			withCredentials: true,
-			credentials: "same-origin",
-			headers: {
-				"Authorization": authToken,
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-								  'basedOn': "popularTag",
-								  'splSQLQuery' : ""
-								})
-		})
+		this.postToSplAdminQueryAPI("SELECT name,count from Tag where count = (select max(count) from Tag)")
 		.then((res) => res.json())
 		.then(json => {
 			if(json.success){
@@ -104,23 +72,7 @@ export default class AdminPage extends React.Component {
 
 	//return the most popular location users are from
 	getMostPopularLoc() {
-		let authToken = localStorage.getItem("authToken");
-
-		fetch(apiMoodportfolio + '/SplAdminQuery', {
-			method: "POST",
-			mode: "cors",
-			cache: "no-cache",
-			withCredentials: true,
-			credentials: "same-origin",
-			headers: {
-				"Authorization": authToken,
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-								  'basedOn': "any",
-								  'splSQLQuery' : " SELECT MAX(townCity) as city from User",
-								})
-		})
+		this.postToSplAdminQueryAPI("SELECT MAX(townCity) as city from User")
 		.then((res) => res.json())
 		.then(json => {
 			if(json.success){
@@ -153,9 +105,8 @@ export default class AdminPage extends React.Component {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-								  'basedOn': "any",
-								  'splSQLQuery' : "select count(photoID) as number from Photo where timestamp between \"" + oneWeekAgoSQL + "\" and \"" + todaySQL + "\""
-								})
+				'splSQLQuery' : "select count(photoID) as number from Photo where timestamp between \"" + oneWeekAgoSQL + "\" and \"" + todaySQL + "\""
+			})
 		})
 		.then((res) => res.json())
 		.then(json => {
@@ -185,38 +136,24 @@ export default class AdminPage extends React.Component {
 
 		if (_sqlQ!="") {
 			//call SplAdminQuery API
-			fetch(apiMoodportfolio + '/SplAdminQuery', {
-				method: "POST",
-				mode: "cors",
-				cache: "no-cache",
-				withCredentials: true,
-				credentials: "same-origin",
-				headers: {
-					"Authorization": authToken,
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-										'basedOn': "any",
-										'splSQLQuery' : _sqlQ
-									})
-			})
+			this.postToSplAdminQueryAPI(_sqlQ)
 			.then((res) => res.json())
 			.then(json => {
-				console.log("Spl SQL Q response", json)
+				console.log("Spl SQL Q response", json.result)
 				if(json.success){
-					console.log(json.result[0])
-					//ITERATE OVER EACH ELEMENT IN JSON.RESULT
-//THIS WAY GIVES ONLY FIRST RESULT !!!!!
-					var _keys = Object.keys(json.result[0])
-					var _values = _keys.map(function(key) {
-						return ["\n"+key+ ": ", json.result[0][key]]
-					})
-					console.log(_values)				
-					this.setState({sqlQRes: _values});
+					let allRes = []
+					json.result.forEach(function(dict) {
+						var _keys = Object.keys(dict)
+						var _values = _keys.map(function(key) {
+							return ["\n"+key+ ": ", dict[key]]
+						})
+						allRes.push(_values)
+					});
+					this.setState({sqlQRes:allRes})				
 				} else {
 					this.setState({error: json.error});
 				}
-			})
+			})			
 		} else {
 			//call AdminQuery API
 			fetch(apiMoodportfolio + '/AdminQuery', {
@@ -243,14 +180,15 @@ export default class AdminPage extends React.Component {
 			.then(json => {
 				console.log("Form response: ", json)
 				if(json.success){
-					console.log(json.result[0])
-					//result is the answer.
-					var _keys = Object.keys(json.result[0])
-					var _values = _keys.map(function(key) {
-						return ["\n"+key+ ": ", json.result[0][key]]
-					})
-					console.log(_values)				
-					this.setState({sqlQRes: _values});
+					let allRes = []
+					json.result.forEach(function(dict) {
+						var _keys = Object.keys(dict)
+						var _values = _keys.map(function(key) {
+							return ["\n"+key+ ": ", dict[key]]
+						})
+						allRes.push(_values)
+					});
+					this.setState({sqlQRes:allRes})
 				} else {
 					this.setState({error: json.error});
 				}
@@ -258,6 +196,24 @@ export default class AdminPage extends React.Component {
 		}
 	}
 
+	postToSplAdminQueryAPI(sqlStmt) {
+		let authToken = localStorage.getItem("authToken");
+
+		return fetch(apiMoodportfolio + '/SplAdminQuery', {
+			method: "POST",
+			mode: "cors",
+			cache: "no-cache",
+			withCredentials: true,
+			credentials: "same-origin",
+			headers: {
+				"Authorization": authToken,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				'splSQLQuery' : sqlStmt
+			})
+		})
+	}
 	//Render web page
 	render() {
 
@@ -265,6 +221,7 @@ export default class AdminPage extends React.Component {
 		  <div className = "text-center homePageContainer">
 				<br></br>
 				<br></br>
+				<p>{this.state.error}</p>
 				<p>Number of users registered : {this.state.numOfUsers}</p>
 				<p>Most popular tag: {this.state.mostPopularTag}</p>
 				<p>Most popular location : {this.state.mostPopularLoc}</p>
@@ -314,11 +271,11 @@ export default class AdminPage extends React.Component {
           <br/>
           <button type="submit" > Submit </button> 
         </form>
-
-				{this.state.sqlQRes}
+		{this.state.sqlQRes}
 
 		  </div>
 	  );
 	}
 }
+//<pre>{JSON.stringify(this.state.sqlQRes, null, 4) }</pre>
 //select * from User where userID=5
