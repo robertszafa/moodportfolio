@@ -19,6 +19,8 @@ export default class AdminPage extends React.Component {
 			mostPopularLoc: null,
 			numOfPhotos: null,
 			sqlQRes: null,
+			show: false,
+			errorInput:'',
 			error: null
     }
 
@@ -141,15 +143,30 @@ export default class AdminPage extends React.Component {
 			.then(json => {
 				console.log("Spl SQL Q response", json.result)
 				if(json.success){
-					let allRes = []
+					let data = []
 					json.result.forEach(function(dict) {
-						var _keys = Object.keys(dict)
-						var _values = _keys.map(function(key) {
-							return ["\n"+key+ ": ", dict[key]]
+						data.push(dict)
+					})
+					console.log(data)
+					this.setState({
+						sqlQRes:data,
+						show: true
+					})
+					/*
+					let keys = Object.keys(json.result[0])
+					//same keys in each dict.
+
+					json.result.forEach(function(dict) {
+						let _values = keys.map(function(key) {
+							return [dict[key]]
 						})
-						allRes.push(_values)
+						allValues.push(_values)
 					});
-					this.setState({sqlQRes:allRes})				
+					this.setState({
+						sqlQResKeys: keys,
+						sqlQResValues:allValues
+					})	
+					*/			
 				} else {
 					this.setState({error: json.error});
 				}
@@ -214,8 +231,45 @@ export default class AdminPage extends React.Component {
 			})
 		})
 	}
+
+	editColumn(p,k,e) {
+		let inputValue = e.target.innerText;
+		let obj = p.p;
+		let objId = obj.id;
+		let position = k.k;
+		let values = Object.values(obj);
+		if(values.indexOf(inputValue) == -1){
+				obj[position] = inputValue;
+				let stateCopy = this.state.data;
+				stateCopy.map((object,index) =>{
+							if(object.id == objId){
+									object = obj[position];
+							}
+				})
+				this.setState(stateCopy);
+				this.setState({errorInput:''});
+				console.log(stateCopy,'stateCopystateCopy');
+		} else{
+				this.setState({errorInput:'This period is also available in your list'});
+				return false;
+		}
+	}
 	//Render web page
 	render() {
+		let list = null
+		if(this.state.show) {
+		list = this.state.sqlQRes.map((dict,index) =>{
+			return (
+					 <tr className="grey2" key={index}>
+								{Object.keys(dict).map(k => {
+											return (
+												<td className="grey1" key={index+''+k}><div suppressContentEditableWarning="true" contentEditable="true"
+										 value={k} onInput={this.editColumn.bind(this,{dict},{k})}>{dict[k]}</div></td>);
+								})}
+					 </tr>
+			);
+		});
+		}
 
 	  return (
 		  <div className = "text-center homePageContainer">
@@ -271,7 +325,17 @@ export default class AdminPage extends React.Component {
           <br/>
           <button type="submit" > Submit </button> 
         </form>
-		{this.state.sqlQRes}
+		
+				<fieldset className="step-4">
+					<div className="heading">
+						<h3>SQL RESULT</h3>
+					</div>
+					<div className="schedule padd-lr">
+						<table cellSpacing="3" id="mytable" border = "1">
+								<tbody>{list}</tbody>
+						</table>
+					</div>
+        </fieldset>
 
 		  </div>
 	  );
