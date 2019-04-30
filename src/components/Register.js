@@ -11,7 +11,8 @@ import logo from '../images/logo.png'
 import { Button } from 'react-bootstrap'
 
 
-export const passwordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+export const passwordRegex = new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#/.,;'+_)
+                 (*&^%$£@!?><:|"{}?!¢$€∞§¶•ªº–≠‘“…æ«÷≥≤µ~∫√ç≈åß∂ƒ©˙∆˚¬πø^¨¥†®´∑∑œ£@$%^&*-]).{8,}$`);
 let buttonDisabled = false;
 
 function redirectToLogin() {
