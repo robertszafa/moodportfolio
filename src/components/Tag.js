@@ -14,7 +14,7 @@ export default class Tag extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: this.props.name,
+            name: this.props.name.toLowerCase(),
             photoId: this.props.photoId,
             tagId: this.props.tagId,
         };
