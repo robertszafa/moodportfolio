@@ -18,7 +18,7 @@ export default class AdminPage extends React.Component {
 			mostPopularTag: "",
 			mostPopularLoc: null,
 			numOfPhotos: null,
-			sqlQRes: null,
+			sqlQRes: [],
 			show: false,
 			errorInput:'',
 			error: null
@@ -35,7 +35,7 @@ export default class AdminPage extends React.Component {
 		this.getNumberOfUsers();
 		this.getMostPopularTag();
 		this.getMostPopularLoc();
-		//this.getPhotocountOverLastWeek();
+		this.getPhotocountOverLastWeek();
 	}
 
 	getNumberOfUsers() {
@@ -94,22 +94,10 @@ export default class AdminPage extends React.Component {
 		var oneWeekAgo = new Date();
 		oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 		var oneWeekAgoSQL = oneWeekAgo.toISOString().slice(0, 19).replace('T', ' ');
-		console.log("select count(photoID) as number from Photo where timestamp between \"" + oneWeekAgoSQL + "\" and \"" + todaySQL + "\"")
+		console.log(oneWeekAgoSQL)
+		var _sqlStmt = "select count(photoID) as number from Photo where timestamp between \"" + oneWeekAgoSQL + "\" and \"" + todaySQL + "\""
 		
-		fetch(apiMoodportfolio + '/AdminQuery', {
-			method: "POST",
-			mode: "cors",
-			cache: "no-cache",
-			withCredentials: true,
-			credentials: "same-origin",
-			headers: {
-				"Authorization": authToken,
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				'splSQLQuery' : "select count(photoID) as number from Photo where timestamp between \"" + oneWeekAgoSQL + "\" and \"" + todaySQL + "\""
-			})
-		})
+		this.postToSplAdminQueryAPI(_sqlStmt)		
 		.then((res) => res.json())
 		.then(json => {
 			console.log(json)
@@ -135,6 +123,12 @@ export default class AdminPage extends React.Component {
 		let _endDate = document.querySelector('input[name=endDate]').value;
 		let _sqlQ = document.querySelector('input[name=sqlQ]').value;
 		let authToken = localStorage.getItem("authToken");
+		
+		//fix timestamp:
+		if (_startDate!="" && _endDate!="") {
+			_startDate = _startDate+" 00:00:00"
+			_endDate = _endDate+" 00:00:00"
+		}
 
 		if (_sqlQ!="") {
 			//call SplAdminQuery API
@@ -148,25 +142,11 @@ export default class AdminPage extends React.Component {
 						data.push(dict)
 					})
 					console.log(data)
+					let _show = (data.length==0 ? false : true)
 					this.setState({
 						sqlQRes:data,
-						show: true
+						show: _show
 					})
-					/*
-					let keys = Object.keys(json.result[0])
-					//same keys in each dict.
-
-					json.result.forEach(function(dict) {
-						let _values = keys.map(function(key) {
-							return [dict[key]]
-						})
-						allValues.push(_values)
-					});
-					this.setState({
-						sqlQResKeys: keys,
-						sqlQResValues:allValues
-					})	
-					*/			
 				} else {
 					this.setState({error: json.error});
 				}
@@ -195,17 +175,18 @@ export default class AdminPage extends React.Component {
 			})
 			.then((res) => res.json())
 			.then(json => {
-				console.log("Form response: ", json)
+				//console.log("Form response: ", json)
 				if(json.success){
-					let allRes = []
+					let data = []
 					json.result.forEach(function(dict) {
-						var _keys = Object.keys(dict)
-						var _values = _keys.map(function(key) {
-							return ["\n"+key+ ": ", dict[key]]
-						})
-						allRes.push(_values)
-					});
-					this.setState({sqlQRes:allRes})
+						data.push(dict)
+					})
+					console.log(data)
+					let _show = (data.length==0 ? false : true)
+					this.setState({
+						sqlQRes:data,
+						show: _show
+					})
 				} else {
 					this.setState({error: json.error});
 				}
@@ -254,19 +235,34 @@ export default class AdminPage extends React.Component {
 				return false;
 		}
 	}
+
+	clearForm(e) {
+		e.preventDefault();
+		this.ref.f1.value = '';this.ref.f5.value = '';
+		this.ref.f2.value = '';this.ref.f6.value = '';
+		this.ref.f3.value = '';this.ref.f7.value = '';
+		this.ref.f4.value = '';this.ref.f8.value = '';		
+	}
 	//Render web page
 	render() {
 		let list = null
-		if(this.state.show) {
+		let colHeaders = null
+		if(this.state.show && this.state.sqlQRes.length!=0) {
+
+		colHeaders = <tr className="tableHeaders" key="header">
+			{Object.keys(this.state.sqlQRes[0]).filter(k => k !== 'hashedPassword').map((k,i) => {
+				return (<th className="headers" key={"header"+i}>{k}</th>)
+			})}</tr>
+
 		list = this.state.sqlQRes.map((dict,index) =>{
 			return (
-					 <tr className="grey2" key={index}>
-								{Object.keys(dict).map(k => {
-											return (
-												<td className="grey1" key={index+''+k}><div suppressContentEditableWarning="true" contentEditable="true"
-										 value={k} onInput={this.editColumn.bind(this,{dict},{k})}>{dict[k]}</div></td>);
-								})}
-					 </tr>
+			  <tr className="grey2" key={index}>
+				{Object.keys(dict).filter(k => k !== 'hashedPassword').map(k=> {
+				  return (
+					<td className="grey1" key={index+''+k}><div suppressContentEditableWarning="true" contentEditable="true"
+				    value={k} onInput={this.editColumn.bind(this,{dict},{k})}>{dict[k]}</div></td>);
+				})}
+			  </tr>
 			);
 		});
 		}
@@ -275,64 +271,62 @@ export default class AdminPage extends React.Component {
 		  <div className = "text-center homePageContainer">
 				<br></br>
 				<br></br>
-				<p>{this.state.error}</p>
+				<h4>Statistics</h4>
 				<p>Number of users registered : {this.state.numOfUsers}</p>
 				<p>Most popular tag: {this.state.mostPopularTag}</p>
 				<p>Most popular location : {this.state.mostPopularLoc}</p>
 				<p>How many photos have been uploaded over the last week : {this.state.numOfPhotos}</p>
-
 				<hr />
 				<br />
 				<p>Fill in 1 or several of the following boxes to run queries with specific conditions (e.g. query for emotions where the city is Liverpool and time interval is today's date etc!)</p>
 
 				<form onSubmit = { this.handleSubmit }>
           Enter a userID:   
-          <input type = "text" name = "userID" placeholder = "UserID" />
+          <input type ="text" ref="f1" name ="userID" placeholder="UserID" />
           <br />
           <br />
           Enter a city:
-          <input type = "text" name = "city" placeholder = "City" />
+          <input type = "text" ref="f2" name = "city" placeholder = "City" />
           <br />
           <br />
           Enter a country: 
-          <input type = "text" name = "country" placeholder = "Country" />
+          <input type ="text" ref="f3" name = "country" placeholder = "Country" />
           <br/>
           <br/>          
           Enter a tag name:
-          <input type = "text" name = "tagName" placeholder = "Tag Name" />
+          <input type ="text" ref="f4" name="tagName" placeholder= "Tag Name" />
           <br/>
           <br/>
 		  Enter a tag id:
-          <input type = "text" name = "tagID" placeholder = "Tag Name" />
+          <input type = "text" ref="f5" name= "tagID" placeholder = "Tag ID" />
           <br/>
           <br/>
-		  Enter a start date (dd-mm-yyyy):
-          <input type = "text" name = "startDate" placeholder = "Tag Name" />
+		  Enter start and finish date (yyyy-mm-dd):
+          <input type = "text" ref="f6" name = "startDate" placeholder = "startDate" /> AND <input type = "text" ref="f7" name = "endDate" placeholder = "Tag Name" />
           <br/>
-          <br/>
-		  Enter a end date (dd-mm-yyyy):
-          <input type = "text" name = "endDate" placeholder = "Tag Name" />
-          <br/>
-          <br/>
-   		  <br/>
           <br/>
    	    	OR
-					<br/>
-					<br/>
-					Write your own SQL query (without the semicolon at the end)
-          <input type = "text" name = "sqlQ" placeholder = "SQL Query" />
+		  <br/>
+		  <br/>
+		  Write your own SQL query (without the semicolon at the end)
+          <input type = "text" ref="f8" name="sqlQ" placeholder = "SQL Query" />
           <br/>
           <br/>
           <button type="submit" > Submit </button> 
+		  <br/>
+		  <button onClick={this.clearForm}> Clear Form </button>
         </form>
 		
 				<fieldset className="step-4">
 					<div className="heading">
-						<h3>SQL RESULT</h3>
+						{this.state.show ? <h3>SQL RESULT</h3> : null}
 					</div>
 					<div className="schedule padd-lr">
-						<table cellSpacing="3" id="mytable" border = "1">
-								<tbody>{list}</tbody>
+						<table id="mytable" border = "2">
+						  <tbody>
+							{colHeaders}
+							{list}
+						  </tbody>
 						</table>
 					</div>
         </fieldset>
