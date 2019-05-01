@@ -4,9 +4,6 @@ import {Link} from 'react-router-dom'
 import ToggleMenu from './menu/ToggleMenu'
 import '../stylesheet/header.css'
 import Login from './Login'
-import {apiMoodportfolio} from '../App'
-
-
 
 export default class Header extends React.Component {
     constructor(props) {

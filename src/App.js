@@ -10,12 +10,9 @@ import Stats from './components/Stats'
 import AboutUs from './components/AboutUs'
 import Login from './components/Login'
 import Profile from './components/Profile'
-import Register from './components/Register'
 import ChangePassword from './components/ChangePassword'
 import AdminPage from './components/AdminPage'
 import './stylesheet/app.css'
-import TagMenu from './components/TagMenu';
-
 
 export const apiMoodportfolio = 'https://api.moodportfolio.ml'; // API for server
 // export const apiMoodportfolio = 'http://127.0.0.1:5000'; // API for localhost

@@ -2,9 +2,6 @@ import React, {Component} from 'react';
 import { Button} from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
 import '../stylesheet/tagMenu.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
-import {firstCharToUpperCase} from './Function';
 import Tag from './Tag'
 
 
@@ -72,6 +69,7 @@ export default class TagMenu extends Component {
 
         for (let i = 0; i < this.state.Tags.length; i++) {
             if (this.state.Tags[i].props.name == this.state.newTag) {
+                this.setState({errorMessage: "This tag already exists"})
                 tagExist = true;
                 this.setState({errorMessage: "This tag already exists"})
             }

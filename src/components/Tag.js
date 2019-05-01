@@ -1,14 +1,8 @@
 import React, {Component} from 'react';
-import { Button, Container, Row, Col } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
-import TextField from '@material-ui/core/TextField';
 import '../stylesheet/tagMenu.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
-
-
-
-
+import { faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 
 export default class Tag extends Component {
     constructor(props) {
@@ -46,7 +40,7 @@ export default class Tag extends Component {
     }
 
     render() {
-        const {tagId, name, photoID} = this.state;
+        const {name} = this.state;
         return (
             <div>
                 <li>

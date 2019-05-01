@@ -2,7 +2,7 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import '../stylesheet/stats.css';
-import { changeDate, convertStringToDate, getUnitQuantity, getEmotionFromString, getDateDifference } from './Graph';
+import { changeDate, getEmotionFromString, getDateDifference } from './Graph';
 import Photo from './Photo'
 
 //nodeView = <NodeViewer nodeClicked={this.state.indexClicked} xLabels={this.state.datetimeLabels} data={this.state.photos} graphType={this.state.selectedGraph} timeUnit={this.state.selectedTime} /> 
@@ -71,7 +71,6 @@ export default class NodeViewer extends React.Component{
 						relevantData.push(photos[i]);
 					}
 				}
-				//now have the criteria, search in the data
 				break;
 			default:
 				console.log("Incorrect graphType in getRelevantData");
@@ -106,11 +105,6 @@ export default class NodeViewer extends React.Component{
 }
 
 class CarouselCard extends React.Component{
-	
-	constructor(props){
-		super(props);
-	}
-	
 	render () {
 		return (
 			<Card style={{ width: '20rem' }} className='card'>

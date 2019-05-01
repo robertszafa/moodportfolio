@@ -1,9 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import RecentPhotos from './RecentPhotos'
-import Login from './Login'
-import { Button } from 'react-bootstrap'
-import {Link} from 'react-router-dom';
 import {apiMoodportfolio} from '../App'
 
 //DELETE QUERY!
@@ -88,7 +83,7 @@ export default class AdminPage extends React.Component {
 
 	//return the photos uploaded per day
 	getPhotocountOverLastWeek() {
-		let authToken = localStorage.getItem("authToken");
+		// let authToken = localStorage.getItem("authToken");
 		
 		var todaySQL = new Date().toISOString().slice(0, 19).replace('T', ' ');
 		var oneWeekAgo = new Date();

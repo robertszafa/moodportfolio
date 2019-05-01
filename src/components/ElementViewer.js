@@ -1,15 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import '../stylesheet/stats.css';
 
 //should take an array of data. Need to receive click event too
 export default class ElementViewer extends React.Component{
-	constructor (props) {
-		super(props);
-		
-	}
 	
 	renderCard(stamp, url, tags, emo){
 		return (

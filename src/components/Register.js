@@ -2,14 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {withFormik, Form, Field} from 'formik'
 import * as Yup from 'yup'
-import App from '../App'
 import {apiMoodportfolio} from '../App'
 import Login from './Login'
-import Header from './Header'
-// import '../stylesheet/register.css'
 import logo from '../images/logo.png'
 import { Button } from 'react-bootstrap'
-
 
 export const passwordRegex = new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#/.,;'+_)
                  (*&^%$£@!?><:|"{}?!¢$€∞§¶•ªº–≠‘“…æ«÷≥≤µ~∫√ç≈åß∂ƒ©˙∆˚¬πø^¨¥†®´∑∑œ£@$%^&*-]).{8,}$`);
@@ -21,7 +17,6 @@ function redirectToLogin() {
     document.getElementById('root')
   );
 }
-
 
 const RegisterApp = ({
   values,

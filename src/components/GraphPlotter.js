@@ -65,6 +65,8 @@ export default class GraphPlotter extends React.Component {
 				break;
 			case 3:
 				j = this.renderPie();
+				break;
+			default: 
 		}
 		
 		return (
