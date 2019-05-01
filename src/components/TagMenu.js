@@ -10,7 +10,7 @@ export default class TagMenu extends Component {
         super(props);
         this.state = {
             newTag: "",
-            Tags: new Array(),
+            Tags: [],
             photoId: this.props.photoId,
             errorMessage: "",
         };
@@ -35,7 +35,7 @@ export default class TagMenu extends Component {
         .then((res) => res.json())
         .then(json => {
             const photoTags = json.photoTags;
-            let newTags = new Array();
+            let newTags = [];
             if (photoTags) {
                 photoTags.forEach(tag => {
                     newTags.push(<Tag
@@ -59,16 +59,15 @@ export default class TagMenu extends Component {
     }
 
     onAddTag() {
-        console.log('Addding ', this.state.newTag);
-        this.state.newTag = this.state.newTag.toLowerCase();
+        this.setState({newTag: this.state.newTag.toLowerCase()});
 
         let tagExist = false;
         let notOneWord = false;
         let noSpecialChar = false;
-        const specialCharacters = /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+$/g;
+        const specialCharacters = /^[a-zA-Z0-9!@#%*+=._-]+$/g;
 
         for (let i = 0; i < this.state.Tags.length; i++) {
-            if (this.state.Tags[i].props.name == this.state.newTag) {
+            if (this.state.Tags[i].props.name === this.state.newTag) {
                 this.setState({errorMessage: "This tag already exists"})
                 tagExist = true;
                 this.setState({errorMessage: "This tag already exists"})
@@ -80,12 +79,12 @@ export default class TagMenu extends Component {
             noSpecialChar = true;
         }
 
-        if (this.state.newTag.trim().indexOf(' ') != -1) {
+        if (this.state.newTag.trim().indexOf(' ') !== -1) {
             this.setState({errorMessage: "The tag must be one word only"})
             notOneWord = true;
         }
 
-        if (this.state.newTag.length > 0 && tagExist == false && notOneWord == false && noSpecialChar == false) {
+        if (this.state.newTag.length > 0 && tagExist === false && notOneWord === false && noSpecialChar === false) {
             console.log('Addding 2');
             let authToken = localStorage.getItem("authToken");
             fetch(apiMoodportfolio + '/PhotoTag', {
@@ -132,7 +131,6 @@ export default class TagMenu extends Component {
     }
 
     render() {
-
         return(
             <div className="tagMenuComponent">
                 <ul className="single-tag">

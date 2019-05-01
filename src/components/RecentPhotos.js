@@ -9,7 +9,7 @@ export default class RecentPhotos extends Component {
         super(props);
         this.state = {
             limit: this.props.limit,
-            Photos: new Array(),
+            Photos: [],
         };
 
         this.unmountPhoto = this.unmountPhoto.bind(this);
@@ -37,7 +37,7 @@ export default class RecentPhotos extends Component {
             const result = json.result;
             console.log(result);
             
-            let newPhotos = new Array();
+            let newPhotos = [];
             result.forEach(photo => {
                 newPhotos.push(
                     <Photo

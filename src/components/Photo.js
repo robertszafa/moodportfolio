@@ -132,7 +132,6 @@ export default class Photo extends Component {
     render() {
         const { photoLoaded,
                 photoUri,
-                photoId,
                 timestamp,
                 city,
                 description,
@@ -144,7 +143,7 @@ export default class Photo extends Component {
 
 
         return (
-            (onlyImage && photoLoaded) ? <img src={photoUri} alt="Your photo"/>
+            (onlyImage && photoLoaded) ? <img src={photoUri} alt="Latest capture of yourself"/>
                                        : // if onlyImage is false display tagMenu, description, info
 
             <div className="photoContainer">
@@ -152,7 +151,7 @@ export default class Photo extends Component {
 
                 <h3>{<FontAwesomeIcon icon={faCamera} />} {formatDate(timestamp)}</h3>
                 {photoLoaded &&
-                    <img src={photoUri} alt="Your photo"/>
+                    <img src={photoUri} alt="Latest capture of yourself"/>
                 }
                 <div>
                     <b>Dominant Emotion:</b> {""}

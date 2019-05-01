@@ -7,13 +7,6 @@ import {apiMoodportfolio} from '../App'
 
 
 export default class ChangePassword extends Component {
-    constructor(props) {
-		super(props);
-	}
-
-    componentDidMount() {
-    }
-
     render () {
         return(
                 <PasswordApp/>
@@ -21,20 +14,14 @@ export default class ChangePassword extends Component {
   }
 }
 
-
-
 const PasswordForm = props => {
   const {
-    values,
     touched,
     errors,
-    handleChange,
-    handleBlur,
     handleSubmit,
   } = props;
 
   return (
-
       <div class = "inputForm">
         <div class="page-header">
             <h1 class="text-center">

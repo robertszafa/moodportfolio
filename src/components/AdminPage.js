@@ -88,7 +88,7 @@ export default class AdminPage extends React.Component {
 
 	//return the photos uploaded per day
 	getPhotocountOverLastWeek() {
-		let authToken = localStorage.getItem("authToken");
+		// let authToken = localStorage.getItem("authToken");
 		
 		var todaySQL = new Date().toISOString().slice(0, 19).replace('T', ' ');
 		var oneWeekAgo = new Date();
@@ -125,12 +125,12 @@ export default class AdminPage extends React.Component {
 		let authToken = localStorage.getItem("authToken");
 		
 		//fix timestamp:
-		if (_startDate!="" && _endDate!="") {
+		if (_startDate !== "" && _endDate !== "") {
 			_startDate = _startDate+" 00:00:00"
 			_endDate = _endDate+" 00:00:00"
 		}
 
-		if (_sqlQ!="") {
+		if (_sqlQ !== "") {
 			//call SplAdminQuery API
 			this.postToSplAdminQueryAPI(_sqlQ)
 			.then((res) => res.json())
@@ -244,13 +244,14 @@ export default class AdminPage extends React.Component {
 		let objId = obj.id;
 		let position = k.k;
 		let values = Object.values(obj);
-		if(values.indexOf(inputValue) == -1){
+		if(values.indexOf(inputValue) === -1){
 				obj[position] = inputValue;
 				let stateCopy = this.state.data;
-				stateCopy.map((object,index) =>{
-							if(object.id == objId){
+				stateCopy.map((object) =>{
+							if(object.id === objId){
 									object = obj[position];
 							}
+							return 1;
 				})
 				this.setState(stateCopy);
 				this.setState({errorInput:''});
@@ -264,28 +265,28 @@ export default class AdminPage extends React.Component {
 	clearForm(e) {
 		e.preventDefault();
 
-		if (document.querySelector('input[name=userID]').value!="")
+		if (document.querySelector('input[name=userID]').value!=="")
 			this.ref.f1.value=''
-		if (document.querySelector('input[name=city]').value!="")
+		if (document.querySelector('input[name=city]').value!=="")
 			this.ref.f2.value=''
-		if (document.querySelector('input[name=country]').value!="")
+		if (document.querySelector('input[name=country]').value!=="")
 			this.ref.f3.value=''
-		if (document.querySelector('input[name=tagName]').value!="")
+		if (document.querySelector('input[name=tagName]').value!=="")
 			this.ref.f4.value=''
-		if (document.querySelector('input[name=tagID]').value!="")
+		if (document.querySelector('input[name=tagID]').value!=="")
 			this.ref.f5.value=''
-		if (document.querySelector('input[name=startDate]').value!="")
+		if (document.querySelector('input[name=startDate]').value!=="")
 			this.ref.f6.value=''
-		if (document.querySelector('input[name=endDate]').value!="")
+		if (document.querySelector('input[name=endDate]').value!=="")
 			this.ref.f7.value=''
-		if (document.querySelector('input[name=sqlQ]').value!="")
+		if (document.querySelector('input[name=sqlQ]').value!=="")
 			this.ref.f8.value=''		
 	}
 	//Render web page
 	render() {
 		let list = null
 		let colHeaders = null
-		if(this.state.show && this.state.sqlQRes.length!=0) {
+		if(this.state.show && this.state.sqlQRes.length !== 0) {
 
 		colHeaders = <tr className="tableHeaders" key="header">
 			{Object.keys(this.state.sqlQRes[0]).filter(k => k !== 'hashedPassword').map((k,i) => {
@@ -358,7 +359,7 @@ export default class AdminPage extends React.Component {
 				<fieldset className="step-4">
 					<div className="heading">
 						{this.state.show ? <h3>SQL RESULT</h3> : null}
-						{this.state.error!='' ? <p>Error Occurred - {this.state.error}</p> : null}
+						{this.state.error !== '' ? <p>Error Occurred - {this.state.error}</p> : null}
 					</div>
 					<div className="schedule padd-lr">
 						<table id="mytable" border = "2">
@@ -375,7 +376,7 @@ export default class AdminPage extends React.Component {
 					<input type = "text" name="delUserID" placeholder = "Enter UserID" />
 					<button type="submit" > Submit </button> 
 				</form>
-				{this.state.errorDel!='' ? <p>Error Occurred - {this.state.errorDel}</p> : null}
+				{this.state.errorDel !== '' ? <p>Error Occurred - {this.state.errorDel}</p> : null}
 				{this.state.showDelQuery ? <p>Deleted!</p> : null}}
 		  </div>
 	  );

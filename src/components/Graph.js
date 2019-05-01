@@ -159,7 +159,7 @@ export default class Graph extends React.Component {
 	}
 
 	SetGraphData_Overall(emotionProbs){
-		this.state.graphOptions = {};
+		this.setState({graphOptions: {}})
 
 		let emotionCount = new Array(this.dbEmotions.length).fill(0);
 
@@ -1015,7 +1015,6 @@ class GraphMenu extends React.Component {
 
 export function changeDate(timecode, adate, modifier) {
 		var d = new Date(adate);
-		var temp;
 		switch (timecode){
 			case 0:
 			/* Hour */
