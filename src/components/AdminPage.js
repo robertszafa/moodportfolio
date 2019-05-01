@@ -16,7 +16,10 @@ export default class AdminPage extends React.Component {
 			sqlQRes: [],
 			show: false,
 			errorInput:'',
-			error: null
+			error: '',
+			showDelQuery: false,
+			deleteQuery: '',
+			errorDel: ''
     }
 
 		this.getNumberOfUsers = this.getNumberOfUsers.bind(this);
@@ -24,6 +27,8 @@ export default class AdminPage extends React.Component {
 		this.getMostPopularLoc = this.getMostPopularLoc.bind(this);
 		this.getPhotocountOverLastWeek = this.getPhotocountOverLastWeek.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.onClickDeleteUser = this.onClickDeleteUser.bind(this);
+		this.clearForm = this.clearForm.bind(this);
 	}
 
 	componentWillMount(){
@@ -83,7 +88,7 @@ export default class AdminPage extends React.Component {
 
 	//return the photos uploaded per day
 	getPhotocountOverLastWeek() {
-		// let authToken = localStorage.getItem("authToken");
+		let authToken = localStorage.getItem("authToken");
 		
 		var todaySQL = new Date().toISOString().slice(0, 19).replace('T', ' ');
 		var oneWeekAgo = new Date();
@@ -107,7 +112,7 @@ export default class AdminPage extends React.Component {
 
 	handleSubmit(e) {
 		e.preventDefault();        
-
+		this.setState({error:''})
 		//get task description, deadline, reward
 		let _userID = document.querySelector('input[name=userID]').value;
 		let _city = document.querySelector('input[name=city]').value;
@@ -137,10 +142,9 @@ export default class AdminPage extends React.Component {
 						data.push(dict)
 					})
 					console.log(data)
-					let _show = (data.length==0 ? false : true)
 					this.setState({
 						sqlQRes:data,
-						show: _show
+						show: true
 					})
 				} else {
 					this.setState({error: json.error});
@@ -177,16 +181,42 @@ export default class AdminPage extends React.Component {
 						data.push(dict)
 					})
 					console.log(data)
-					let _show = (data.length==0 ? false : true)
 					this.setState({
 						sqlQRes:data,
-						show: _show
+						show: true
 					})
 				} else {
 					this.setState({error: json.error});
 				}
 			})
 		}
+	}
+
+	onClickDeleteUser(e) {
+		e.preventDefault();
+		this.setState({showDelQuery: false})
+		let _userID = document.querySelector('input[name=delUserID]').value;
+		let authToken = localStorage.getItem("authToken");
+		fetch(apiMoodportfolio + '/AdminQuery', {
+			method: "DELETE",
+      mode: "cors",
+      cache: "no-cache",
+      withCredentials: true,
+      credentials: "same-origin",
+      headers: {
+          "Authorization": authToken,
+          "Content-Type": "application/json",
+			},
+			body: JSON.stringify({'userID': _userID})
+    })
+    .then(data => data.json())
+    .then(json => {
+      console.log(json)
+      if(json.success) //is admin      
+				this.setState({showDelQuery: true})
+			else
+				this.setState({errorDel: json.error});
+    })
 	}
 
 	postToSplAdminQueryAPI(sqlStmt) {
@@ -233,10 +263,23 @@ export default class AdminPage extends React.Component {
 
 	clearForm(e) {
 		e.preventDefault();
-		this.ref.f1.value = '';this.ref.f5.value = '';
-		this.ref.f2.value = '';this.ref.f6.value = '';
-		this.ref.f3.value = '';this.ref.f7.value = '';
-		this.ref.f4.value = '';this.ref.f8.value = '';		
+
+		if (document.querySelector('input[name=userID]').value!="")
+			this.ref.f1.value=''
+		if (document.querySelector('input[name=city]').value!="")
+			this.ref.f2.value=''
+		if (document.querySelector('input[name=country]').value!="")
+			this.ref.f3.value=''
+		if (document.querySelector('input[name=tagName]').value!="")
+			this.ref.f4.value=''
+		if (document.querySelector('input[name=tagID]').value!="")
+			this.ref.f5.value=''
+		if (document.querySelector('input[name=startDate]').value!="")
+			this.ref.f6.value=''
+		if (document.querySelector('input[name=endDate]').value!="")
+			this.ref.f7.value=''
+		if (document.querySelector('input[name=sqlQ]').value!="")
+			this.ref.f8.value=''		
 	}
 	//Render web page
 	render() {
@@ -315,6 +358,7 @@ export default class AdminPage extends React.Component {
 				<fieldset className="step-4">
 					<div className="heading">
 						{this.state.show ? <h3>SQL RESULT</h3> : null}
+						{this.state.error!='' ? <p>Error Occurred - {this.state.error}</p> : null}
 					</div>
 					<div className="schedule padd-lr">
 						<table id="mytable" border = "2">
@@ -325,10 +369,17 @@ export default class AdminPage extends React.Component {
 						</table>
 					</div>
         </fieldset>
-
+				<hr />
+				<p>Delete user id</p>
+				<form onSubmit = { this.onClickDeleteUser }>
+					<input type = "text" name="delUserID" placeholder = "Enter UserID" />
+					<button type="submit" > Submit </button> 
+				</form>
+				{this.state.errorDel!='' ? <p>Error Occurred - {this.state.errorDel}</p> : null}
+				{this.state.showDelQuery ? <p>Deleted!</p> : null}}
 		  </div>
 	  );
 	}
 }
-//<pre>{JSON.stringify(this.state.sqlQRes, null, 4) }</pre>
 //select * from User where userID=5
+//insert into User VALUES (111,"raz","&yh",1,NULL,NULL,NULL,NULL,NULL,False,NULL);
