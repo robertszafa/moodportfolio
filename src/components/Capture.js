@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo'
-import 'react-html5-camera-photo/build/css/index.css'
+import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
+import 'react-html5-camera-photo/build/css/index.css';
 import ImageUploader from 'react-images-upload';
 import { Button, Container, Row } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
-import TagMenu from './TagMenu'
+import TagMenu from './TagMenu';
+import GraphPlotter from './GraphPlotter.js';
 
 export default class Capture extends Component {
     constructor(props) {
@@ -255,6 +256,22 @@ export default class Capture extends Component {
 
             </div>
         )
+		
+		//Create graph data for radio graph
+		const emos = this.state.emotion;
+		console.log('em',emos);
+		const graphData = {
+			labels: ['fear','anger','contempt','disgust','sadness','neutral','surprise','happiness'],
+			datasets: [{
+				label: 'AI Confidence',
+				data: [emos.fear, emos.anger, emos.contempt, emos.disgust, emos.sadness, emos.neutral, emos.surprise, emos.happiness],
+				backgroundColor: 'rgba(244,179,255,200)',
+				borderColor: 'rgba(120,0,150,100)',
+				pointBackgroundColor: ['#11ff00','#ff0011','#ee00ff','#80027a','#1003ff','#06ffb4','#ff7206','#fff700'],
+			}]
+		};
+		
+		var radarGraph = <GraphPlotter type={4} data={graphData}/>;
 
         return (
             <div className="captureContainer">
@@ -283,6 +300,9 @@ export default class Capture extends Component {
                             onClick={!isUploading ? this.onUploadPhoto : null}>
                                 Upload
                             </Button>
+							<div>
+								{radarGraph}
+							</div>	
                         </div>
                     : EnableCaptureAndUpload }
                     </Row>
