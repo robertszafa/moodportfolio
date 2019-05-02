@@ -1,3 +1,7 @@
+.btnDelete {
+    margin-top: 5px;
+}
+
 @media only screen and (min-width: 700px) {
     .photoContainer img {
         border-radius: 5px;

@@ -213,9 +213,7 @@ export default class Photo extends Component {
                 </div>
 
                 <div>
-                    <Button variant="danger"
-                            onClick={this.onDeletePhoto}
-                    >
+                    <Button className="btnDelete" variant="danger" onClick={this.onDeletePhoto}>
                         Delete photo
                     </Button>
                 </div>

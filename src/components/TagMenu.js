@@ -4,7 +4,6 @@ import {apiMoodportfolio} from '../App';
 import '../stylesheet/tagMenu.css';
 import Tag from './Tag'
 
-
 export default class TagMenu extends Component {
     constructor(props) {
         super(props);

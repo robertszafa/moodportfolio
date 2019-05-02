@@ -1,6 +1,7 @@
 import React from 'react'
 import {apiMoodportfolio} from '../App'
-
+import {Button} from '@material-ui/core';
+import '../stylesheet/adminPage.css';
 //DELETE QUERY!
 //display result from splSQLQuery in table format.
 
@@ -307,16 +308,13 @@ export default class AdminPage extends React.Component {
 		}
 
 	  return (
-		  <div className = "text-center homePageContainer">
-				<br></br>
-				<br></br>
-				<h4>Statistics</h4>
-				<p>Number of users registered : {this.state.numOfUsers}</p>
-				<p>Most popular tag: {this.state.mostPopularTag}</p>
-				<p>Most popular location : {this.state.mostPopularLoc}</p>
-				<p>How many photos have been uploaded over the last week : {this.state.numOfPhotos}</p>
+		  <div className="adminContainer">
+				<h3>Latest Statistics</h3>
+				<div className="text">Total Registered Users: {this.state.numOfUsers}</div>
+				<div className="text">Most Popular Tag: {this.state.mostPopularTag}</div>
+				<div className="text">Most Common Location: {this.state.mostPopularLoc}</div>
+				<div className="text">Total Photos Uploaded Since Last Week: {this.state.numOfPhotos}</div>
 				<hr />
-				<br />
 				<p>Fill in 1 or several of the following boxes to run queries with specific conditions (e.g. query for emotions where the city is Liverpool and time interval is today's date etc!)</p>
 
 				<form onSubmit = { this.handleSubmit }>
@@ -351,7 +349,7 @@ export default class AdminPage extends React.Component {
           <input type = "text" ref="f8" name="sqlQ" placeholder = "SQL Query" />
           <br/>
           <br/>
-          <button type="submit" > Submit </button> 
+          <Button type="submit" > Submit </Button> 
 		  <br/>
 		  <button onClick={this.clearForm}> Clear Form </button>
         </form>

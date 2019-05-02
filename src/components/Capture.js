@@ -6,7 +6,6 @@ import { Button, Container, Row } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
 import TagMenu from './TagMenu'
 
-
 export default class Capture extends Component {
     constructor(props) {
         super(props);
@@ -22,6 +21,7 @@ export default class Capture extends Component {
             photoId: "",
             description: "",
             error: "",
+            showButtons: false
         }
         this.onDrop = this.onDrop.bind(this);
         this.onUploadPhoto = this.onUploadPhoto.bind(this);
@@ -131,6 +131,40 @@ export default class Capture extends Component {
         }
     }
 
+    onEditEmotion(emotionName) {
+        let authToken = localStorage.getItem("authToken");
+
+        fetch(apiMoodportfolio + '/EditEmotions', {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            withCredentials: true,
+            credentials: "same-origin",
+            headers: {
+                "Authorization": authToken,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "photoID": this.state.photoId,
+                "emotionName" : emotionName
+            })
+        })
+        .then((res) => res.json())
+        .then(json => {
+            console.log(json)
+            if(json.success) {
+                this.setState({
+                    dominantEmotion: emotionName,
+                    dominantEmotionValue: "100"
+                })
+            }
+        })
+    }
+
+    _showButtons() {
+        this.setState({showButtons: true})
+    }
+
     render() {
         const { isUploading, dataUri, photoId } = this.state;
 
@@ -226,10 +260,12 @@ export default class Capture extends Component {
                                 </button>
                             </div>
                         </div>
-
                         <div>
                             {this.state.description.length} / {this.maxDescriptionLength}
                         </div>
+
+                        {this.state.emotion!="" ? <button class="btn btn-dark" onClick={() => this._showButtons}>Change Emotion</button> : null}
+                        {this.state.showButtons ? <btnChangeEmotion /> : null}
                     </div>
                 }
 
@@ -242,3 +278,20 @@ export default class Capture extends Component {
     }
 
 }
+
+const btnChangeEmotion = () => (
+    <div>
+    <Button>Happiness</Button>
+    <Button>Sadness</Button>
+    <Button>Neautral</Button>
+    <Button>Surprise</Button>
+    <Button>Disgust</Button>
+    <Button>Contempt</Button>
+    <Button>Fear</Button>
+    <Button>Anger</Button>
+    </div> 
+)
+
+
+
+

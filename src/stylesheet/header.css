@@ -11,7 +11,7 @@
 .menuNavigation {
     display: flex;
     align-items: center;
-    height: 60px;
+    height: 90px;
     /*background-image: linear-gradient(white,#3399ff)
 */
 }
@@ -19,7 +19,10 @@
 .menuLogo p {
     padding: 1em;
     color: black;
-    margin-left: 15px;
+    margin-left: 0px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
 }
 
 .space {
@@ -52,4 +55,5 @@
     .menuList {
         visibility: hidden;
     }
+
 }
