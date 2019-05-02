@@ -13,6 +13,7 @@ export default class NodeViewer extends React.Component{
 
 	constructor(props){
 		super(props);
+		this.state = {photos: this.props.data}
 		this.handleClick = this.handleClick.bind(this);
 	}
 	
@@ -86,7 +87,7 @@ export default class NodeViewer extends React.Component{
 	
 	render () {
 		let thedata = [];
-		thedata = this.getRelevantData(this.props.nodeClicked,this.props.indexLabels,this.props.graphType,this.props.timeUnit,this.props.startDate,this.props.endDate,this.props.data);
+		thedata = this.getRelevantData(this.props.nodeClicked,this.props.indexLabels,this.props.graphType,this.props.timeUnit,this.props.startDate,this.props.endDate,this.state.photos);
 
 		console.log('The Data',thedata);
 		
@@ -125,7 +126,7 @@ class CarouselCard extends React.Component{
 				
 				<Card.Body>
 
-					<Card.Text>{JSON.stringify(this.props.photo.state.dominantEmotion)}<br/>{this.props.photo.state.timestamp}</Card.Text>
+					<Card.Text>{JSON.stringify(this.props.photo.props.dominantEmotion)}<br/>{this.props.photo.props.timestamp}</Card.Text>
 					<Button variant="primary" onClick={this.props.onClick}>Enlarge</Button>
 				</Card.Body>
 			</Card>
