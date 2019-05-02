@@ -53,6 +53,16 @@ export default class GraphPlotter extends React.Component {
 		);
 	}
 	
+	renderRadar(){
+		Chart.defaults.global.legend.display = true; //don't know which is best yet
+		Chart.defaults.global.maintainAspectRatio = false;
+		return {
+			<RadarGraph
+			value = {this.props.data}
+			/>
+		};
+	}
+	
 	render() {
 		
 		var j;
@@ -65,6 +75,9 @@ export default class GraphPlotter extends React.Component {
 				break;
 			case 3:
 				j = this.renderPie();
+				break;
+			case 4:
+				j = this.renderRadar();
 				break;
 			default: 
 		}
@@ -107,5 +120,13 @@ function BarGraph(props) {
 			data = {props.value}
 			getElementAtEvent = {(element) => props.getIndex(element)}
 			/>
+	);
+}
+
+function RadarGraph(props) {
+	return (
+		<Radar
+		data = {props.value}
+		/>
 	);
 }
