@@ -18,7 +18,7 @@ export default class Graph extends React.Component {
 			selectedTime: 3, //Day = 1, Week = 2, Month  = 3
 			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4
 			selectedPhoto: -1,
-			selectedTag: 'test',
+			selectedTag: this.props.selectedTag,
 			graphData: {},
 			graphOptions: {},
 			indexClicked: -1,
@@ -1049,7 +1049,7 @@ export function changeDate(timecode, adate, modifier) {
 		}
 }
 
-function formatDate(adate) {
+export function formatDate(adate) {
 	var d = new Date(adate);
 	return (
 		('0' + d.getDate()).slice(-2) + '/' +

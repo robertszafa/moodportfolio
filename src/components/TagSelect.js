@@ -2,6 +2,7 @@ import React from 'react';
 import {apiMoodportfolio} from '../App';
 import Button from 'react-bootstrap/Button';
 import GraphPlotter from './GraphPlotter.js';
+import formatDate from './Graph.js';
 
 export default class TagSelect extends React.Component {
 	
@@ -10,6 +11,10 @@ export default class TagSelect extends React.Component {
 		this.state = {
 			tags : []
 		}
+	}
+	
+	handleClick(o){
+		this.props.onClick(o);
 	}
 	
 	componentWillMount(){
@@ -36,14 +41,12 @@ export default class TagSelect extends React.Component {
 		.then(json => {
 			const result = json.result;
 			let temp = [];
-			
+			//put the tags in a list
 			result.forEach(jsonData => {
 				temp.push(jsonData.name);
-				//console.log('test',new Photo(jsonData));
 			});
+			//store list to state
 			this.setState({tags : temp});
-			console.log('tag emotionsquery', json);
-			console.log('what was stored',this.state.tags);
 		})
 		.catch(err => console.log(err))
 	}
@@ -51,11 +54,11 @@ export default class TagSelect extends React.Component {
 	render(){
 		
 		var tagButtons = [];
-
+		//create a button for each tag
 		for (let i = 0; i < this.state.tags.length; i++) {
 			tagButtons.push(
 				<div key={i} className="tag-button">
-					<Button variant = "primary" onClick={this.props.onClick}>{this.state.tags[i]}</Button>
+					<Button variant = "primary" onClick={() => this.handleClick(this.state.tags[i])} key={i}>{this.state.tags[i]}</Button>
 				</div>
 			)
 		}

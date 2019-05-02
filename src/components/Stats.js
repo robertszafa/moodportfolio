@@ -14,11 +14,11 @@ export default class Stats extends React.Component {
 		super(props);
 		this.state = {
 			menuOption: -1, //what the graph is based on. 1 = all, 2 = emotion, 3 = tag
+			tagOption: -1
 		}
 
 		this.handleMenuClick = this.handleMenuClick.bind(this);
 		this.handleTagClick = this.handleTagClick.bind(this);
-		this.handleEmotionClick = this.handleEmotionClick.bind(this);
 	}
 
 	handleMenuClick(o){
@@ -26,16 +26,13 @@ export default class Stats extends React.Component {
 	}
 
 	handleTagClick(o){
-		this.setState({menuOption: o});
-	}
-
-	handleEmotionClick(o){
-		this.setState({menuOption: o});
+		//this.setState({menuOption: o});
+		this.setState({tagOption: o});
 	}
 
 	render () {
 		var j;
-		j = <Graph menuOption={this.state.menuOption}/>;
+		//j = <Graph menuOption={this.state.menuOption}/>;
 
 		switch (this.state.menuOption){
 			case 1:
@@ -49,8 +46,11 @@ export default class Stats extends React.Component {
 				//Tag, select tag
 				//NO CODE YET - wait for thep's to be done
 				//Change this so that doesn't pass these values too
-				
-				j = <TagsMenu />;
+				if (this.state.tagOption === -1){
+					j = <TagsMenu onClick = {this.handleTagClick}/>;
+				} else {
+					j = <Graph menuOption={this.state.menuOption} selectedTag={this.state.tagOption}/>;
+				}
 				//j = <Graph menuOption={this.state.menuOption} />;
 				//j = <Graph menuOption={this.state.menuOption}/>;
 				break;
@@ -74,8 +74,8 @@ export default class Stats extends React.Component {
 class StatsMenu extends React.Component {
 
 	constructor(props) {
-		super(props)
-		this.handleClick = this.handleClick.bind(this)
+		super(props);
+		this.handleClick = this.handleClick.bind(this);
 	}
 
 	renderButton(n, v){
@@ -128,21 +128,21 @@ function StatsMenuButton(props) {
 class TagsMenu extends React.Component {
 
 	constructor(props) {
-		super(props)
-		this.handleClick = this.handleClick.bind(this)
+		super(props);
+		//this.handleClick = this.handleClick.bind(this)
 	}
-
+/*
 	handleClick(o){
 		this.props.onClick(o);
 	}
-
+*/
 	render () {
 		return (
 			<div className="stats-menu">
 				<b>View graph based on:</b>
 				<p/>
 				<div className="tags-menu">
-					<TagSelect />
+					<TagSelect onClick={this.props.onClick}/>
 				</div>
 			</div>
 		);

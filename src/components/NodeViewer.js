@@ -127,7 +127,7 @@ class CarouselCard extends React.Component{
 				<Card.Body>
 
 					<Card.Text>{JSON.stringify(this.props.photo.props.dominantEmotion)}<br/>{this.props.photo.props.timestamp}</Card.Text>
-					<Button variant="primary" onClick={this.props.onClick}>Enlarge</Button>
+					<Button variant="primary" onClick={this.props.onClick}>Details</Button>
 				</Card.Body>
 			</Card>
 		);
