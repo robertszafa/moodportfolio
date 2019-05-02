@@ -35,10 +35,13 @@ export default class TagSelect extends React.Component {
 		.then((res) => res.json())
 		.then(json => {
 			const result = json.result;
+			let temp = [];
+			
 			result.forEach(jsonData => {
-				this.state.tags.push(jsonData.name);
+				temp.push(jsonData.name);
 				//console.log('test',new Photo(jsonData));
 			});
+			this.setState({tags : temp});
 			console.log('tag emotionsquery', json);
 			console.log('what was stored',this.state.tags);
 		})
@@ -56,7 +59,7 @@ export default class TagSelect extends React.Component {
 				</div>
 			)
 		}
-		
+		console.log('tag buttons',tagButtons);
 		return tagButtons;
 	}
 	
