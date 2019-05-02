@@ -6,6 +6,7 @@ import { Button, Container, Row } from 'react-bootstrap';
 import {apiMoodportfolio} from '../App';
 import TagMenu from './TagMenu';
 import GraphPlotter from './GraphPlotter.js';
+import '../stylesheet/capture.css';
 
 export default class Capture extends Component {
     constructor(props) {
@@ -223,7 +224,7 @@ export default class Capture extends Component {
 		</div>
 
         const EnableCaptureAndUpload = (
-            <div>
+            <div className="center">
 
                 <div className="cam">
                     <Camera
@@ -252,7 +253,14 @@ export default class Capture extends Component {
                         singleImage={true} 
                     />
                 </div>
-
+                
+                <div className="instructions">
+                        <h3>Quick Guide</h3>
+                        <div className="instructions">1. Take or upload a photo of youself.</div>
+                        <div className="instructions">2. Press upload button.</div>
+                        <div className="instructions">3. Let our artificial intelligence read your emotions.</div>
+                        <div className="instructions">4. Add notes about your day or activity tags.</div>
+                </div>
 
             </div>
         )
@@ -280,26 +288,30 @@ export default class Capture extends Component {
 
                     {this.state.dataUri || this.state.emotion || this.state.error ?
                         <div>
-                            <p><img src={this.state.dataUri} alt="Your recent photograph"
+                            <p><img className="recentPhotograph" src={this.state.dataUri} alt="Your recent photograph"
                                     width="100%"/></p>
 
                             {this.state.emotion && 
-                                <p>You are feeling : {this.state.dominantEmotion} ({this.state.dominantEmotionValue}% confidence)</p>}
+                                <p className="resultParagraph">You are feeling: <b>{this.state.dominantEmotion} ({this.state.dominantEmotionValue}% confidence)</b></p>}
                             {this.state.error && <p>An error occured: {this.state.error}</p>}
-
-                            <Button
+                        
+                        <div className="captureBtn">
+                            <Button 
+                            className="btn"
                             variant="primary"
                             disabled={isUploading}
                             onClick={!isUploading ? this.handleRecapture : null}>
-                                Capture
+                                Recapture
                             </Button>
 
                             <Button
+                            className="btn"
                             variant="primary"
                             disabled={!dataUri || isUploading || this.state.emotion}
                             onClick={!isUploading ? this.onUploadPhoto : null}>
                                 Upload
                             </Button>
+                        </div>
 							<div>
 								{radarGraph}
 							</div>	

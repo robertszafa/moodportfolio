@@ -1,0 +1,38 @@
+.center {
+    width: 100%;
+    margin: auto;
+}
+
+.captureBtn {
+    padding: 5px;
+}
+
+.captureBtn .btn {
+    margin: auto;
+    margin-left: 20px;
+    margin-bottom: 15px;
+    width: 40%;
+    padding: 10px;
+}
+
+.captureContainer .recentPhotograph {
+    margin-top: -50px;
+    border-radius: 10px;
+}
+
+.resultParagraph {
+    ont-family: 'Merriweather', serif;
+    font-size: 18px;
+}
+
+/* .adminContainer h3 {
+    font-size: 32px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+}
+
+.adminContainer {
+    font-family: 'Merriweather', serif;
+    font-size: 22px;
+} */
