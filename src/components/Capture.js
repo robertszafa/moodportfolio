@@ -192,34 +192,34 @@ export default class Capture extends Component {
         let radioButtons = 
 		<div>
 			<form onSubmit={this.handleSubmitEditEmotions}>
-			  <p>Select the right emotion:</p>			  
+			  <p className="text-center merriweather">Select the right emotion:</p>			  
 			  <ul>
 				<li>
 				  <label> <input type="radio" value="happiness" checked={this.state.editedEmotion === "happiness"} onChange={this.handleChangeEditEmotions} /> Happiness </label>
 				</li>				
 				<li>
-				  <label> <input type="radio" value="neutral" checked={this.state.editedEmotion === "neutral"} onChange={this.handleChangeEditEmotions} /> neutral </label>
+				  <label> <input type="radio" value="neutral" checked={this.state.editedEmotion === "neutral"} onChange={this.handleChangeEditEmotions} />Neutral </label>
 				</li>
                 <li>
-				  <label> <input type="radio" value="surprise" checked={this.state.editedEmotion === "surprise"} onChange={this.handleChangeEditEmotions} /> surprise </label>
+				  <label> <input type="radio" value="surprise" checked={this.state.editedEmotion === "surprise"} onChange={this.handleChangeEditEmotions} /> Surprise </label>
 				</li>
                 <li>
-				  <label> <input type="radio" value="sadness" checked={this.state.editedEmotion === "sadness"} onChange={this.handleChangeEditEmotions} /> sadness </label>
+				  <label> <input type="radio" value="sadness" checked={this.state.editedEmotion === "sadness"} onChange={this.handleChangeEditEmotions} />Sadness </label>
 				</li>
                 <li>
-				  <label> <input type="radio" value="anger" checked={this.state.editedEmotion === "anger"} onChange={this.handleChangeEditEmotions} /> anger </label>
+				  <label> <input type="radio" value="anger" checked={this.state.editedEmotion === "anger"} onChange={this.handleChangeEditEmotions} />Anger </label>
 				</li>
                 <li>
-				  <label> <input type="radio" value="disgust" checked={this.state.editedEmotion === "disgust"} onChange={this.handleChangeEditEmotions} /> disgust </label>
+				  <label> <input type="radio" value="disgust" checked={this.state.editedEmotion === "disgust"} onChange={this.handleChangeEditEmotions} />Disgust </label>
 				</li>
                 <li>
-				  <label> <input type="radio" value="fear" checked={this.state.editedEmotion === "fear"} onChange={this.handleChangeEditEmotions} /> fear </label>
+				  <label> <input type="radio" value="fear" checked={this.state.editedEmotion === "fear"} onChange={this.handleChangeEditEmotions} />Fear </label>
 				</li>
                 <li>
-				  <label> <input type="radio" value="contempt" checked={this.state.editedEmotion === "contempt"} onChange={this.handleChangeEditEmotions} /> contempt </label>
+				  <label> <input type="radio" value="contempt" checked={this.state.editedEmotion === "contempt"} onChange={this.handleChangeEditEmotions} /> Contempt </label>
 				</li>
 			  </ul>
-			  <button type="submit">Make your choice</button>
+			  <Button className="center" variant="warning" type="submit">Confirmed</Button>
 			</form>		
 		</div>
 
@@ -255,11 +255,11 @@ export default class Capture extends Component {
                 </div>
                 
                 <div className="instructions">
-                        <h3>Quick Guide</h3>
-                        <div className="instructions">1. Take or upload a photo of youself.</div>
-                        <div className="instructions">2. Press upload button.</div>
-                        <div className="instructions">3. Let our artificial intelligence read your emotions.</div>
-                        <div className="instructions">4. Add notes about your day or activity tags.</div>
+                        <h3 className="text-center montserrat">Quick Guide</h3>
+                        <div className="instructions merriweather">1. Take or upload a photo of youself.</div>
+                        <div className="instructions merriweather">2. Press upload button.</div>
+                        <div className="instructions merriweather">3. Let our artificial intelligence read your emotions.</div>
+                        <div className="instructions merriweather">4. Add notes about your day or activity tags.</div>
                 </div>
 
             </div>
@@ -292,7 +292,7 @@ export default class Capture extends Component {
                                     width="100%"/></p>
 
                             {this.state.emotion && 
-                                <p className="resultParagraph">You are feeling: <b>{this.state.dominantEmotion} ({this.state.dominantEmotionValue}% confidence)</b></p>}
+                                <p className="resultParagraph merriweather">You are feeling: <b>{this.state.dominantEmotion} ({this.state.dominantEmotionValue}% confidence)</b></p>}
                             {this.state.error && <p>An error occured: {this.state.error}</p>}
                         
                         <div className="captureBtn">
@@ -312,22 +312,27 @@ export default class Capture extends Component {
                                 Upload
                             </Button>
                         </div>
-							<div>
-								{radarGraph}
-							</div>	
+                        
+                        <div className="btnChangeEmotion">
+                        {this.state.emotion!=="" ? <p className="merriweather text-center">Not the right emotion displayed? </p> : null}
+                        {this.state.emotion!=="" ? <button class="btn btn-dark center" onClick={this.onClickEditEmotions}>Change Emotion</button> : null}
+                        {this.state.showRadoiButtons ? radioButtons : null}
+						</div>
+
+                        <div>
+							{radarGraph}
+						</div>	
+
                         </div>
                     : EnableCaptureAndUpload }
                     </Row>
                 </Container>
 
                 {this.state.emotion &&
-                    <div class = "text-center moodDiary">
+                    <div class = "text-center afterPhotoContainer">
+                        <div>Add descriptions</div>
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Add description: </span>
-                            </div>
-
-                            <textarea class="form-control" 
+                            <textarea className="form-control descriptionBox" 
                                     type="text"
                                     maxLength="280"
                                     aria-label="With textarea"
@@ -349,9 +354,6 @@ export default class Capture extends Component {
                             {this.state.description.length} / {this.maxDescriptionLength}
                         </div>
 
-                        {this.state.emotion!=="" ? <p>Not the right emotion displayed? </p> : null}
-                        {this.state.emotion!=="" ? <button class="btn btn-dark" onClick={this.onClickEditEmotions}>Change Emotion</button> : null}
-                        {this.state.showRadoiButtons ? radioButtons : null}
                     </div>
                 }
 
