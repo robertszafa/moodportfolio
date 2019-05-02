@@ -41,6 +41,7 @@ export default class Graph extends React.Component {
 	}
 
 	componentWillMount(){
+		console.log("FIRED WILLMOUNT");
 		if (this.props.menuOption === 3){
 			this.GetPhotosBasedOnTag(this.state.startDate,this.state.endDate,this.state.selectedTag);
 		} else {
@@ -102,6 +103,12 @@ export default class Graph extends React.Component {
     let startDate = formatDate(start);
     let endDate = formatDate(end); // exclusive
     let authToken = localStorage.getItem("authToken");
+	
+	//EMPTY THE Photos
+	this.setState({
+		photos: []
+	});
+	
     fetch(apiMoodportfolio + '/EmotionsQuery', {
         method: "GET",
         mode: "cors",

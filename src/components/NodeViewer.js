@@ -40,13 +40,14 @@ export default class NodeViewer extends React.Component{
 			case 2: //line
 				let i;
 				let d = startDate;
+				//increment date until reach right moment based on index
 				for (i = 0; i < index; i++){
-					changeDate(timeUnit,d,1);
+					d = changeDate(timeUnit,d,1);
 				}
 				
 				//now have the criteria. Search in the data.
 				let finished = 0;
-				i = 0;
+				i = 0; //used for different purpose
 				while (finished < 2 && i < photos.length){
 					console.log(timeUnit);
 					console.log("COMPARISON OF : " + getDateDifference(photos[i].state.timestamp,startDate,timeUnit) + "	AND	" + index);
@@ -55,7 +56,9 @@ export default class NodeViewer extends React.Component{
 						relevantData.push(photos[i]);
 						finished = 1;
 					} else {
+						//check if already found at least one match
 						if (finished === 1){
+							//if have then end search
 							finished = 2;
 						}
 					}
@@ -85,8 +88,7 @@ export default class NodeViewer extends React.Component{
 		let thedata = [];
 		thedata = this.getRelevantData(this.props.nodeClicked,this.props.indexLabels,this.props.graphType,this.props.timeUnit,this.props.startDate,this.props.endDate,this.props.data);
 
-		console.log("THE DATA");
-		console.log(thedata);
+		console.log('The Data',thedata);
 		
 		var cardList = [];
 
