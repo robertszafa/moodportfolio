@@ -339,7 +339,7 @@ export default class AdminPage extends React.Component {
           <br/>
           <br/>
 		  Enter start and finish date (yyyy-mm-dd):
-          <input type = "text" ref="f6" name = "startDate" placeholder = "startDate" /> AND <input type = "text" ref="f7" name = "endDate" placeholder = "Tag Name" />
+          <input type = "text" ref="f6" name = "startDate" placeholder = "startDate" /> AND <input type = "text" ref="f7" name = "endDate" placeholder = "endDate" />
           <br/>
           <br/>
    	    	OR

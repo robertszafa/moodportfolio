@@ -21,17 +21,25 @@ export default class Capture extends Component {
             photoId: "",
             description: "",
             error: "",
-            showButtons: false
+            showRadoiButtons: false,
+            editedEmotion: ""
         }
         this.onDrop = this.onDrop.bind(this);
         this.onUploadPhoto = this.onUploadPhoto.bind(this);
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.onUploadDescription = this.onUploadDescription.bind(this);
+        this.onClickEditEmotions = this.onClickEditEmotions.bind(this);
+        this.handleChangeEditEmotions = this.handleChangeEditEmotions.bind(this)
+        this.handleSubmitEditEmotions = this.handleSubmitEditEmotions.bind(this)
     }
 
     // Upload the photo to the server for classification
     onUploadPhoto() {
-        this.setState({ isUploading: true });
+        this.setState({ 
+            isUploading: true,
+            showRadoiButtons: false,
+            editedEmotion: "" 
+        });
         let authToken = localStorage.getItem("authToken");
         let latitude = sessionStorage.getItem("latitude");
         let longitude = sessionStorage.getItem("longitude");
@@ -110,6 +118,8 @@ export default class Capture extends Component {
             error: "",
             emotion: "",
             photoId: "",
+            showRadoiButtons: false,
+            editedEmotion: ""
         })
     };
 
@@ -131,7 +141,9 @@ export default class Capture extends Component {
         }
     }
 
-    onEditEmotion(emotionName) {
+    handleSubmitEditEmotions(e) {
+        e.preventDefault();
+
         let authToken = localStorage.getItem("authToken");
 
         fetch(apiMoodportfolio + '/EditEmotions', {
@@ -146,7 +158,7 @@ export default class Capture extends Component {
             },
             body: JSON.stringify({
                 "photoID": this.state.photoId,
-                "emotionName" : emotionName
+                "emotionName" : this.state.editedEmotion
             })
         })
         .then((res) => res.json())
@@ -154,19 +166,60 @@ export default class Capture extends Component {
             console.log(json)
             if(json.success) {
                 this.setState({
-                    dominantEmotion: emotionName,
-                    dominantEmotionValue: "100"
+                    dominantEmotion: this.state.editedEmotion,
+                    dominantEmotionValue: "100",
+                    showRadoiButtons: false
                 })
             }
         })
     }
 
-    _showButtons() {
-        this.setState({showButtons: true})
+
+    onClickEditEmotions(e) {
+        e.preventDefault()
+        this.setState({showRadoiButtons: true})
     }
+
+    handleChangeEditEmotions(event) {
+        this.setState({editedEmotion: event.target.value});
+      }
 
     render() {
         const { isUploading, dataUri, photoId } = this.state;
+
+        let radioButtons = 
+		<div>
+			<form onSubmit={this.handleSubmitEditEmotions}>
+			  <p>Select the right emotion:</p>			  
+			  <ul>
+				<li>
+				  <label> <input type="radio" value="happiness" checked={this.state.editedEmotion === "happiness"} onChange={this.handleChangeEditEmotions} /> Happiness </label>
+				</li>				
+				<li>
+				  <label> <input type="radio" value="neutral" checked={this.state.editedEmotion === "neutral"} onChange={this.handleChangeEditEmotions} /> neutral </label>
+				</li>
+                <li>
+				  <label> <input type="radio" value="surprise" checked={this.state.editedEmotion === "surprise"} onChange={this.handleChangeEditEmotions} /> surprise </label>
+				</li>
+                <li>
+				  <label> <input type="radio" value="sadness" checked={this.state.editedEmotion === "sadness"} onChange={this.handleChangeEditEmotions} /> sadness </label>
+				</li>
+                <li>
+				  <label> <input type="radio" value="anger" checked={this.state.editedEmotion === "anger"} onChange={this.handleChangeEditEmotions} /> anger </label>
+				</li>
+                <li>
+				  <label> <input type="radio" value="disgust" checked={this.state.editedEmotion === "disgust"} onChange={this.handleChangeEditEmotions} /> disgust </label>
+				</li>
+                <li>
+				  <label> <input type="radio" value="fear" checked={this.state.editedEmotion === "fear"} onChange={this.handleChangeEditEmotions} /> fear </label>
+				</li>
+                <li>
+				  <label> <input type="radio" value="contempt" checked={this.state.editedEmotion === "contempt"} onChange={this.handleChangeEditEmotions} /> contempt </label>
+				</li>
+			  </ul>
+			  <button type="submit">Make your choice</button>
+			</form>		
+		</div>
 
         const EnableCaptureAndUpload = (
             <div>
@@ -214,14 +267,14 @@ export default class Capture extends Component {
                                     width="100%"/></p>
 
                             {this.state.emotion && 
-                                <p>You look: {this.state.dominantEmotionValue}% {this.state.dominantEmotion}</p>}
+                                <p>You are feeling : {this.state.dominantEmotion} ({this.state.dominantEmotionValue}% confidence)</p>}
                             {this.state.error && <p>An error occured: {this.state.error}</p>}
 
                             <Button
                             variant="primary"
                             disabled={isUploading}
                             onClick={!isUploading ? this.handleRecapture : null}>
-                                Recapture
+                                Capture
                             </Button>
 
                             <Button
@@ -264,8 +317,9 @@ export default class Capture extends Component {
                             {this.state.description.length} / {this.maxDescriptionLength}
                         </div>
 
-                        {this.state.emotion!="" ? <button class="btn btn-dark" onClick={() => this._showButtons}>Change Emotion</button> : null}
-                        {this.state.showButtons ? <btnChangeEmotion /> : null}
+                        {this.state.emotion!=="" ? <p>Not the right emotion displayed? </p> : null}
+                        {this.state.emotion!=="" ? <button class="btn btn-dark" onClick={this.onClickEditEmotions}>Change Emotion</button> : null}
+                        {this.state.showRadoiButtons ? radioButtons : null}
                     </div>
                 }
 
@@ -278,19 +332,6 @@ export default class Capture extends Component {
     }
 
 }
-
-const btnChangeEmotion = () => (
-    <div>
-    <Button>Happiness</Button>
-    <Button>Sadness</Button>
-    <Button>Neautral</Button>
-    <Button>Surprise</Button>
-    <Button>Disgust</Button>
-    <Button>Contempt</Button>
-    <Button>Fear</Button>
-    <Button>Anger</Button>
-    </div> 
-)
 
 
 
