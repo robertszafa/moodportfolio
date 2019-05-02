@@ -50,7 +50,7 @@ export default class Stats extends React.Component {
 				//NO CODE YET - wait for thep's to be done
 				//Change this so that doesn't pass these values too
 				
-				j = <TagSelect/>
+				j = <TagsMenu />;
 				//j = <Graph menuOption={this.state.menuOption} />;
 				//j = <Graph menuOption={this.state.menuOption}/>;
 				break;
@@ -123,6 +123,31 @@ function StatsMenuButton(props) {
 			</Button>
 		</div>
 	);
+}
+
+class TagsMenu extends React.Component {
+
+	constructor(props) {
+		super(props)
+		this.handleClick = this.handleClick.bind(this)
+	}
+
+	handleClick(o){
+		this.props.onClick(o);
+	}
+
+	render () {
+		return (
+			<div className="stats-menu">
+				<b>View graph based on:</b>
+				<p/>
+				<div className="tags-menu">
+					<TagSelect />
+				</div>
+			</div>
+		);
+	}
+
 }
 
 ReactDOM.render(
