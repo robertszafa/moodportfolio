@@ -118,7 +118,13 @@ export default class Graph extends React.Component {
     })
     .then((res) => res.json())
     .then(json => {
-        console.log('tag ', json)
+        const result = json.result;
+		result.forEach(jsonData => {
+			this.state.photos.push(new Photo(jsonData));
+			//console.log('test',new Photo(jsonData));
+		});
+		//console.log('tag ', json)
+		this.SetGraphData(this.state.selectedGraph,start,end);
     })
     .catch(err => console.log(err))
 	}
