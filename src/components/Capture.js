@@ -7,6 +7,7 @@ import {apiMoodportfolio} from '../App';
 import TagMenu from './TagMenu';
 import GraphPlotter from './GraphPlotter.js';
 import '../stylesheet/capture.css';
+import '../stylesheet/emotionColours.css';
 
 export default class Capture extends Component {
     constructor(props) {
@@ -193,33 +194,36 @@ export default class Capture extends Component {
 		<div>
 			<form onSubmit={this.handleSubmitEditEmotions}>
 			  <p className="text-center merriweather">Select the right emotion:</p>			  
-			  <ul>
-				<li>
+			  <div className="emotionList">
+				<div className="happiness merriweather">
 				  <label> <input type="radio" value="happiness" checked={this.state.editedEmotion === "happiness"} onChange={this.handleChangeEditEmotions} /> Happiness </label>
-				</li>				
-				<li>
+				</div>				
+				<div className="neutral merriweather">
 				  <label> <input type="radio" value="neutral" checked={this.state.editedEmotion === "neutral"} onChange={this.handleChangeEditEmotions} />Neutral </label>
-				</li>
-                <li>
+				</div>
+                <div className="surprise merriweather">
 				  <label> <input type="radio" value="surprise" checked={this.state.editedEmotion === "surprise"} onChange={this.handleChangeEditEmotions} /> Surprise </label>
-				</li>
-                <li>
+				</div>
+                <div className="sadness merriweather white">
 				  <label> <input type="radio" value="sadness" checked={this.state.editedEmotion === "sadness"} onChange={this.handleChangeEditEmotions} />Sadness </label>
-				</li>
-                <li>
+				</div>
+                <div className="anger merriweather">
 				  <label> <input type="radio" value="anger" checked={this.state.editedEmotion === "anger"} onChange={this.handleChangeEditEmotions} />Anger </label>
-				</li>
-                <li>
+				</div>
+                <div className="disgust merriweather white">
 				  <label> <input type="radio" value="disgust" checked={this.state.editedEmotion === "disgust"} onChange={this.handleChangeEditEmotions} />Disgust </label>
-				</li>
-                <li>
+				</div>
+                <div className="fear merriweather">
 				  <label> <input type="radio" value="fear" checked={this.state.editedEmotion === "fear"} onChange={this.handleChangeEditEmotions} />Fear </label>
-				</li>
-                <li>
+				</div>
+                <div className="contempt merriweather white">
 				  <label> <input type="radio" value="contempt" checked={this.state.editedEmotion === "contempt"} onChange={this.handleChangeEditEmotions} /> Contempt </label>
-				</li>
-			  </ul>
-			  <Button className="center" variant="warning" type="submit">Confirmed</Button>
+				</div>
+              <div className="confirmNewEmotion merriweather">
+              <div className="text-center">Confirm your new emotion:</div>
+			  <Button className="center" variant="dark" type="submit">Confirmed</Button>
+              </div> 
+              </div>
 			</form>		
 		</div>
 
@@ -259,7 +263,7 @@ export default class Capture extends Component {
                         <div className="instructions merriweather">1. Take or upload a photo of youself.</div>
                         <div className="instructions merriweather">2. Press upload button.</div>
                         <div className="instructions merriweather">3. Let our artificial intelligence read your emotions.</div>
-                        <div className="instructions merriweather">4. Add notes about your day or activity tags.</div>
+                        <div className="instructions merriweather">4. Add activity tags or write about your day.</div>
                 </div>
 
             </div>
