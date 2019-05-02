@@ -5,6 +5,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'; //can't seem t
 import '../stylesheet/stats.css';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import TagSelect from './TagSelect.js'
 
 //Need to remember to reset graphOption to -1 when navigating away from component - unless it gets recreated?
 export default class Stats extends React.Component {
@@ -48,7 +49,9 @@ export default class Stats extends React.Component {
 				//Tag, select tag
 				//NO CODE YET - wait for thep's to be done
 				//Change this so that doesn't pass these values too
-				j = <Graph menuOption={this.state.menuOption} />;
+				
+				j = <TagSelect/>
+				//j = <Graph menuOption={this.state.menuOption} />;
 				//j = <Graph menuOption={this.state.menuOption}/>;
 				break;
 			default:

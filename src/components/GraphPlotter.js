@@ -1,5 +1,5 @@
 import React from 'react';
-import {Chart, Bar, Line, Pie} from 'react-chartjs-2';
+import {Chart, Bar, Line, Pie, Radar} from 'react-chartjs-2';
 import '../stylesheet/stats.css';
 //{ Chart, Bar, Line, Pie }
 //The Graph component. Draws pie, line and bar charts. Add radio if have time.
@@ -56,11 +56,11 @@ export default class GraphPlotter extends React.Component {
 	renderRadar(){
 		Chart.defaults.global.legend.display = true; //don't know which is best yet
 		Chart.defaults.global.maintainAspectRatio = false;
-		return {
+		return (
 			<RadarGraph
 			value = {this.props.data}
 			/>
-		};
+		);
 	}
 	
 	render() {

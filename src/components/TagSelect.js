@@ -1,15 +1,21 @@
-
+import React from 'react';
+import {apiMoodportfolio} from '../App';
+import Button from 'react-bootstrap/Button';
+import GraphPlotter from './GraphPlotter.js';
 
 export default class TagSelect extends React.Component {
 	
 	constructor(props){
 		super(props);
+		this.state = {
+			tags : []
+		}
 	}
 	
 	componentWillMount(){
 		let basedOn = "tagUsage";
 		let startDate = '01/01/1970';
-		let endDate = "29/04/2019"; // exclusive
+		let endDate = "02/05/2019"; // exclusive
 		let authToken = localStorage.getItem("authToken");
 		
 		
@@ -28,7 +34,13 @@ export default class TagSelect extends React.Component {
 		})
 		.then((res) => res.json())
 		.then(json => {
-			console.log('tag emotionsquery', json)
+			const result = json.result;
+			result.forEach(jsonData => {
+				this.state.tags.push(jsonData.name);
+				//console.log('test',new Photo(jsonData));
+			});
+			console.log('tag emotionsquery', json);
+			console.log('what was stored',this.state.tags);
 		})
 		.catch(err => console.log(err))
 	}
@@ -37,10 +49,10 @@ export default class TagSelect extends React.Component {
 		
 		var tagButtons = [];
 
-		for (let i = 0; i < this.props.tags.length; i++) {
+		for (let i = 0; i < this.state.tags.length; i++) {
 			tagButtons.push(
 				<div key={i} className="tag-button">
-					<Button variant = "primary" onClick={this.props.onClick}>{this.props.tags[i]}</Button>
+					<Button variant = "primary" onClick={this.props.onClick}>{this.state.tags[i]}</Button>
 				</div>
 			)
 		}

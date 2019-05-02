@@ -1,6 +1,6 @@
 import React from 'react';
 import GraphPlotter from './GraphPlotter.js';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';  //not clear why i don't need these
+import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import NodeViewer from './NodeViewer.js';
@@ -16,7 +16,7 @@ export default class Graph extends React.Component {
 			endDate: getMonthEnd(Date.now()),
 			currentDate: Date.now(),
 			selectedTime: 3, //Day = 1, Week = 2, Month  = 3
-			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4 (can't be selected). Have left bar in for now.
+			selectedGraph: 2, //Bar = 1, Line = 2, Pie = 3, Radio = 4
 			selectedPhoto: -1,
 			selectedTag: 'test',
 			graphData: {},
