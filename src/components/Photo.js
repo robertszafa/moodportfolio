@@ -153,10 +153,13 @@ export default class Photo extends Component {
                 {photoLoaded &&
                     <img src={photoUri} alt="Latest capture of yourself"/>
                 }
-                <div>
+                {/* <div>
                     <b>Dominant Emotion:</b> {""}
                     {this.firstCharToUpperCase(JSON.stringify(dominantEmotion).match(/"([^']+)"/)[1])} {""}
                     {JSON.stringify(dominantEmotion).match(/:([^']+)}/)[1]}{"%"} 
+                </div> */}
+                <div>
+                    <b>Dominant Emotion: </b> {JSON.stringify(dominantEmotion)}
                 </div>
                 <div>
                     <b>Classified Emotions:</b> {JSON.stringify(emotion).split(/[."{}]/).join(' ')}
