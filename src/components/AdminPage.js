@@ -309,15 +309,16 @@ export default class AdminPage extends React.Component {
 
 	  return (
 		  <div className="adminContainer">
+				<br />
 				<h3>Latest Statistics</h3>
 				<div className="text">Total Registered Users: {this.state.numOfUsers}</div>
 				<div className="text">Most Popular Tag: {this.state.mostPopularTag}</div>
 				<div className="text">Most Common Location: {this.state.mostPopularLoc}</div>
 				<div className="text">Total Photos Uploaded Since Last Week: {this.state.numOfPhotos}</div>
 				<hr />
-				<p>Fill in 1 or several of the following boxes to run queries with specific conditions (e.g. query for emotions where the city is Liverpool and time interval is today's date etc!)</p>
+				<p className="text">Fill in 1 or several of the following boxes to run queries with specific conditions (e.g. query for emotions where the city is Liverpool and time interval is today's date etc!)</p>
 
-				<form onSubmit = { this.handleSubmit }>
+				<form className="text" onSubmit = { this.handleSubmit }>
           Enter a userID:   
           <input type ="text" ref="f1" name ="userID" placeholder="UserID" />
           <br />
@@ -339,7 +340,7 @@ export default class AdminPage extends React.Component {
           <br/>
           <br/>
 		  Enter start and finish date (yyyy-mm-dd):
-          <input type = "text" ref="f6" name = "startDate" placeholder = "startDate" /> AND <input type = "text" ref="f7" name = "endDate" placeholder = "endDate" />
+          <input type = "text" ref="f6" name = "startDate" placeholder = "startDate" /> <input type = "text" ref="f7" name = "endDate" placeholder = "endDate" />
           <br/>
           <br/>
    	    	OR
@@ -349,9 +350,10 @@ export default class AdminPage extends React.Component {
           <input type = "text" ref="f8" name="sqlQ" placeholder = "SQL Query" />
           <br/>
           <br/>
-          <Button type="submit" > Submit </Button> 
-		  <br/>
-		  <button onClick={this.clearForm}> Clear Form </button>
+					<div className="button">
+          <Button  variant="contained" color="primary" type="submit" > Submit </Button> 
+		  		<Button variant="contained" color="secondary" onClick=		{this.clearForm}>Clear Form </Button>
+					</div>
         </form>
 		
 				<fieldset className="step-4">
@@ -369,10 +371,10 @@ export default class AdminPage extends React.Component {
 					</div>
         </fieldset>
 				<hr />
-				<p>Delete user id</p>
+				<div className="text">Delete User ID</div>
 				<form onSubmit = { this.onClickDeleteUser }>
 					<input type = "text" name="delUserID" placeholder = "Enter UserID" />
-					<button type="submit" > Submit </button> 
+					<Button variant="contained" color="primary" type="submit" >Submit</Button> 
 				</form>
 				{this.state.errorDel !== '' ? <p>Error Occurred - {this.state.errorDel}</p> : null}
 				{this.state.showDelQuery ? <p>Deleted!</p> : null}}

@@ -1,15 +1,26 @@
 .adminContainer {
-    background-color: #7FDBFF;
+    background-color: white;
+    margin-top: 40px;
 }
 
 .adminContainer h3 {
     font-size: 32px;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
-    font-size: 32px;
+    text-align: center;
 }
 
 .adminContainer {
     font-family: 'Merriweather', serif;
     font-size: 22px;
+}
+
+.text {
+    padding: 2px;
+    padding-left: 10px;
+}
+
+.button {
+    width: 100%;
+    margin-left: 24%;
 }
