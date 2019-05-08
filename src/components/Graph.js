@@ -267,27 +267,32 @@ export default class Graph extends React.Component {
 	i = 0;
 	lastUnit = getUnitQuantity(startdate,changeDateUnit);
 	missingUnits = 0;
-
+	let lastTimeStamp = startdate;
+	
 	while (i < timestamp.length){
 		//check if part of the current time
 		if (getUnitQuantity(timestamp[i],changeDateUnit) === lastUnit){
 			console.log("PUSHING" + emotionProbs[i] + " TO COMPARISON.");
 			emotionCompare.push(emotionProbs[i]);
 		} else {
-			//if new time
-			missingUnits = getUnitQuantity(timestamp[i],changeDateUnit) - lastUnit - 1;
-			if (missingUnits > 1 || (missingUnits > -1 && i === 0)){
-				if (i === 0) {missingUnits++;}
-				console.log("ADDING NULLS * " + missingUnits + "from: " + timestamp[i]);
-				for (j = 0; j < missingUnits; j++){
-					thedata.push(null);
-				}
-			}
+			
 			//find most prominent emotion, get its number, push it
 			if (emotionCompare.length > 0){
 				console.log("PUSHING PROMINENT EMOTION");
 				thedata.push(getEmotionIndex(GetModeEmotion(emotionCompare)) + 1);
 			}
+			
+			//if new time
+			missingUnits = getDateDifference(getDayStart(timestamp[i]),getDayStart(lastTimeStamp),changeDateUnit);
+			console.log('missing units',missingUnits);
+			if (missingUnits > 1 || (missingUnits > -1 && i === 0)){
+				if (lastTimeStamp !== startdate) {missingUnits--;}
+				console.log("ADDING NULLS * " + missingUnits + "from: " + timestamp[i]);
+				for (j = 0; j < missingUnits; j++){
+					thedata.push(null);
+				}
+			}
+
 			//clear emotionCompare
 			emotionCompare = [];
 			//add the current element to emotionCompare
@@ -295,6 +300,7 @@ export default class Graph extends React.Component {
 			emotionCompare.push(emotionProbs[i]);
 			//set the current time being looked at
 			lastUnit = getUnitQuantity(timestamp[i],changeDateUnit);
+			lastTimeStamp = timestamp[i];
 		}
 		i++;
 	}
@@ -478,6 +484,7 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 	for (emote = 0; emote < this.displayEmotions.length; emote++){
 		i = 0;
 		lastUnit = getUnitQuantity(startdate,changeDateUnit);
+		let lastTimeStamp = startdate;
 		missingUnits = 0;
 		
 		//need to get emotion specific data
@@ -491,21 +498,25 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 				console.log("PUSHING" + emotionData.emotion[i] + " TO COMPARISON.");
 				emotionCompare.push(emotionData.emotion[i]);
 			} else {
-				//if new time
-				missingUnits = getUnitQuantity(emotionData.timestamp[i],changeDateUnit) - lastUnit - 1;
-				console.log(missingUnits + " missing units found. " + emotionData.timestamp[i] + "	" + changeDateUnit);
-				if (missingUnits > 1 || (missingUnits > -1 && i === 0)){
-					if (i === 0) {missingUnits++;}
-					console.log("ADDING NULLS * " + missingUnits + "from: " + emotionData.timestamp[i]);
-					for (j = 0; j < missingUnits; j++){
-						tempdata.push(null);
-					}
-				}
+				
 				//push count of emotion
 				if (emotionCompare.length > 0){
 					console.log("PUSHING PROMINENT EMOTION");
 					tempdata.push(emotionCompare.length);
 				}
+				
+				//if new time
+				missingUnits = getDateDifference(getDayStart(emotionData.timestamp[i]),getDayStart(lastTimeStamp),changeDateUnit);
+				//missingUnits = getUnitQuantity(emotionData.timestamp[i],changeDateUnit) - lastUnit - 1;
+				console.log(missingUnits + " missing units found. " + emotionData.timestamp[i] + "	" + changeDateUnit);
+				if (missingUnits > 1 || (missingUnits > -1 && i === 0)){
+					if (lastTimeStamp !== startdate) {missingUnits--;}
+					console.log("ADDING NULLS * " + missingUnits + "from: " + emotionData.timestamp[i]);
+					for (j = 0; j < missingUnits; j++){
+						tempdata.push(null);
+					}
+				}
+
 				//clear emotionCompare
 				emotionCompare = [];
 				//add the current element to emotionCompare
@@ -513,6 +524,7 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 				emotionCompare.push(emotionData.emotion[i]);
 				//set the current time being looked at
 				lastUnit = getUnitQuantity(emotionData.timestamp[i],changeDateUnit);
+				lastTimeStamp = timestamp[i];
 			}
 			i++;
 		}
@@ -1173,7 +1185,7 @@ function getEmotionData(emotionProbs,timestamp,emotionIndex){
 
 export function getDateDifference(date1, date2, timeUnit){
 	let ms;
-	
+	console.log('Comparing',date1,date2);
 	switch(timeUnit) {
 		case 0: //hours
 		console.log("DD HOURS");
