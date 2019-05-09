@@ -282,8 +282,14 @@ export default class Graph extends React.Component {
 				thedata.push(getEmotionIndex(GetModeEmotion(emotionCompare)) + 1);
 			}
 			
+			console.log('change date unit',changeDateUnit);
 			//if new time
-			missingUnits = getDateDifference(getDayStart(timestamp[i]),getDayStart(lastTimeStamp),changeDateUnit);
+			if (changeDateUnit === 0){
+				missingUnits = getDateDifference(timestamp[i],lastTimeStamp,changeDateUnit);
+			} else {
+				//days
+				missingUnits = getDateDifference(getDayStart(timestamp[i]),getDayStart(lastTimeStamp),changeDateUnit);
+			}		
 			console.log('missing units',missingUnits);
 			if (missingUnits > 1 || (missingUnits > -1 && i === 0)){
 				if (lastTimeStamp !== startdate) {missingUnits--;}
@@ -505,8 +511,14 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 					tempdata.push(emotionCompare.length);
 				}
 				
+				console.log('change date unit',changeDateUnit);
 				//if new time
-				missingUnits = getDateDifference(getDayStart(emotionData.timestamp[i]),getDayStart(lastTimeStamp),changeDateUnit);
+				if (changeDateUnit === 0){
+					missingUnits = getDateDifference(emotionData.timestamp[i],lastTimeStamp,changeDateUnit);
+				} else {
+					//days
+					missingUnits = getDateDifference(getDayStart(emotionData.timestamp[i]),getDayStart(lastTimeStamp),changeDateUnit);
+				}
 				//missingUnits = getUnitQuantity(emotionData.timestamp[i],changeDateUnit) - lastUnit - 1;
 				console.log(missingUnits + " missing units found. " + emotionData.timestamp[i] + "	" + changeDateUnit);
 				if (missingUnits > 1 || (missingUnits > -1 && i === 0)){
