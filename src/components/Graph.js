@@ -285,7 +285,7 @@ export default class Graph extends React.Component {
 			console.log('change date unit',changeDateUnit);
 			//if new time
 			if (changeDateUnit === 0){
-				missingUnits = getDateDifference(timestamp[i],lastTimeStamp,changeDateUnit);
+				missingUnits = timestamp[i].getHours() - lastTimeStamp.getHours();
 			} else {
 				//days
 				missingUnits = getDateDifference(getDayStart(timestamp[i]),getDayStart(lastTimeStamp),changeDateUnit);
@@ -514,7 +514,7 @@ setGraphData_Emotions(emotionProbs,timestamp,startdate,enddate){
 				console.log('change date unit',changeDateUnit);
 				//if new time
 				if (changeDateUnit === 0){
-					missingUnits = getDateDifference(emotionData.timestamp[i],lastTimeStamp,changeDateUnit);
+					missingUnits = emotionData.timestamp[i].getHours() - lastTimeStamp.getHours();
 				} else {
 					//days
 					missingUnits = getDateDifference(getDayStart(emotionData.timestamp[i]),getDayStart(lastTimeStamp),changeDateUnit);
