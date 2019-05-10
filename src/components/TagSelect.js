@@ -20,7 +20,7 @@ export default class TagSelect extends React.Component {
 	componentWillMount(){
 		let basedOn = "tagUsage";
 		let startDate = '01/01/1970';
-		let endDate = formatDate(Date.now()); // exclusive
+		let endDate = '02/05/3000'; // exclusive
 		let authToken = localStorage.getItem("authToken");
 		
 		
